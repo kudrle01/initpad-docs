@@ -1,9 +1,16 @@
-// Cloudflare deploys this repository as a Worker that only serves the static
-// files in public/. The name must match the project name in Cloudflare.
+// Cloudflare deploys this repository as a Worker. Files in public/ are served
+// as static assets; src/index.js only answers requests that match no file,
+// which in practice means sending "/" to the guide in the reader's language.
+// The name must match the project name in Cloudflare.
 {
   "name": "initpad-docs",
+  "main": "src/index.js",
   "compatibility_date": "2026-10-01",
   "assets": {
-    "directory": "./public"
-  }
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  // Cloudflare builds pull requests with `npx wrangler preview`, which needs
+  // this block even when empty. Everything else is shared with production.
+  "previews": {}
 }
