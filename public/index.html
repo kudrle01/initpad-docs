@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nápověda InitPad</title>
+<meta name="description" content="Jak ve veřejné edici InitPadu propojit GitHub, připojit vlastní server, založit nebo importovat projekt a nasazovat ho.">
+<style>
+  :root{
+    --bg:#fbf8f0; --ink:#4e220f; --ink2:#7a5a44; --card:#fff;
+    --green:#3a6b40; --greenbg:#e7efe8; --sec:#f1ede1; --border:#e9e3d5;
+    --terra:#b4472e; --terrabg:#f7e8e3; --amber:#9d6638; --amberbg:#f5ecdd;
+    --mono:ui-monospace,'JetBrains Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif}
+  .wrap{display:flex;max-width:1180px;margin:0 auto}
+  nav.toc{position:sticky;top:0;align-self:flex-start;height:100vh;overflow-y:auto;width:260px;flex:none;padding:28px 18px;border-right:1px solid var(--border);font-size:13.5px}
+  nav.toc .logo{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-weight:700;font-size:15px}
+  nav.toc .logo .chip{background:var(--green);color:#fff;border-radius:8px;padding:3px 8px;font-size:13px}
+  nav.toc a{display:block;color:var(--ink2);text-decoration:none;padding:4px 8px;border-radius:6px}
+  nav.toc a:hover,nav.toc a:focus-visible{background:var(--sec);color:var(--ink)}
+  main{flex:1;min-width:0;padding:36px 44px 90px}
+  h1{font-size:30px;line-height:1.25;margin:0 0 6px}
+  .subtitle{color:var(--ink2);margin:0 0 28px}
+  h2{font-size:22px;margin:52px 0 8px;padding-top:14px;border-top:2px solid var(--border);scroll-margin-top:12px}
+  h3{font-size:17px;margin:26px 0 6px}
+  p{margin:10px 0}
+  a{color:var(--green)}
+  code{font-family:var(--mono);font-size:.86em;background:var(--sec);border:1px solid var(--border);border-radius:5px;padding:1px 5px}
+  pre{background:var(--sec);border:1px solid var(--border);border-radius:10px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.55}
+  pre code{background:none;border:none;padding:0}
+  .ui{font-weight:600}
+  .box{border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin:16px 0;background:var(--card)}
+  .box .t{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+  .tip{border-left:4px solid var(--green);background:var(--greenbg)}
+  .tip .t{color:var(--green)}
+  .warn{border-left:4px solid var(--terra);background:var(--terrabg)}
+  .warn .t{color:var(--terra)}
+  .why{border-left:4px solid var(--amber);background:var(--amberbg)}
+  .why .t{color:var(--amber)}
+  .scroll{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;background:var(--card)}
+  th,td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top}
+  th{background:var(--sec);font-size:12.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--ink2)}
+  .steps{counter-reset:s;list-style:none;padding-left:0}
+  .steps>li{counter-increment:s;position:relative;padding:10px 0 10px 46px;border-bottom:1px dashed var(--border)}
+  .steps>li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  footer{margin-top:70px;padding-top:16px;border-top:2px solid var(--border);color:var(--ink2);font-size:13px}
+  @media(max-width:900px){nav.toc{display:none}main{padding:24px 16px 70px}}
+  @media print{nav.toc{display:none}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="Obsah">
+  <div class="logo"><span class="chip">InitPad</span> Nápověda</div>
+  <a href="#zaciname">1. Začínáme</a>
+  <a href="#prihlaseni">2. Přihlášení</a>
+  <a href="#github">3. Propojení GitHubu</a>
+  <a href="#server">4. Připojení serveru</a>
+  <a href="#novy-projekt">5. Nový projekt</a>
+  <a href="#import">6. Import repozitáře</a>
+  <a href="#nasazeni">7. Nasazení a prostředí</a>
+  <a href="#promenne">8. Proměnné a secrety</a>
+  <a href="#tym">9. Tým a role</a>
+  <a href="#prejmenovani">10. Přejmenování a smazání</a>
+  <a href="#potize">11. Řešení potíží</a>
+  <a href="#omezeni">12. Omezení veřejné edice</a>
+</nav>
+<main>
+
+<h1>Nápověda InitPad</h1>
+<p class="subtitle">Veřejná edice propojená s GitHubem. Popisuje verzi 0.2.17; co platí až od novější verze, je u toho uvedeno.</p>
+
+<h2 id="zaciname">1. Začínáme</h2>
+<p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
+<p>Budete potřebovat:</p>
+<ul>
+  <li>účet na GitHubu,</li>
+  <li>Linux server s Dockerem, na kterém aplikace poběží. Stačí mu odchozí přístup na internet, takže může stát za routerem i za VPN.</li>
+</ul>
+<p>Celá cesta má pět kroků:</p>
+<ol class="steps">
+  <li><a href="#prihlaseni">Přihlaste se</a> účtem GitHub.</li>
+  <li><a href="#github">Nainstalujte GitHub App</a>, aby InitPad směl pracovat s vašimi repozitáři.</li>
+  <li><a href="#server">Připojte server</a> jedním příkazem.</li>
+  <li><a href="#novy-projekt">Založte projekt</a> ze šablony, nebo <a href="#import">importujte</a> existující repozitář.</li>
+  <li>Pushněte změnu. InitPad ji nasadí do prostředí dev a vy ji pak <a href="#nasazeni">povyšujete</a> dál.</li>
+</ol>
+
+<h2 id="prihlaseni">2. Přihlášení</h2>
+<p>Na úvodní stránce zvolte <span class="ui">Pokračovat přes GitHub</span>. Účet v InitPadu vznikne při prvním přihlášení, heslo se nezakládá.</p>
+<p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu.</p>
+
+<h2 id="github">3. Propojení GitHubu</h2>
+<p>InitPad s repozitáři nepracuje pod vaším jménem, ale přes GitHub App. Vidí jen účty a organizace, do kterých ji nainstalujete, a jen repozitáře, které jí povolíte.</p>
+<ol class="steps">
+  <li>Otevřete <span class="ui">Nastavení účtu</span> a v části <span class="ui">Účet GitHub</span> zvolte <span class="ui">Nainstalovat GitHub App</span>. Otevře se okno GitHubu, proto povolte vyskakovací okna.</li>
+  <li>Vyberte svůj účet nebo organizaci a rozhodněte, zda App uvidí všechny repozitáře, nebo jen vybrané.</li>
+  <li>Po návratu se instalace objeví v seznamu pod vaším účtem. Další účet nebo organizaci přidáte tlačítkem <span class="ui">Přidat instalaci</span>.</li>
+</ol>
+<div class="box why"><div class="t">Organizace</div>
+Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHub mu pošle žádost a InitPad ukáže, že čeká na schválení.</div>
+<p>Samotné členství v organizaci nestačí. Repozitáře organizace uvidíte v InitPadu až po instalaci App do ní.</p>
+
+<h2 id="server">4. Připojení serveru</h2>
+<p>Aplikace neběží u InitPadu, ale na vašem serveru. Na něm běží malý program InitPad Agent, který si sám chodí pro práci. InitPad se na váš server nikdy nepřipojuje, takže nemusíte otevírat žádný port pro správu ani předávat SSH klíč.</p>
+<h3>Co server potřebuje</h3>
+<ul>
+  <li>Linux a běžící Docker,</li>
+  <li>odchozí HTTPS spojení na adresu InitPadu,</li>
+  <li>oprávnění správce pro jednorázové spuštění instalátoru.</li>
+</ul>
+<h3>Postup</h3>
+<ol class="steps">
+  <li>Otevřete <span class="ui">Servery</span> a zvolte <span class="ui">Přidat server</span>.</li>
+  <li>Jako způsob připojení ponechte <span class="ui">InitPad Agent pro Docker (doporučeno)</span> a vyplňte název.</li>
+  <li>V poli <span class="ui">Umí spustit</span> zaškrtněte runtimy, které server zvládne. Šablonu půjde nasadit jen na server, který její runtime umí.</li>
+  <li>Zvolte <span class="ui">Zpřístupnění aplikací</span>, viz tabulka níže, a vyplňte veřejnou URL serveru.</li>
+  <li>InitPad zobrazí příkaz <span class="ui">Instalace a registrace na Docker serveru</span>. Zkopírujte ho a spusťte na serveru. Instalátor se zeptá na registrační token, který vidíte ve stejném okně.</li>
+  <li>Po chvíli se server v seznamu ukáže jako připojený.</li>
+</ol>
+<div class="scroll"><table>
+  <tr><th>Zpřístupnění</th><th>Kdy ho zvolit</th><th>Adresa aplikace</th></tr>
+  <tr><td>Přímé porty</td><td>Zkoušení, laboratoř, server ve vnitřní síti</td><td>Adresa serveru a port. Port se při novém nasazení může změnit.</td></tr>
+  <tr><td>Spravovaná brána</td><td>Produkce</td><td>Stálá adresa pro každý projekt a prostředí. Vyžaduje vlastní doménu směrovanou na server.</td></tr>
+</table></div>
+<div class="box tip"><div class="t">Server za VPN nebo doma</div>
+Funguje to. Agent navazuje jen odchozí spojení a po nasazení si sám ověří, že aplikace odpovídá. Aplikaci pak otevře jen ten, kdo se na server dostane, tedy typicky kdo je ve stejné síti nebo na stejné VPN.</div>
+
+<h2 id="novy-projekt">5. Nový projekt</h2>
+<ol class="steps">
+  <li>Zvolte <span class="ui">Nový projekt</span> a zadejte název: malá písmena, číslice a pomlčky.</li>
+  <li>V poli <span class="ui">Vlastník repozitáře na GitHubu</span> vyberte účet nebo organizaci, kde má repozitář vzniknout.</li>
+  <li>Vyberte <span class="ui">Šablonu</span> a <span class="ui">Pipeline</span>, tedy která prostředí projekt bude mít: dev, test a prod, jen dev a prod, nebo jen prod.</li>
+  <li>V části <span class="ui">Cíle nasazení</span> přiřaďte každému prostředí server. Jeden server může hostit více prostředí.</li>
+  <li>Zvolte <span class="ui">Vytvořit projekt</span>.</li>
+</ol>
+<p>InitPad založí soukromý repozitář s kostrou aplikace, souborem Dockerfile a workflow pro GitHub Actions a nastaví mu potřebné secrety. První běh pipeline začne hned a po jeho dokončení se aplikace nasadí do prostředí dev.</p>
+
+<h2 id="import">6. Import existujícího repozitáře</h2>
+<p>Na stránce <span class="ui">Nový projekt</span> zvolte <span class="ui">Import existujícího repozitáře</span>. InitPad při importu váš kód nemění. Repozitář ale musí splnit tři podmínky a InitPad je před importem sám zkontroluje:</p>
+<div class="scroll"><table>
+  <tr><th>Podmínka</th><th>Podrobnosti</th></tr>
+  <tr><td>Dockerfile</td><td>V kořeni výchozí větve. Čistě statické šablony ho nevyžadují.</td></tr>
+  <tr><td>Workflow InitPadu</td><td>Přesně v souboru <code>.github/workflows/ci.yml</code>. Startovní verzi si stáhnete na obrazovce importu a commitnete ji sami.</td></tr>
+  <tr><td>Název repozitáře</td><td>Malá písmena, číslice a pomlčky, nejvýše 41 znaků. Stane se názvem projektu.</td></tr>
+</table></div>
+<h3>Projekt, který už má vlastní pipeline</h3>
+<ul>
+  <li>Vaše workflow v jiných souborech běží dál beze změny.</li>
+  <li>InitPad čte stav jen z <code>ci.yml</code>. Pokud se tak jmenuje vaše pipeline, přejmenujte ji, nebo kroky InitPadu přidejte do ní.</li>
+  <li>Nasazení spouští jen workflow InitPadu. Když vaše testy v jiném souboru selžou, InitPad to nevidí a nasadí i tak. Testy, které mají nasazení zastavit, patří do <code>ci.yml</code>.</li>
+  <li>Aplikace musí poslouchat na portu zvolené šablony a odpovídat na její kontrolní adrese, jinak nasazení skončí neúspěšnou kontrolou zdraví.</li>
+</ul>
+
+<h2 id="nasazeni">7. Nasazení a prostředí</h2>
+<p>Push do výchozí větve spustí pipeline. Ta aplikaci otestuje, sestaví image a předá ho InitPadu, který ho nasadí do prostředí dev. Do dalších prostředí se povyšuje přesně tentýž image, nic se nesestavuje znovu.</p>
+<div class="scroll"><table>
+  <tr><th>Co chcete</th><th>Jak na to</th></tr>
+  <tr><td>Povýšit dev do testu</td><td>Tlačítko se šipkou mezi kartami prostředí.</td></tr>
+  <tr><td>Nasadit do produkce</td><td><span class="ui">Žádost o prod</span>. Nasazení musí schválit vlastník, administrátor nebo správce workspace.</td></tr>
+  <tr><td>Vrátit starší verzi</td><td>Nabídka prostředí, <span class="ui">Vrátit na předchozí verzi…</span></td></tr>
+  <tr><td>Nasadit stejnou verzi znovu</td><td>Nabídka prostředí, <span class="ui">Znovu nasadit ověřený build</span>.</td></tr>
+  <tr><td>Dočasně vypnout aplikaci</td><td><span class="ui">Zastavit</span> a později <span class="ui">Spustit</span>.</td></tr>
+  <tr><td>Odstranit aplikaci ze serveru</td><td><span class="ui">Odstranit nasazení</span>.</td></tr>
+  <tr><td>Přesunout prostředí na jiný server</td><td><span class="ui">Změnit cíl</span>. Aplikaci nasazenou přes Agenta nejdřív odstraňte.</td></tr>
+  <tr><td>Zjistit, proč aplikace neběží</td><td><span class="ui">Diagnostika workloadu…</span> a část <span class="ui">Aktivita nasazení</span>.</td></tr>
+  <tr><td>Zopakovat neúspěšnou pipeline</td><td><span class="ui">Znovu spustit neúspěšné úlohy na GitHubu</span>.</td></tr>
+</table></div>
+<p>Kroky pipeline u commitu vedou přímo na logy běhu na GitHubu.</p>
+
+<h2 id="promenne">8. Proměnné a secrety</h2>
+<p>V detailu projektu je část <span class="ui">Konfigurace</span> s proměnnými pro každé prostředí zvlášť. InitPad je aplikaci předá při nasazení. Změna se projeví až po opětovném nasazení prostředí.</p>
+
+<h2 id="tym">9. Tým a role</h2>
+<p>Projekty, servery i instalace GitHub App patří do workspace. Člen workspace má jednu z pěti rolí:</p>
+<div class="scroll"><table>
+  <tr><th>Role</th><th>Co smí navíc oproti předchozí</th></tr>
+  <tr><td>Čtenář</td><td>Prohlížet projekty a jejich stav.</td></tr>
+  <tr><td>Člen</td><td>Zakládat a importovat projekty a nasazovat.</td></tr>
+  <tr><td>Správce</td><td>Přidávat servery a schvalovat nasazení do produkce.</td></tr>
+  <tr><td>Administrátor</td><td>Instalovat GitHub App pro workspace.</td></tr>
+  <tr><td>Vlastník</td><td>Měnit pravidlo pro schvalování produkce.</td></tr>
+</table></div>
+<p>Workspace může vyžadovat, aby produkci schválil někdo jiný než žadatel. Kdo co udělal, najdete v části <span class="ui">Auditní log</span>.</p>
+
+<h2 id="prejmenovani">10. Přejmenování a smazání</h2>
+<h3>Přejmenování repozitáře nebo organizace</h3>
+<p>Od verze 0.2.18 InitPad přejmenování na GitHubu sleduje sám. Projekt si do chvíle převezme nový název a další push se nasadí jako dřív. Kontejner na serveru si ponechá původní jméno, aby se běžící aplikace nepřesouvala.</p>
+<div class="box warn"><div class="t">Verze 0.2.17 a starší</div>
+Repozitář s projektem nepřejmenovávejte. Projekt by dál ukazoval starý název a nový push by se nenasadil.</div>
+<div class="box warn"><div class="t">Převod repozitáře</div>
+Převod na jiného vlastníka přejmenování není. Když repozitář přestane být pro instalaci GitHub App dostupný, InitPad ho považuje za smazaný a projekt uklidí.</div>
+<h3>Smazání projektu</h3>
+<ol class="steps">
+  <li>U každého prostředí nasazeného přes Agenta nejdřív zvolte <span class="ui">Odstranit nasazení</span> a počkejte, až úklid doběhne.</li>
+  <li>Zvolte <span class="ui">Smazat projekt</span>.</li>
+  <li>Volbu <span class="ui">Smazat také zdrojový repozitář a uvolnit jeho název</span> zaškrtněte jen tehdy, když chcete smazat i repozitář na GitHubu. Bez ní repozitář zůstane a půjde později znovu importovat.</li>
+</ol>
+
+<h2 id="potize">11. Řešení potíží</h2>
+<p>Chybové hlášky ze serveru jsou zatím anglicky.</p>
+<div class="scroll"><table>
+  <tr><th>Co vidíte</th><th>Proč a co s tím</th></tr>
+  <tr><td>Žádný připojený a ověřený cíl neumí spustit daný runtime</td><td>Workspace nemá připojený server, který šablonu zvládne. Připojte server, nebo mu v jeho nastavení doplňte runtime.</td></tr>
+  <tr><td><code>Too many attempts. Try again later.</code></td><td>Ochranný limit proti opakovaným pokusům. Chvíli počkejte a zkuste to znovu, obvykle stačí několik minut.</td></tr>
+  <tr><td><code>Remove Agent-managed deployments first</code></td><td>Projekt má aplikaci nasazenou přes Agenta. Nejdřív zvolte Odstranit nasazení.</td></tr>
+  <tr><td>Repozitář je v importu označený jako prázdný</td><td>Nemá žádný commit. Ve verzi 0.2.17 se tak může až hodinu jevit i čerstvě vytvořený repozitář s kódem; od 0.2.18 už ne.</td></tr>
+  <tr><td><code>No Dockerfile on 'main'</code></td><td>Šablona sestavuje image ze souboru Dockerfile ve výchozí větvi. Přidejte ho.</td></tr>
+  <tr><td><code>No InitPad-compatible workflow at '.github/workflows/ci.yml'</code></td><td>Stáhněte startovní workflow na obrazovce importu a commitněte ho pod tímto názvem.</td></tr>
+  <tr><td>Organizace chybí v nabídce vlastníků</td><td>Není v ní nainstalovaná GitHub App, nebo instalace čeká na schválení vlastníkem organizace.</td></tr>
+  <tr><td>Pipeline je zelená, ale prostředí dev selhalo</td><td>Sestavení prošlo, nasazení ne. Důvod je na kartě prostředí a v části Aktivita nasazení. Po odstranění příčiny zvolte ikonu opakování.</td></tr>
+  <tr><td>Server je v seznamu odpojený</td><td>Agent se neozývá. Ověřte, že server běží, Docker je spuštěný a server se dostane na adresu InitPadu.</td></tr>
+</table></div>
+
+<h2 id="omezeni">12. Omezení veřejné edice</h2>
+<ul>
+  <li>Aplikace se nasazují jen na servery s Agentem. Sdílený webhosting přes SFTP veřejná edice zatím nenasadí.</li>
+  <li>Zdrojem kódu je GitHub. Jiné Git servery veřejná edice nepodporuje.</li>
+  <li>Aplikace na serveru za VPN je dostupná jen z té sítě. InitPad ji ven nezveřejní.</li>
+  <li>Workflow InitPadu musí být v souboru <code>ci.yml</code>.</li>
+</ul>
+
+<footer>InitPad, nápověda veřejné edice. Stav k verzi 0.2.17, říjen 2026.</footer>
+</main>
+</div>
+</body>
+</html>
