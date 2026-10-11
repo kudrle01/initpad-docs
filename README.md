@@ -10,6 +10,7 @@ je ve složce `public/`.
 | `/en/`       | anglická nápověda (`public/en/index.html`)                |
 | `/`          | přesměruje podle jazyka prohlížeče, výchozí je angličtina |
 | `/guide.css` | společné styly obou jazyků                                |
+| `/brand/`    | symbol InitPadu a ikony stránky                           |
 
 ## Odkazy z aplikace
 
@@ -65,3 +66,7 @@ upravit i `Content-Security-Policy`.
   tedy anglickým textům ve zdrojovém kódu.
 - Po každém vydání platformy, které mění uživatelské rozhraní nebo chování, se
   nápověda projde a podtitul i patička se v obou jazycích aktualizují.
+- Symbol a favicon jsou kopie exportů z `docs/brand` v repozitáři platformy a
+  barvy (`--green`, krémová, espresso, akcent) odpovídají tamním barvám značky.
+  Symbol se nepřekresluje ani nevektorizuje; při změně značky se soubory v
+  `public/brand/` a `public/favicon.ico` znovu zkopírují.

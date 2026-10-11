@@ -1,6 +1,6 @@
 :root{
   --bg:#fbf8f0; --ink:#4e220f; --ink2:#7a5a44; --card:#fff;
-  --green:#3a6b40; --greenbg:#e7efe8; --sec:#f1ede1; --border:#e9e3d5;
+  --green:#075e54; --greenbg:#e2eeec; --sec:#f1ede1; --border:#e9e3d5;
   --terra:#b4472e; --terrabg:#f7e8e3; --amber:#9d6638; --amberbg:#f5ecdd;
   --mono:ui-monospace,'JetBrains Mono',Menlo,Consolas,monospace;
 }
@@ -8,12 +8,16 @@
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif}
 .wrap{display:flex;max-width:1180px;margin:0 auto}
 nav.toc{position:sticky;top:0;align-self:flex-start;height:100vh;overflow-y:auto;width:260px;flex:none;padding:28px 18px;border-right:1px solid var(--border);font-size:13.5px}
-nav.toc .logo{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-weight:700;font-size:15px}
-nav.toc .logo .chip{background:var(--green);color:#fff;border-radius:8px;padding:3px 8px;font-size:13px}
 nav.toc a{display:block;color:var(--ink2);text-decoration:none;padding:4px 8px;border-radius:6px}
 nav.toc a:hover,nav.toc a:focus-visible{background:var(--sec);color:var(--ink)}
+.logo{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-size:17px;font-weight:700;letter-spacing:-.2px}
+.logo img{display:block;width:32px;height:32px}
+.logo .sub{color:var(--ink2);font-weight:500}
+nav.toc a.logo{display:flex;margin-bottom:16px;padding:4px 8px;color:var(--ink)}
 main{flex:1;min-width:0;padding:36px 44px 90px}
-.lang{display:flex;justify-content:flex-end;gap:4px;margin:-12px 0 12px;font-size:13.5px}
+.topbar{display:flex;align-items:center;gap:12px;margin:-12px 0 12px}
+.topbar .logo{display:none}
+.lang{display:flex;gap:4px;margin-left:auto;font-size:13.5px}
 .lang a,.lang span{padding:3px 10px;border-radius:999px;text-decoration:none}
 .lang a{color:var(--ink2)}
 .lang a:hover,.lang a:focus-visible{background:var(--sec);color:var(--ink)}
@@ -44,5 +48,5 @@ th{background:var(--sec);font-size:12.5px;text-transform:uppercase;letter-spacin
 .steps>li{counter-increment:s;position:relative;padding:10px 0 10px 46px;border-bottom:1px dashed var(--border)}
 .steps>li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
 footer{margin-top:70px;padding-top:16px;border-top:2px solid var(--border);color:var(--ink2);font-size:13px}
-@media(max-width:900px){nav.toc{display:none}main{padding:24px 16px 70px}}
-@media print{nav.toc,.lang{display:none}body{background:#fff}}
+@media(max-width:900px){nav.toc{display:none}main{padding:24px 16px 70px}.topbar{margin:0 0 20px}.topbar .logo{display:flex}}
+@media print{nav.toc,.lang{display:none}.topbar .logo{display:flex}body{background:#fff}}
