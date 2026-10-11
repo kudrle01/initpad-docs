@@ -1,0 +1,9 @@
+// Cloudflare deploys this repository as a Worker that only serves the static
+// files in public/. The name must match the project name in Cloudflare.
+{
+  "name": "initpad-docs",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./public"
+  }
+}

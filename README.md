@@ -13,13 +13,19 @@ Stránka je pak na `http://localhost:4178`.
 
 ## Nasazení
 
-Cloudflare Pages nasazuje větev `main` po každém pushi. Nastavení projektu:
+Cloudflare nasazuje větev `main` po každém pushi jako Worker, který jen
+servíruje statické soubory. Co a odkud se nasazuje, určuje `wrangler.jsonc`.
+Nastavení projektu v Cloudflare:
 
-| Položka                | Hodnota  |
-| ---------------------- | -------- |
-| Framework preset       | None     |
-| Build command          | prázdné  |
-| Build output directory | `public` |
+| Položka        | Hodnota                |
+| -------------- | ---------------------- |
+| Project name   | `initpad-docs`         |
+| Build command  | prázdné                |
+| Deploy command | `npx wrangler deploy`  |
+| Root directory | `/`                    |
+
+Název projektu se musí shodovat s `name` ve `wrangler.jsonc`, jinak nasazení
+selže.
 
 Soubor `public/_headers` nastavuje bezpečnostní hlavičky. Stránka nenačítá
 žádné skripty ani zdroje z jiných adres; kdo je přidá, musí upravit i
