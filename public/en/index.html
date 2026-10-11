@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InitPad Help</title>
+<meta name="description" content="How to connect GitHub, attach your own server, create or import a project and deploy it in the public edition of InitPad.">
+<link rel="alternate" hreflang="cs" href="/cs/">
+<link rel="alternate" hreflang="en" href="/en/">
+<link rel="alternate" hreflang="x-default" href="/en/">
+<link rel="stylesheet" href="/guide.css">
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="logo"><span class="chip">InitPad</span> Help</div>
+  <a href="#getting-started">1. Getting started</a>
+  <a href="#sign-in">2. Signing in</a>
+  <a href="#github">3. Connecting GitHub</a>
+  <a href="#servers">4. Connecting a server</a>
+  <a href="#new-project">5. New project</a>
+  <a href="#import">6. Importing a repository</a>
+  <a href="#deployments">7. Deployments and environments</a>
+  <a href="#variables">8. Variables and secrets</a>
+  <a href="#team">9. Team and roles</a>
+  <a href="#rename-delete">10. Renaming and deleting</a>
+  <a href="#troubleshooting">11. Troubleshooting</a>
+  <a href="#limitations">12. Public edition limits</a>
+</nav>
+<main>
+
+<nav class="lang" aria-label="Language">
+  <a href="/cs/" hreflang="cs" lang="cs">Čeština</a>
+  <span aria-current="page">English</span>
+</nav>
+
+<h1>InitPad Help</h1>
+<p class="subtitle">The public edition connected to GitHub. Describes version 0.2.17; anything that applies only from a later version says so.</p>
+
+<h2 id="getting-started">1. Getting started</h2>
+<p>InitPad creates a repository with an application skeleton and a ready-made pipeline for you, and after every push it builds, tests and deploys the application to your server. You write the code; you do not have to set up Docker or CI.</p>
+<p>You will need:</p>
+<ul>
+  <li>a GitHub account,</li>
+  <li>a Linux server with Docker for the application to run on. It only needs outbound internet access, so it can sit behind a router or a VPN.</li>
+</ul>
+<p>The whole path has five steps:</p>
+<ol class="steps">
+  <li><a href="#sign-in">Sign in</a> with your GitHub account.</li>
+  <li><a href="#github">Install the GitHub App</a> so InitPad may work with your repositories.</li>
+  <li><a href="#servers">Connect a server</a> with a single command.</li>
+  <li><a href="#new-project">Create a project</a> from a template, or <a href="#import">import</a> an existing repository.</li>
+  <li>Push a change. InitPad deploys it to the dev environment and you then <a href="#deployments">promote</a> it further.</li>
+</ol>
+<div class="box tip"><div class="t">Help inside the app</div>
+The <span class="ui">Help</span> link in the left menu opens this page in the language you use in InitPad. The <span class="ui">Learn more</span> links on individual screens go straight to the matching chapter.</div>
+
+<h2 id="sign-in">2. Signing in</h2>
+<p>On the start page choose <span class="ui">Continue with GitHub</span>. Your InitPad account is created on the first sign-in; there is no password to set.</p>
+<p>A sign-in lasts seven days. After a platform update you may have to sign in again.</p>
+<p>Under <span class="ui">Account settings</span>, the <span class="ui">Signed-in browsers</span> section lists every device where you are signed in. Sign out any browser you do not recognise, or choose <span class="ui">Sign out all others</span>.</p>
+
+<h2 id="github">3. Connecting GitHub</h2>
+<p>InitPad does not work with repositories in your name but through a GitHub App. It sees only the accounts and organizations you install it into, and only the repositories you allow.</p>
+<ol class="steps">
+  <li>Open <span class="ui">Account settings</span> and in the <span class="ui">GitHub account</span> section choose <span class="ui">Install GitHub App</span>. A GitHub window opens, so allow pop-ups.</li>
+  <li>Pick your account or organization and decide whether the App sees all repositories or only selected ones.</li>
+  <li>When you come back, the installation appears in the list under your account. Add another account or organization with <span class="ui">Add installation</span>.</li>
+</ol>
+<div class="box why"><div class="t">Organizations</div>
+An installation into an organization must be approved by its owner. If that is not you, GitHub sends the owner a request and InitPad shows that it is waiting for approval.</div>
+<p>Membership in an organization is not enough. You will see the organization's repositories in InitPad only after the App is installed into it.</p>
+
+<h2 id="servers">4. Connecting a server</h2>
+<p>Applications do not run at InitPad but on your server. A small program, InitPad Agent, runs there and fetches its work on its own. InitPad never connects to your server, so you do not have to open any management port or hand over an SSH key.</p>
+<h3>What the server needs</h3>
+<ul>
+  <li>Linux and a running Docker,</li>
+  <li>outbound HTTPS to the InitPad address,</li>
+  <li>administrator rights to run the installer once.</li>
+</ul>
+<h3>Steps</h3>
+<ol class="steps">
+  <li>Open <span class="ui">Servers</span> and choose <span class="ui">Add server</span>.</li>
+  <li>Keep <span class="ui">InitPad Agent for Docker (recommended)</span> as the connection method and fill in a name.</li>
+  <li>In <span class="ui">Can run</span>, tick the runtimes the server can handle. A template can be deployed only to a server that supports its runtime.</li>
+  <li>Choose the <span class="ui">Application exposure</span> (see the table below) and fill in the server's public URL.</li>
+  <li>InitPad shows the <span class="ui">Install and enroll on the Docker server</span> command. Copy it and run it on the server. The installer asks for the enrollment token shown in the same window.</li>
+  <li>After a moment the server appears as connected in the list.</li>
+</ol>
+<div class="scroll"><table>
+  <tr><th>Exposure</th><th>When to choose it</th><th>Application address</th></tr>
+  <tr><td>Direct ports</td><td>Trying things out, a lab, a server on an internal network</td><td>The server address and a port. The port may change on a new deployment.</td></tr>
+  <tr><td>Managed gateway</td><td>Production</td><td>A stable address for each project and environment. Requires your own domain pointed at the server.</td></tr>
+</table></div>
+<div class="box tip"><div class="t">A server behind a VPN or at home</div>
+That works. The Agent only makes outbound connections and checks by itself that the application responds after a deployment. The application can then be opened only by someone who can reach the server, typically someone on the same network or VPN.</div>
+
+<h2 id="new-project">5. New project</h2>
+<ol class="steps">
+  <li>Choose <span class="ui">New project</span> and enter a name: lowercase letters, digits and hyphens.</li>
+  <li>In <span class="ui">GitHub repository owner</span>, pick the account or organization where the repository should be created.</li>
+  <li>Pick a <span class="ui">Template</span> and a <span class="ui">Pipeline</span>, i.e. which environments the project has: dev, test and prod; dev and prod only; or prod only.</li>
+  <li>Under <span class="ui">Deployment targets</span>, assign a server to each environment. One server can host several environments.</li>
+  <li>Choose <span class="ui">Create project</span>.</li>
+</ol>
+<p>InitPad creates a private repository with the application skeleton, a Dockerfile and a GitHub Actions workflow, and sets the secrets it needs. The first pipeline run starts right away; when it finishes, the application is deployed to the dev environment.</p>
+
+<h2 id="import">6. Importing an existing repository</h2>
+<p>On the <span class="ui">New project</span> page choose <span class="ui">Import existing repository</span>. InitPad does not change your code during the import. The repository must however meet three conditions, which InitPad checks before importing:</p>
+<div class="scroll"><table>
+  <tr><th>Condition</th><th>Details</th></tr>
+  <tr><td>Dockerfile</td><td>In the root of the default branch. Purely static templates do not need one.</td></tr>
+  <tr><td>InitPad workflow</td><td>Exactly in the file <code>.github/workflows/ci.yml</code>. Download the starter version on the import screen and commit it yourself.</td></tr>
+  <tr><td>Repository name</td><td>Lowercase letters, digits and hyphens, at most 41 characters. It becomes the project name.</td></tr>
+</table></div>
+<h3>A project that already has its own pipeline</h3>
+<ul>
+  <li>Your workflows in other files keep running unchanged.</li>
+  <li>InitPad reads the status only from <code>ci.yml</code>. If your pipeline already has that name, rename it or add the InitPad steps to it.</li>
+  <li>Only the InitPad workflow triggers a deployment. If your tests in another file fail, InitPad does not see it and deploys anyway. Tests that should stop a deployment belong in <code>ci.yml</code>.</li>
+  <li>The application must listen on the port of the chosen template and answer on its health-check path, otherwise the deployment ends with a failed health check.</li>
+</ul>
+
+<h2 id="deployments">7. Deployments and environments</h2>
+<p>A push to the default branch starts the pipeline. It tests the application, builds an image and hands it to InitPad, which deploys it to the dev environment. The very same image is promoted to the next environments; nothing is rebuilt.</p>
+<div class="scroll"><table>
+  <tr><th>What you want</th><th>How</th></tr>
+  <tr><td>Promote dev to test</td><td>The arrow button between the environment cards.</td></tr>
+  <tr><td>Deploy to production</td><td><span class="ui">Request prod</span>. The deployment must be approved by a workspace owner, admin or maintainer.</td></tr>
+  <tr><td>Go back to an older version</td><td>Environment menu, <span class="ui">Roll back to previous version…</span></td></tr>
+  <tr><td>Deploy the same version again</td><td>Environment menu, <span class="ui">Redeploy verified build</span>.</td></tr>
+  <tr><td>Turn the application off for a while</td><td><span class="ui">Stop</span> and later <span class="ui">Start</span>.</td></tr>
+  <tr><td>Remove the application from the server</td><td><span class="ui">Remove deployment</span>.</td></tr>
+  <tr><td>Move an environment to another server</td><td><span class="ui">Change target</span>. Remove an Agent-managed deployment first.</td></tr>
+  <tr><td>Find out why the application is not running</td><td><span class="ui">Workload diagnostics…</span> and the <span class="ui">Deployment activity</span> section.</td></tr>
+  <tr><td>Retry a failed pipeline</td><td><span class="ui">Re-run failed GitHub jobs</span>.</td></tr>
+</table></div>
+<p>The pipeline steps of a commit link straight to the run logs on GitHub.</p>
+
+<h2 id="variables">8. Variables and secrets</h2>
+<p>The project detail has a <span class="ui">Configuration</span> section with variables for each environment separately. InitPad passes them to the application on deployment. A change takes effect only after the environment is redeployed.</p>
+<p>Secret values are stored encrypted and nobody can see them after saving, not even you. You can only replace a secret with a new value or delete it. Rolling back changes the application code; the variables stay as they are.</p>
+
+<h2 id="team">9. Team and roles</h2>
+<p>Projects, servers and GitHub App installations belong to a workspace. Besides your personal workspace you can create a team one from the workspace menu in the left sidebar with <span class="ui">Add new workspace</span>. In the public edition one account can own at most five team workspaces.</p>
+<p>A personal workspace is yours alone. Add members to a team workspace in <span class="ui">Workspace settings</span> (the <span class="ui">Workspace</span> menu item), in the <span class="ui">Workspace members</span> section, with <span class="ui">Add member</span>. Enter a username or e-mail. The person must have signed in to InitPad at least once, otherwise their account does not exist.</p>
+<p>A workspace member has one of five roles:</p>
+<div class="scroll"><table>
+  <tr><th>Role</th><th>What it adds to the previous one</th></tr>
+  <tr><td>viewer</td><td>View projects and their status.</td></tr>
+  <tr><td>member</td><td>Create and import projects, and deploy.</td></tr>
+  <tr><td>maintainer</td><td>Add servers and approve production deployments.</td></tr>
+  <tr><td>admin</td><td>Install the GitHub App for the workspace and manage members.</td></tr>
+  <tr><td>owner</td><td>Change the production approval rule.</td></tr>
+</table></div>
+<p>A workspace can require production to be approved by someone other than the requester. The <span class="ui">Audit log</span> shows who did what.</p>
+
+<h2 id="rename-delete">10. Renaming and deleting</h2>
+<h3>Renaming a repository or organization</h3>
+<p>From version 0.2.18 InitPad follows renames on GitHub by itself. The project picks up the new name shortly and the next push deploys as before. The container on the server keeps its original name so the running application does not move.</p>
+<div class="box warn"><div class="t">Version 0.2.17 and older</div>
+Do not rename a repository that has a project. The project would keep showing the old name and a new push would not deploy.</div>
+<div class="box warn"><div class="t">Transferring a repository</div>
+A transfer to another owner is not a rename. When the repository is no longer available to the GitHub App installation, InitPad treats it as deleted and cleans the project up.</div>
+<h3>Deleting a project</h3>
+<ol class="steps">
+  <li>For every environment deployed through the Agent, first choose <span class="ui">Remove deployment</span> and wait for the cleanup to finish.</li>
+  <li>Choose <span class="ui">Delete project</span>.</li>
+  <li>Tick <span class="ui">Also delete the source repository and release its name</span> only if you also want to delete the repository on GitHub. Without it, the repository stays and can be imported again later.</li>
+</ol>
+
+<h2 id="troubleshooting">11. Troubleshooting</h2>
+<div class="scroll"><table>
+  <tr><th>What you see</th><th>Why, and what to do</th></tr>
+  <tr><td>No connected and verified target can run the template</td><td>The workspace has no connected server that can run the template. Connect a server, or add the runtime in its settings.</td></tr>
+  <tr><td><code>Too many attempts. Try again later.</code></td><td>A protective limit against repeated attempts. Wait a while and try again; a few minutes is usually enough.</td></tr>
+  <tr><td><code>Remove Agent-managed deployments first</code></td><td>The project has an application deployed through the Agent. Choose Remove deployment first.</td></tr>
+  <tr><td>The import marks the repository as empty</td><td>It has no commit. In version 0.2.17 even a freshly created repository with code can look empty for up to an hour; from 0.2.18 it no longer does.</td></tr>
+  <tr><td><code>No Dockerfile on 'main'</code></td><td>The template builds the image from a Dockerfile on the default branch. Add one.</td></tr>
+  <tr><td><code>No InitPad-compatible workflow at '.github/workflows/ci.yml'</code></td><td>Download the starter workflow on the import screen and commit it under this name.</td></tr>
+  <tr><td><code>You can own at most 5 team workspaces.</code></td><td>You have reached the team workspace limit. Delete a workspace you no longer need, or ask the platform administrator to raise the limit.</td></tr>
+  <tr><td><code>User '…' not found</code> when adding a member</td><td>InitPad has no account with that username or e-mail. The person must sign in with GitHub once first.</td></tr>
+  <tr><td>An organization is missing from the owner list</td><td>The GitHub App is not installed in it, or the installation is waiting for the organization owner's approval.</td></tr>
+  <tr><td>The pipeline is green but the dev environment failed</td><td>The build passed, the deployment did not. The reason is on the environment card and in the Deployment activity section. Once you fix the cause, choose the retry icon.</td></tr>
+  <tr><td>A server shows as disconnected</td><td>The Agent is not reporting in. Check that the server is running, Docker is started and the server can reach the InitPad address.</td></tr>
+</table></div>
+
+<h2 id="limitations">12. Public edition limits</h2>
+<ul>
+  <li>Applications are deployed only to servers with the Agent. The public edition cannot deploy to shared web hosting over SFTP yet.</li>
+  <li>GitHub is the source of code. The public edition does not support other Git servers.</li>
+  <li>An application on a server behind a VPN is reachable only from that network. InitPad does not publish it to the outside.</li>
+  <li>The InitPad workflow must be in the file <code>ci.yml</code>.</li>
+  <li>One account can own at most five team workspaces.</li>
+</ul>
+
+<footer>InitPad, public edition help. Current as of version 0.2.17, October 2026.</footer>
+</main>
+</div>
+</body>
+</html>
