@@ -15,7 +15,7 @@ nav.toc a:hover,nav.toc a:focus-visible{background:var(--sec);color:var(--ink)}
 .logo .sub{color:var(--ink2);font-weight:500}
 nav.toc a.logo{display:flex;margin-bottom:16px;padding:4px 8px;color:var(--ink)}
 main{flex:1;min-width:0;padding:36px 44px 90px}
-.topbar{display:flex;align-items:center;gap:12px;margin:-12px 0 12px}
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;margin:-36px -44px 24px;padding:12px 44px;background:var(--bg);border-bottom:1px solid var(--border)}
 .topbar .logo{display:none}
 .lang{display:flex;gap:4px;margin-left:auto;font-size:13.5px}
 .lang a,.lang span{padding:3px 10px;border-radius:999px;text-decoration:none}
@@ -24,7 +24,7 @@ main{flex:1;min-width:0;padding:36px 44px 90px}
 .lang span{background:var(--sec);font-weight:600}
 h1{font-size:30px;line-height:1.25;margin:0 0 6px}
 .subtitle{color:var(--ink2);margin:0 0 28px}
-h2{font-size:22px;margin:52px 0 8px;padding-top:14px;border-top:2px solid var(--border);scroll-margin-top:12px}
+h2{font-size:22px;margin:52px 0 8px;padding-top:14px;border-top:2px solid var(--border);scroll-margin-top:72px}
 h3{font-size:17px;margin:26px 0 6px}
 p{margin:10px 0}
 a{color:var(--green)}
@@ -48,5 +48,5 @@ th{background:var(--sec);font-size:12.5px;text-transform:uppercase;letter-spacin
 .steps>li{counter-increment:s;position:relative;padding:10px 0 10px 46px;border-bottom:1px dashed var(--border)}
 .steps>li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
 footer{margin-top:70px;padding-top:16px;border-top:2px solid var(--border);color:var(--ink2);font-size:13px}
-@media(max-width:900px){nav.toc{display:none}main{padding:24px 16px 70px}.topbar{margin:0 0 20px}.topbar .logo{display:flex}}
-@media print{nav.toc,.lang{display:none}.topbar .logo{display:flex}body{background:#fff}}
+@media(max-width:900px){nav.toc{display:none}main{padding:24px 16px 70px}.topbar{margin:-24px -16px 20px;padding:10px 16px}.topbar .logo{display:flex}}
+@media print{nav.toc,.lang{display:none}.topbar{position:static;margin:0 0 12px;padding:0;border:none}.topbar .logo{display:flex}body{background:#fff}}
