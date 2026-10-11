@@ -9,5 +9,8 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS"
-  }
+  },
+  // Cloudflare builds pull requests with `npx wrangler preview`, which needs
+  // this block even when empty. Everything else is shared with production.
+  "previews": {}
 }
