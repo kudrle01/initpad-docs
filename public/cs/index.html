@@ -41,7 +41,7 @@
 </div>
 
 <h1>Nápověda InitPad</h1>
-<p class="subtitle">Veřejná edice propojená s GitHubem. Popisuje verzi 0.2.17; co platí až od novější verze, je u toho uvedeno.</p>
+<p class="subtitle">Veřejná edice propojená s GitHubem. Popisuje verzi 0.2.24.</p>
 
 <h2 id="getting-started">1. Začínáme</h2>
 <p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
@@ -74,7 +74,7 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
   <li>Po návratu se instalace objeví v seznamu pod vaším účtem. Další účet nebo organizaci přidáte tlačítkem <span class="ui">Přidat instalaci</span>.</li>
 </ol>
 <div class="box why"><div class="t">Organizace</div>
-Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHub mu pošle žádost a InitPad ukáže, že čeká na schválení.</div>
+Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHub mu pošle žádost a Nastavení ukážou <q>Čeká se, až vlastník organizace na GitHubu schválí aplikaci. Po schválení se organizace propojí sem.</q> Jakmile vlastník App schválí a vy se vrátíte do okna InitPadu, organizace se připojí sama.</div>
 <p>Samotné členství v organizaci nestačí. Repozitáře organizace uvidíte v InitPadu až po instalaci App do ní.</p>
 
 <h2 id="servers">4. Připojení serveru</h2>
@@ -101,6 +101,19 @@ Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHu
 </table></div>
 <div class="box tip"><div class="t">Server za VPN nebo doma</div>
 Funguje to. Agent navazuje jen odchozí spojení a po nasazení si sám ověří, že aplikace odpovídá. Aplikaci pak otevře jen ten, kdo se na server dostane, tedy typicky kdo je ve stejné síti nebo na stejné VPN.</div>
+
+<h3>Odpojení, vyřazení a smazání serveru</h3>
+<p>U serveru je viditelná sekce <span class="ui">Odpojení a smazání</span> se třemi tlačítky:</p>
+<div class="scroll"><table>
+  <tr><th>Tlačítko</th><th>Co udělá</th></tr>
+  <tr><td><span class="ui">Odpojit server</span></td><td>InitPad přestane server spravovat a zneplatní jeho přístup. Běžící aplikace zůstanou online.</td></tr>
+  <tr><td><span class="ui">Vyřadit server</span></td><td>Pro server, který rušíte. Historie a adresy zůstanou viditelné a nasazení na něm pak půjde uvolnit.</td></tr>
+  <tr><td><span class="ui">Smazat server</span></td><td>Odebere server z InitPadu. Na samotném serveru se nic nesmaže.</td></tr>
+</table></div>
+<p>Odpojený server jde smazat, jen když žádné jeho prostředí neeviduje nasazení. Jinak InitPad ukáže <q>Nejdřív uvolněte nasazení na tomto serveru: …</q>; nasazení uvolníte akcí <span class="ui">Uvolnit nasazení</span>, viz <a href="#deployments">Nasazení a prostředí</a>.</p>
+<h3>Odinstalace Agenta ze serveru</h3>
+<p>V <span class="ui">Spravovat Agenta</span> otevřete sbalitelnou sekci <span class="ui">Odinstalovat ze serveru</span> a příkaz spusťte na serveru. Ověří kontrolní součet instalátoru, odmítne server registrovaný pro jiný cíl, vypíše, co odstraní, a vyžádá potvrzení. Odstraní kontejner Agenta a jeho uloženou identitu. Sekce je dostupná i pro odpojeného Agenta.</p>
+<p>Volba <span class="ui">Odstranit i aplikace, které InitPad na tento server nasadil</span> smaže jejich kontejnery a sítě přímo na serveru. InitPad je pak dál zobrazuje jako nasazené, proto je raději odeberte v InitPadu, dokud je Agent připojený. Po odinstalaci Agenta v InitPadu odpojte, nebo server smažte, aby na něj InitPad už nečekal.</p>
 
 <h2 id="new-project">5. Nový projekt</h2>
 <ol class="steps">
@@ -138,7 +151,8 @@ Funguje to. Agent navazuje jen odchozí spojení a po nasazení si sám ověří
   <tr><td>Nasadit stejnou verzi znovu</td><td>Nabídka prostředí, <span class="ui">Znovu nasadit ověřený build</span>.</td></tr>
   <tr><td>Dočasně vypnout aplikaci</td><td><span class="ui">Zastavit</span> a později <span class="ui">Spustit</span>.</td></tr>
   <tr><td>Odstranit aplikaci ze serveru</td><td><span class="ui">Odstranit nasazení</span>.</td></tr>
-  <tr><td>Přesunout prostředí na jiný server</td><td><span class="ui">Změnit cíl</span>. Aplikaci nasazenou přes Agenta nejdřív odstraňte.</td></tr>
+  <tr><td>Přesunout prostředí na jiný server</td><td><span class="ui">Změnit cíl</span>. Aplikaci nasazenou přes připojeného Agenta nejdřív odstraňte.</td></tr>
+  <tr><td>Uvolnit nasazení na odpojeném nebo vyřazeném serveru</td><td>Nabídka prostředí, <span class="ui">Uvolnit nasazení</span>. Uvolní se jen záznam v InitPadu, kontejner může na serveru dál běžet a je potřeba ho tam odstranit ručně.</td></tr>
   <tr><td>Zjistit, proč aplikace neběží</td><td><span class="ui">Diagnostika workloadu…</span> a část <span class="ui">Aktivita nasazení</span>.</td></tr>
   <tr><td>Zopakovat neúspěšnou pipeline</td><td><span class="ui">Znovu spustit neúspěšné úlohy na GitHubu</span>.</td></tr>
 </table></div>
@@ -164,17 +178,16 @@ Funguje to. Agent navazuje jen odchozí spojení a po nasazení si sám ověří
 
 <h2 id="rename-delete">10. Přejmenování a smazání</h2>
 <h3>Přejmenování repozitáře nebo organizace</h3>
-<p>Od verze 0.2.18 InitPad přejmenování na GitHubu sleduje sám. Projekt si do chvíle převezme nový název a další push se nasadí jako dřív. Kontejner na serveru si ponechá původní jméno, aby se běžící aplikace nepřesouvala.</p>
-<div class="box warn"><div class="t">Verze 0.2.17 a starší</div>
-Repozitář s projektem nepřejmenovávejte. Projekt by dál ukazoval starý název a nový push by se nenasadil.</div>
+<p>InitPad přejmenování na GitHubu sleduje sám. Projekt si do chvíle převezme nový název a další push se nasadí jako dřív. Kontejner na serveru si ponechá původní jméno, aby se běžící aplikace nepřesouvala.</p>
 <div class="box warn"><div class="t">Převod repozitáře</div>
 Převod na jiného vlastníka přejmenování není. Když repozitář přestane být pro instalaci GitHub App dostupný, InitPad ho považuje za smazaný a projekt uklidí.</div>
 <h3>Smazání projektu</h3>
 <ol class="steps">
-  <li>U každého prostředí nasazeného přes Agenta nejdřív zvolte <span class="ui">Odstranit nasazení</span> a počkejte, až úklid doběhne.</li>
+  <li>U každého prostředí nasazeného přes připojeného Agenta nejdřív zvolte <span class="ui">Odstranit nasazení</span> a počkejte, až úklid doběhne. Nasazení na odpojeném nebo vyřazeném serveru nejdřív uvolněte akcí <span class="ui">Uvolnit nasazení</span>, nebo je nechte označit v dialogu.</li>
   <li>Zvolte <span class="ui">Smazat projekt</span>.</li>
   <li>Volbu <span class="ui">Smazat také zdrojový repozitář a uvolnit jeho název</span> zaškrtněte jen tehdy, když chcete smazat i repozitář na GitHubu. Bez ní repozitář zůstane a půjde později znovu importovat.</li>
 </ol>
+<p>Projekt s nasazením na odpojeném nebo vyřazeném serveru jde smazat taky. Dialog toto nasazení označí <q>server odpojen · zůstane na serveru</q> a vyžaduje zaškrtnout <span class="ui">Smazat záznam v InitPadu, i když chráněný úklid ještě čeká</span>. Kontejnery tam mohou dál běžet a je potřeba je na serveru odstranit ručně.</p>
 
 <h2 id="troubleshooting">11. Řešení potíží</h2>
 <p>Chybové hlášky ze serveru jsou zatím anglicky.</p>
@@ -182,13 +195,14 @@ Převod na jiného vlastníka přejmenování není. Když repozitář přestane
   <tr><th>Co vidíte</th><th>Proč a co s tím</th></tr>
   <tr><td>Žádný připojený a ověřený cíl neumí spustit daný runtime</td><td>Workspace nemá připojený server, který šablonu zvládne. Připojte server, nebo mu v jeho nastavení doplňte runtime.</td></tr>
   <tr><td><code>Too many attempts. Try again later.</code></td><td>Ochranný limit proti opakovaným pokusům. Chvíli počkejte a zkuste to znovu, obvykle stačí několik minut.</td></tr>
-  <tr><td><code>Remove Agent-managed deployments first</code></td><td>Projekt má aplikaci nasazenou přes Agenta. Nejdřív zvolte Odstranit nasazení.</td></tr>
-  <tr><td>Repozitář je v importu označený jako prázdný</td><td>Nemá žádný commit. Ve verzi 0.2.17 se tak může až hodinu jevit i čerstvě vytvořený repozitář s kódem; od 0.2.18 už ne.</td></tr>
+  <tr><td><code>Remove Agent-managed deployments first</code></td><td>Projekt má aplikaci nasazenou přes připojeného Agenta. Nejdřív zvolte Odstranit nasazení. Nasazení na odpojeném nebo vyřazeném serveru se týká jiná cesta: Uvolnit nasazení.</td></tr>
+  <tr><td><code>Release the deployments on this server first: …</code></td><td>Odpojený server jde smazat, jen když žádné jeho prostředí neeviduje nasazení. Uvolněte je akcí Uvolnit nasazení a server pak smažte.</td></tr>
+  <tr><td>Repozitář je v importu označený jako prázdný</td><td>Nemá žádný commit.</td></tr>
   <tr><td><code>No Dockerfile on 'main'</code></td><td>Šablona sestavuje image ze souboru Dockerfile ve výchozí větvi. Přidejte ho.</td></tr>
   <tr><td><code>No InitPad-compatible workflow at '.github/workflows/ci.yml'</code></td><td>Stáhněte startovní workflow na obrazovce importu a commitněte ho pod tímto názvem.</td></tr>
   <tr><td><code>You can own at most 5 team workspaces.</code></td><td>Dosáhli jste limitu týmových workspace. Smažte workspace, který už nepotřebujete, nebo požádejte o navýšení správce platformy.</td></tr>
   <tr><td><code>User '…' not found</code> při přidávání člena</td><td>Účet s tímto jménem nebo e-mailem v InitPadu není. Dotyčný se musí nejdřív jednou přihlásit přes GitHub.</td></tr>
-  <tr><td>Organizace chybí v nabídce vlastníků</td><td>Není v ní nainstalovaná GitHub App, nebo instalace čeká na schválení vlastníkem organizace.</td></tr>
+  <tr><td>Organizace chybí v nabídce vlastníků</td><td>Není v ní nainstalovaná GitHub App, nebo instalace čeká na schválení vlastníkem organizace („Čeká se, až vlastník organizace na GitHubu schválí aplikaci“). Po schválení se organizace připojí sama, když se vrátíte do okna InitPadu.</td></tr>
   <tr><td>Pipeline je zelená, ale prostředí dev selhalo</td><td>Sestavení prošlo, nasazení ne. Důvod je na kartě prostředí a v části Aktivita nasazení. Po odstranění příčiny zvolte ikonu opakování.</td></tr>
   <tr><td>Server je v seznamu odpojený</td><td>Agent se neozývá. Ověřte, že server běží, Docker je spuštěný a server se dostane na adresu InitPadu.</td></tr>
 </table></div>
@@ -202,7 +216,7 @@ Převod na jiného vlastníka přejmenování není. Když repozitář přestane
   <li>Jeden účet může vlastnit nejvýše pět týmových workspace.</li>
 </ul>
 
-<footer>InitPad, nápověda veřejné edice. Stav k verzi 0.2.17, říjen 2026.</footer>
+<footer>InitPad, nápověda veřejné edice. Stav k verzi 0.2.24, listopad 2026.</footer>
 </main>
 </div>
 </body>
