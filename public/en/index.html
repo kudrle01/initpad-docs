@@ -41,7 +41,7 @@
 </div>
 
 <h1>InitPad Help</h1>
-<p class="subtitle">The public edition connected to GitHub. Describes version 0.2.24.</p>
+<p class="subtitle">The public edition connected to GitHub. Describes version 0.2.32.</p>
 
 <h2 id="getting-started">1. Getting started</h2>
 <p>InitPad creates a repository with an application skeleton and a ready-made pipeline for you, and after every push it builds, tests and deploys the application to your server. You write the code; you do not have to set up Docker or CI.</p>
@@ -64,6 +64,7 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
 <h2 id="sign-in">2. Signing in</h2>
 <p>On the start page choose <span class="ui">Continue with GitHub</span>. Your InitPad account is created on the first sign-in; there is no password to set.</p>
 <p>A sign-in lasts seven days. After a platform update you may have to sign in again.</p>
+<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.32</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
 <p>Under <span class="ui">Account settings</span>, the <span class="ui">Signed-in browsers</span> section lists every device where you are signed in. Sign out any browser you do not recognise, or choose <span class="ui">Sign out all others</span>.</p>
 
 <h2 id="github">3. Connecting GitHub</h2>
@@ -83,6 +84,7 @@ An installation into an organization must be approved by its owner. If that is n
 <ul>
   <li>Linux and a running Docker,</li>
   <li>outbound HTTPS to the InitPad address,</li>
+  <li>at least 1.5 GB RAM, 1 CPU and 10 GiB of free space for Docker. On a smaller server the installer stops before enrollment. Below 4 GB RAM, 2 CPUs or 20 GiB it only warns that building applications may be slow,</li>
   <li>administrator rights to run the installer once.</li>
 </ul>
 <h3>Steps</h3>
@@ -99,6 +101,15 @@ An installation into an organization must be approved by its owner. If that is n
   <tr><td>Direct ports</td><td>Trying things out, a lab, a server on an internal network</td><td>The server address and a port. The port may change on a new deployment.</td></tr>
   <tr><td>Managed gateway</td><td>Production</td><td>A stable address for each project and environment. Requires your own domain pointed at the server.</td></tr>
 </table></div>
+<h3>Managed gateway</h3>
+<p>With the managed gateway, the install command also sets up the gateway for your domain: a private certificate authority, a TLS edge and the gateway itself. Point the domain and <code>*.domain</code> at the server in DNS first.</p>
+<p>The applications' HTTPS certificates come from this private authority, so install it in the browser of every computer you open the applications from. Otherwise the browser warns on every application.</p>
+<ol class="steps">
+  <li>Open <span class="ui">Manage Agent</span> on the server and, under <span class="ui">Application gateway</span>, choose <span class="ui">Test gateway</span>. After a successful test the certificate fingerprint appears.</li>
+  <li>Choose <span class="ui">Download certificate</span> and compare the SHA-256 fingerprint with the downloaded file.</li>
+  <li>Install the certificate following the Windows, macOS or Firefox steps under <span class="ui">How to install the certificate</span>.</li>
+</ol>
+<p>Agent 0.16 and newer refresh the gateway themselves after an update. The <span class="ui">Refresh the gateway on the server</span> command is only for older Agents and needs no new enrollment token.</p>
 <div class="box tip"><div class="t">A server behind a VPN or at home</div>
 That works. The Agent only makes outbound connections and checks by itself that the application responds after a deployment. The application can then be opened only by someone who can reach the server, typically someone on the same network or VPN.</div>
 
@@ -112,7 +123,7 @@ That works. The Agent only makes outbound connections and checks by itself that 
 </table></div>
 <p>A disconnected server can be deleted only when none of its environments still records a deployment. Otherwise InitPad shows <q>Release the deployments on this server first: …</q>; release them with <span class="ui">Release deployment</span>, see <a href="#deployments">Deployments and environments</a>.</p>
 <h3>Uninstalling the Agent from a server</h3>
-<p>In <span class="ui">Manage Agent</span>, open the collapsible <span class="ui">Uninstall from the server</span> section and run the command on the server. It verifies the installer checksum, refuses a server enrolled for another target, lists what it removes and asks you to confirm. It removes the Agent container and its saved identity. The section is also available for a disconnected Agent.</p>
+<p>In <span class="ui">Manage Agent</span>, expand <span class="ui">Diagnostics and removal</span>, open <span class="ui">Uninstall from the server</span> and run the command on the server. It verifies the installer checksum, refuses a server enrolled for another target, lists what it removes and asks you to confirm. It removes the Agent container, its saved identity and the InitPad CA installed for it. The section is also available for a disconnected Agent.</p>
 <p>The <span class="ui">Also remove applications InitPad deployed on this server</span> option deletes their containers and networks directly on the server. InitPad keeps showing them as deployed, so prefer removing environments in InitPad while the Agent is connected. After uninstalling, disconnect the Agent in InitPad or delete the server, so InitPad no longer waits for it.</p>
 
 <h2 id="new-project">5. New project</h2>
@@ -188,6 +199,7 @@ A transfer to another owner is not a rename. When the repository is no longer av
   <li>Tick <span class="ui">Also delete the source repository and release its name</span> only if you also want to delete the repository on GitHub. Without it, the repository stays and can be imported again later.</li>
 </ol>
 <p>A project with a deployment on a disconnected or retired server can be deleted too. The dialog marks that deployment <q>server disconnected · left on the server</q> and requires you to tick <span class="ui">Delete the InitPad record with protected cleanup still pending</span>. The containers may keep running there and must be removed on the server manually.</p>
+<p>An environment whose build or deployment failed before anything reached the server needs no cleanup. A project with it is deleted right away.</p>
 
 <h2 id="troubleshooting">11. Troubleshooting</h2>
 <div class="scroll"><table>
@@ -204,6 +216,9 @@ A transfer to another owner is not a rename. When the repository is no longer av
   <tr><td>An organization is missing from the owner list</td><td>The GitHub App is not installed in it, or the installation is waiting for the organization owner's approval ("Waiting for a GitHub organization owner to approve the App"). Once approved, the organization connects by itself when you return to the InitPad window.</td></tr>
   <tr><td>The pipeline is green but the dev environment failed</td><td>The build passed, the deployment did not. The reason is on the environment card and in the Deployment activity section. Once you fix the cause, choose the retry icon.</td></tr>
   <tr><td>A server shows as disconnected</td><td>The Agent is not reporting in. Check that the server is running, Docker is started and the server can reach the InitPad address.</td></tr>
+  <tr><td>The Agent installer stops because of the server size</td><td>The server has less than 1.5 GB RAM, 1 CPU or 10 GiB of free space for Docker. Use a bigger server, or free up space for Docker.</td></tr>
+  <tr><td>The browser warns about the certificate of an application behind the managed gateway</td><td>This computer lacks the gateway certificate. Download it in Manage Agent under Application gateway and install it.</td></tr>
+  <tr><td>InitPad was updated</td><td>The page belongs to the previous version. InitPad usually reloads it by itself; otherwise choose Reload.</td></tr>
 </table></div>
 
 <h2 id="limitations">12. Public edition limits</h2>
@@ -215,7 +230,7 @@ A transfer to another owner is not a rename. When the repository is no longer av
   <li>One account can own at most five team workspaces.</li>
 </ul>
 
-<footer>InitPad, public edition help. Current as of version 0.2.24, November 2026.</footer>
+<footer>InitPad, public edition help. Current as of version 0.2.32, November 2026.</footer>
 </main>
 </div>
 </body>
