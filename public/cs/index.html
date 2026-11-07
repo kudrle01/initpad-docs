@@ -41,7 +41,7 @@
 </div>
 
 <h1>Nápověda InitPad</h1>
-<p class="subtitle">Veřejná edice propojená s GitHubem. Popisuje verzi 0.2.24.</p>
+<p class="subtitle">Veřejná edice propojená s GitHubem. Popisuje verzi 0.2.32.</p>
 
 <h2 id="getting-started">1. Začínáme</h2>
 <p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
@@ -64,6 +64,7 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
 <h2 id="sign-in">2. Přihlášení</h2>
 <p>Na úvodní stránce zvolte <span class="ui">Pokračovat přes GitHub</span>. Účet v InitPadu vznikne při prvním přihlášení, heslo se nezakládá.</p>
 <p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu.</p>
+<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.32</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
 <p>V <span class="ui">Nastavení účtu</span> najdete v části <span class="ui">Přihlášené prohlížeče</span> všechna zařízení, kde jste přihlášení. Prohlížeč, který nepoznáváte, odhlaste, případně zvolte <span class="ui">Odhlásit všechny ostatní</span>.</p>
 
 <h2 id="github">3. Propojení GitHubu</h2>
@@ -83,6 +84,7 @@ Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHu
 <ul>
   <li>Linux a běžící Docker,</li>
   <li>odchozí HTTPS spojení na adresu InitPadu,</li>
+  <li>aspoň 1,5 GB RAM, 1 CPU a 10 GiB volného místa pro Docker. S menším serverem instalátor skončí ještě před registrací. Pod 4 GB RAM, 2 CPU nebo 20 GiB jen upozorní, že server může být na sestavování aplikací pomalý,</li>
   <li>oprávnění správce pro jednorázové spuštění instalátoru.</li>
 </ul>
 <h3>Postup</h3>
@@ -99,6 +101,15 @@ Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHu
   <tr><td>Přímé porty</td><td>Zkoušení, laboratoř, server ve vnitřní síti</td><td>Adresa serveru a port. Port se při novém nasazení může změnit.</td></tr>
   <tr><td>Spravovaná brána</td><td>Produkce</td><td>Stálá adresa pro každý projekt a prostředí. Vyžaduje vlastní doménu směrovanou na server.</td></tr>
 </table></div>
+<h3>Spravovaná brána</h3>
+<p>U spravované brány instalační příkaz nastaví zároveň bránu pro vaši doménu: soukromou certifikační autoritu, TLS vstup a samotnou bránu. Předem v DNS nasměrujte doménu i <code>*.doména</code> na server.</p>
+<p>HTTPS certifikáty aplikací vydává tato soukromá autorita, proto ji nainstalujte do prohlížeče na každém počítači, ze kterého aplikace otevíráte. Jinak prohlížeč u každé aplikace ukáže varování.</p>
+<ol class="steps">
+  <li>U serveru otevřete <span class="ui">Spravovat Agenta</span> a v části <span class="ui">Brána aplikací</span> zvolte <span class="ui">Otestovat bránu</span>. Po úspěšném testu se zobrazí otisk certifikátu.</li>
+  <li>Zvolte <span class="ui">Stáhnout certifikát</span> a otisk SHA-256 porovnejte se staženým souborem.</li>
+  <li>Certifikát nainstalujte podle návodu pro Windows, macOS nebo Firefox v části <span class="ui">Jak certifikát nainstalovat</span>.</li>
+</ol>
+<p>Agent 0.16 a novější po své aktualizaci obnoví bránu sám. Příkaz <span class="ui">Obnovit bránu na serveru</span> je jen pro starší Agenty a nový registrační token nepotřebuje.</p>
 <div class="box tip"><div class="t">Server za VPN nebo doma</div>
 Funguje to. Agent navazuje jen odchozí spojení a po nasazení si sám ověří, že aplikace odpovídá. Aplikaci pak otevře jen ten, kdo se na server dostane, tedy typicky kdo je ve stejné síti nebo na stejné VPN.</div>
 
@@ -112,7 +123,7 @@ Funguje to. Agent navazuje jen odchozí spojení a po nasazení si sám ověří
 </table></div>
 <p>Odpojený server jde smazat, jen když žádné jeho prostředí neeviduje nasazení. Jinak InitPad ukáže <q>Nejdřív uvolněte nasazení na tomto serveru: …</q>; nasazení uvolníte akcí <span class="ui">Uvolnit nasazení</span>, viz <a href="#deployments">Nasazení a prostředí</a>.</p>
 <h3>Odinstalace Agenta ze serveru</h3>
-<p>V <span class="ui">Spravovat Agenta</span> otevřete sbalitelnou sekci <span class="ui">Odinstalovat ze serveru</span> a příkaz spusťte na serveru. Ověří kontrolní součet instalátoru, odmítne server registrovaný pro jiný cíl, vypíše, co odstraní, a vyžádá potvrzení. Odstraní kontejner Agenta a jeho uloženou identitu. Sekce je dostupná i pro odpojeného Agenta.</p>
+<p>V <span class="ui">Spravovat Agenta</span> rozbalte <span class="ui">Diagnostika a odebrání</span>, otevřete <span class="ui">Odinstalovat ze serveru</span> a příkaz spusťte na serveru. Ověří kontrolní součet instalátoru, odmítne server registrovaný pro jiný cíl, vypíše, co odstraní, a vyžádá potvrzení. Odstraní kontejner Agenta, jeho uloženou identitu a certifikační autoritu InitPadu, kterou pro něj nainstaloval. Sekce je dostupná i pro odpojeného Agenta.</p>
 <p>Volba <span class="ui">Odstranit i aplikace, které InitPad na tento server nasadil</span> smaže jejich kontejnery a sítě přímo na serveru. InitPad je pak dál zobrazuje jako nasazené, proto je raději odeberte v InitPadu, dokud je Agent připojený. Po odinstalaci Agenta v InitPadu odpojte, nebo server smažte, aby na něj InitPad už nečekal.</p>
 
 <h2 id="new-project">5. Nový projekt</h2>
@@ -188,6 +199,7 @@ Převod na jiného vlastníka přejmenování není. Když repozitář přestane
   <li>Volbu <span class="ui">Smazat také zdrojový repozitář a uvolnit jeho název</span> zaškrtněte jen tehdy, když chcete smazat i repozitář na GitHubu. Bez ní repozitář zůstane a půjde později znovu importovat.</li>
 </ol>
 <p>Projekt s nasazením na odpojeném nebo vyřazeném serveru jde smazat taky. Dialog toto nasazení označí <q>server odpojen · zůstane na serveru</q> a vyžaduje zaškrtnout <span class="ui">Smazat záznam v InitPadu, i když chráněný úklid ještě čeká</span>. Kontejnery tam mohou dál běžet a je potřeba je na serveru odstranit ručně.</p>
+<p>Prostředí, jehož sestavení nebo nasazení selhalo dřív, než se na server cokoli dostalo, úklid nepotřebuje. Projekt s ním smažete rovnou.</p>
 
 <h2 id="troubleshooting">11. Řešení potíží</h2>
 <p>Chybové hlášky ze serveru jsou zatím anglicky.</p>
@@ -205,6 +217,9 @@ Převod na jiného vlastníka přejmenování není. Když repozitář přestane
   <tr><td>Organizace chybí v nabídce vlastníků</td><td>Není v ní nainstalovaná GitHub App, nebo instalace čeká na schválení vlastníkem organizace („Čeká se, až vlastník organizace na GitHubu schválí aplikaci“). Po schválení se organizace připojí sama, když se vrátíte do okna InitPadu.</td></tr>
   <tr><td>Pipeline je zelená, ale prostředí dev selhalo</td><td>Sestavení prošlo, nasazení ne. Důvod je na kartě prostředí a v části Aktivita nasazení. Po odstranění příčiny zvolte ikonu opakování.</td></tr>
   <tr><td>Server je v seznamu odpojený</td><td>Agent se neozývá. Ověřte, že server běží, Docker je spuštěný a server se dostane na adresu InitPadu.</td></tr>
+  <tr><td>Instalátor Agenta skončí kvůli velikosti serveru</td><td>Server nemá aspoň 1,5 GB RAM, 1 CPU nebo 10 GiB volného místa pro Docker. Použijte větší server, nebo Dockeru uvolněte místo.</td></tr>
+  <tr><td>Prohlížeč u aplikace za spravovanou bránou varuje před certifikátem</td><td>Na tomto počítači chybí certifikát brány. Stáhněte ho ve Spravovat Agenta v části Brána aplikací a nainstalujte.</td></tr>
+  <tr><td>InitPad byl aktualizován</td><td>Stránka patří k předchozí verzi. InitPad ji obvykle obnoví sám, jinak zvolte Obnovit.</td></tr>
 </table></div>
 
 <h2 id="limitations">12. Omezení veřejné edice</h2>
@@ -216,7 +231,7 @@ Převod na jiného vlastníka přejmenování není. Když repozitář přestane
   <li>Jeden účet může vlastnit nejvýše pět týmových workspace.</li>
 </ul>
 
-<footer>InitPad, nápověda veřejné edice. Stav k verzi 0.2.24, listopad 2026.</footer>
+<footer>InitPad, nápověda veřejné edice. Stav k verzi 0.2.32, listopad 2026.</footer>
 </main>
 </div>
 </body>
