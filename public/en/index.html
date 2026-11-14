@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>InitPad Help</title>
-<meta name="description" content="How to connect GitHub, attach your own server, create or import a project and deploy it in the public edition of InitPad.">
+<meta name="description" content="How to connect GitHub, attach your own server, create or import a project and deploy it with InitPad. Covers the public GitHub edition and self-hosted installations.">
 <link rel="alternate" hreflang="cs" href="/cs/">
 <link rel="alternate" hreflang="en" href="/en/">
 <link rel="alternate" hreflang="x-default" href="/en/">
@@ -25,10 +25,11 @@
   <a href="#import">6. Importing a repository</a>
   <a href="#deployments">7. Deployments and environments</a>
   <a href="#variables">8. Variables and secrets</a>
-  <a href="#team">9. Team and roles</a>
+  <a href="#team">9. Team, roles and quotas</a>
   <a href="#rename-delete">10. Renaming and deleting</a>
   <a href="#troubleshooting">11. Troubleshooting</a>
   <a href="#limitations">12. Public edition limits</a>
+  <a href="#self-hosted">13. Self-hosted InitPad</a>
 </nav>
 <main>
 
@@ -41,16 +42,28 @@
 </div>
 
 <h1>InitPad Help</h1>
-<p class="subtitle">The public edition connected to GitHub. Describes version 0.2.32.</p>
+<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.35.</p>
 
 <h2 id="getting-started">1. Getting started</h2>
 <p>InitPad creates a repository with an application skeleton and a ready-made pipeline for you, and after every push it builds, tests and deploys the application to your server. You write the code; you do not have to set up Docker or CI.</p>
-<p>You will need:</p>
+
+<h3 id="editions">Two editions</h3>
+<p>InitPad comes in two editions. Most of this guide applies to both; differences are always stated in the text.</p>
+<div class="scroll"><table>
+  <tr><th></th><th>Public edition (GitHub)</th><th>Self-hosted edition</th></tr>
+  <tr><td>Where it runs</td><td>Operated by the InitPad author at <a href="https://staging.initpad.me">https://staging.initpad.me</a> (currently a trial service).</td><td>On your own server. The administrator picks the address during installation, for example <code>http://localhost:8080</code> or <code>https://initpad.school.example</code>.</td></tr>
+  <tr><td>Signing in</td><td>With a GitHub account.</td><td>With a username and password; accounts are created by the instance administrator.</td></tr>
+  <tr><td>Repositories and CI</td><td>GitHub and GitHub Actions, workflow <code>.github/workflows/ci.yml</code>.</td><td>The built-in Gitea and its CI runner, workflow <code>.gitea/workflows/ci.yml</code>.</td></tr>
+  <tr><td>Servers</td><td>Your own servers with InitPad Agent, or publicly reachable SFTP hosting.</td><td>The same, plus platform servers the administrator makes available to a workspace.</td></tr>
+  <tr><td>Chapters for this edition only</td><td><a href="#sign-in">Signing in</a>, <a href="#github">Connecting GitHub</a>, <a href="#limitations">Public edition limits</a></td><td><a href="#self-hosted">Self-hosted InitPad</a></td></tr>
+</table></div>
+
+<h3>What you need</h3>
 <ul>
-  <li>a GitHub account,</li>
-  <li>a Linux server with Docker for the application to run on. It only needs outbound internet access, so it can sit behind a router or a VPN.</li>
+  <li>in the public edition a GitHub account, in the self-hosted edition an account from the instance administrator,</li>
+  <li>a Linux server with Docker for the application to run on (see <a href="#server-requirements">server requirements</a>). It only needs outbound access to the InitPad address, so it can sit behind a router or a VPN.</li>
 </ul>
-<p>The whole path has five steps:</p>
+<p>In the public edition the path has five steps:</p>
 <ol class="steps">
   <li><a href="#sign-in">Sign in</a> with your GitHub account.</li>
   <li><a href="#github">Install the GitHub App</a> so InitPad may work with your repositories.</li>
@@ -58,16 +71,19 @@
   <li><a href="#new-project">Create a project</a> from a template, or <a href="#import">import</a> an existing repository.</li>
   <li>Push a change. InitPad deploys it to the dev environment and you then <a href="#deployments">promote</a> it further.</li>
 </ol>
+<p>In the self-hosted edition steps 1 and 2 do not apply: you sign in with a password and repositories are created in the built-in Gitea. See <a href="#self-hosted">Self-hosted InitPad</a>.</p>
 <div class="box tip"><div class="t">Help inside the app</div>
-The <span class="ui">Help</span> link in the left menu opens this page in the language you use in InitPad. The <span class="ui">Learn more</span> links on individual screens go straight to the matching chapter.</div>
+The <span class="ui">Help</span> link in the left menu opens this page in the language you use in InitPad. The <span class="ui">Learn more</span> links on individual screens go straight to the matching chapter. The language switch at the top keeps the chapter you are reading.</div>
 
 <h2 id="sign-in">2. Signing in</h2>
+<p>This chapter applies to the public edition. Signing in to a self-hosted edition is described in <a href="#self-hosted-accounts">Password sign-in and account activation</a>.</p>
 <p>On the start page choose <span class="ui">Continue with GitHub</span>. Your InitPad account is created on the first sign-in; there is no password to set.</p>
-<p>A sign-in lasts seven days. After a platform update you may have to sign in again.</p>
-<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.32</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
+<p>A sign-in lasts seven days. After a platform update you may have to sign in again. When a new InitPad version is released while a tab is open, the tab shows <q>InitPad was updated</q>; load the new version with <span class="ui">Reload</span>.</p>
+<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.35</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
 <p>Under <span class="ui">Account settings</span>, the <span class="ui">Signed-in browsers</span> section lists every device where you are signed in. Sign out any browser you do not recognise, or choose <span class="ui">Sign out all others</span>.</p>
 
 <h2 id="github">3. Connecting GitHub</h2>
+<p>This chapter applies to the public edition. The self-hosted edition does not use GitHub.</p>
 <p>InitPad does not work with repositories in your name but through a GitHub App. It sees only the accounts and organizations you install it into, and only the repositories you allow.</p>
 <ol class="steps">
   <li>Open <span class="ui">Account settings</span> and in the <span class="ui">GitHub account</span> section choose <span class="ui">Install GitHub App</span>. A GitHub window opens, so allow pop-ups.</li>
@@ -79,42 +95,95 @@ An installation into an organization must be approved by its owner. If that is n
 <p>Membership in an organization is not enough. You will see the organization's repositories in InitPad only after the App is installed into it.</p>
 
 <h2 id="servers">4. Connecting a server</h2>
-<p>Applications do not run at InitPad but on your server. A small program, InitPad Agent, runs there and fetches its work on its own. InitPad never connects to your server, so you do not have to open any management port or hand over an SSH key.</p>
-<h3>What the server needs</h3>
+<p>Applications do not run at InitPad but on your server. InitPad supports two kinds of servers:</p>
+<div class="scroll"><table>
+  <tr><th>Connection method</th><th>For what</th><th>Who may add it</th></tr>
+  <tr><td><span class="ui">InitPad Agent for Docker (recommended)</span></td><td>All templates. A small program, InitPad Agent, runs on the server and fetches its work on its own. InitPad never connects to the server, so you do not open a management port or hand over an SSH key.</td><td>Workspace owner or admin</td></tr>
+  <tr><td><span class="ui">SFTP shared web hosting</span></td><td>Static sites and PHP (Nette, Laravel, Symfony) on ordinary web hosting. InitPad connects to the hosting itself over SFTP.</td><td>Workspace owner, admin or maintainer</td></tr>
+</table></div>
+<p>An Agent server may be added only by someone who may also connect the Agent, that is a workspace owner or admin. A workspace maintainer may add and verify an SFTP server and use every server the workspace already has. Other roles can only see servers.</p>
+
+<h3 id="server-requirements">What an Agent server needs</h3>
 <ul>
-  <li>Linux and a running Docker,</li>
-  <li>outbound HTTPS to the InitPad address,</li>
-  <li>at least 1.5 GB RAM, 1 CPU and 10 GiB of free space for Docker. On a smaller server the installer stops before enrollment. Below 4 GB RAM, 2 CPUs or 20 GiB it only warns that building applications may be slow,</li>
-  <li>administrator rights to run the installer once.</li>
+  <li>Linux (<code>amd64</code> or <code>arm64</code>) with Docker Engine running as root, i.e. with the socket at <code>/var/run/docker.sock</code>. The Agent does not support rootless Docker. No desktop environment is needed.</li>
+  <li>Outbound HTTPS to the InitPad address. Only the <a href="#gateway">managed gateway</a> needs inbound ports (80 and 443).</li>
+  <li>Root rights to run the installer once.</li>
 </ul>
-<h3>Steps</h3>
+<p>Before enrolling, the installer checks the server size. Below the minimum it stops and lists what is missing; between the minimum and the recommendation it only warns.</p>
+<div class="scroll"><table>
+  <tr><th></th><th>Minimum</th><th>Recommended</th></tr>
+  <tr><td>RAM</td><td>1.5 GB</td><td>4 GB</td></tr>
+  <tr><td>CPU</td><td>1</td><td>2</td></tr>
+  <tr><td>Free space for Docker</td><td>10 GiB</td><td>20 GiB</td></tr>
+</table></div>
+<p>The minimum is enough for the Agent and one environment, the recommended size for a project with dev, test and prod. By default each environment is limited to 512 MB of memory and 1 CPU, and while a new version is deployed the old and new versions briefly run side by side.</p>
+
+<h3 id="agent-install">Steps for an Agent server</h3>
 <ol class="steps">
   <li>Open <span class="ui">Servers</span> and choose <span class="ui">Add server</span>.</li>
-  <li>Keep <span class="ui">InitPad Agent for Docker (recommended)</span> as the connection method and fill in a name.</li>
-  <li>In <span class="ui">Can run</span>, tick the runtimes the server can handle. A template can be deployed only to a server that supports its runtime.</li>
-  <li>Choose the <span class="ui">Application exposure</span> (see the table below) and fill in the server's public URL.</li>
-  <li>InitPad shows the <span class="ui">Install and enroll on the Docker server</span> command. Copy it and run it on the server. The installer asks for the enrollment token shown in the same window.</li>
-  <li>After a moment the server appears as connected in the list.</li>
+  <li>Keep <span class="ui">InitPad Agent for Docker (recommended)</span> as the <span class="ui">Connection method</span> and fill in the <span class="ui">Name</span>.</li>
+  <li>Choose the <span class="ui">Application exposure</span> (see the table below) and fill in the <span class="ui">Application base URL</span>, or the <span class="ui">Gateway base URL</span> for a managed gateway.</li>
+  <li>In <span class="ui">Can run</span>, tick the runtimes the server should offer. A template can be deployed only to a server that supports its runtime. The Agent confirms Docker support by itself after enrollment.</li>
+  <li>Choose <span class="ui">Add server</span>. The <span class="ui">InitPad Agent</span> dialog opens; later you open it with <span class="ui">Manage Agent</span> on the server. When you are at the server, choose <span class="ui">Generate enrollment</span>.</li>
+  <li><span class="ui">1. Install and enroll on the Docker server</span>: copy the command and run it in an interactive terminal on the server. It verifies the installer checksum and the Agent image, checks the server size and starts the Agent. <span class="ui">Download script only</span> downloads the installer without running it.</li>
+  <li><span class="ui">2. Enrollment token</span>: paste the token when the installer asks for it. It is entered through a hidden prompt, so it never enters shell history. The token is shown only once, disappears when you close the dialog, and is short-lived and single-use.</li>
+  <li>After a moment the dialog shows <q>Agent … is current</q> and the server appears as connected in the list.</li>
 </ol>
 <div class="scroll"><table>
   <tr><th>Exposure</th><th>When to choose it</th><th>Application address</th></tr>
-  <tr><td>Direct ports</td><td>Trying things out, a lab, a server on an internal network</td><td>The server address and a port. The port may change on a new deployment.</td></tr>
-  <tr><td>Managed gateway</td><td>Production</td><td>A stable address for each project and environment. Requires your own domain pointed at the server.</td></tr>
+  <tr><td><span class="ui">Direct ports (local / lab)</span></td><td>Trying things out, a lab, a server on an internal network</td><td>The server address and a port, for example <code>http://192.168.1.50:32768</code>. The port may change on a new deployment.</td></tr>
+  <tr><td><span class="ui">Managed gateway (production)</span></td><td>Production, stable HTTPS addresses</td><td>A stable address for each project and environment, for example <code>https://shop-prod-1a2b3c4d.apps.example.com</code>. Requires a domain, see <a href="#gateway">Managed gateway</a>.</td></tr>
 </table></div>
-<h3>Managed gateway</h3>
-<p>With the managed gateway, the install command also sets up the gateway for your domain: a private certificate authority, a TLS edge and the gateway itself. Point the domain and <code>*.domain</code> at the server in DNS first.</p>
-<p>The applications' HTTPS certificates come from this private authority, so install it in the browser of every computer you open the applications from. Otherwise the browser warns on every application.</p>
-<ol class="steps">
-  <li>Open <span class="ui">Manage Agent</span> on the server and, under <span class="ui">Application gateway</span>, choose <span class="ui">Test gateway</span>. After a successful test the certificate fingerprint appears.</li>
-  <li>Choose <span class="ui">Download certificate</span> and compare the SHA-256 fingerprint with the downloaded file.</li>
-  <li>Install the certificate following the Windows, macOS or Firefox steps under <span class="ui">How to install the certificate</span>.</li>
-</ol>
-<p>Agent 0.16 and newer refresh the gateway themselves after an update. The <span class="ui">Refresh the gateway on the server</span> command is only for older Agents and needs no new enrollment token.</p>
 <div class="box tip"><div class="t">A server behind a VPN or at home</div>
 That works. The Agent only makes outbound connections and checks by itself that the application responds after a deployment. The application can then be opened only by someone who can reach the server, typically someone on the same network or VPN.</div>
 
+<h3 id="gateway">Managed gateway</h3>
+<p>The gateway gives every environment a stable HTTPS address under your domain. The Agent installer sets it up on the server by itself: a private certificate authority (CA), a TLS edge on ports 80 and 443 and an inner gateway.</p>
+<ol class="steps">
+  <li>Pick a domain for the applications, for example <code>apps.example.com</code>. It must be a DNS name, not an IP address.</li>
+  <li>In DNS, point two records at the server: the domain itself, <code>apps.example.com</code>, and the wildcard <code>*.apps.example.com</code>. On an internal network create them on your own DNS server.</li>
+  <li>Allow inbound ports 80 and 443 on the server and in the firewall. No other web server may occupy them. If <code>ufw</code> is active, the installer adds the rule it needs by itself.</li>
+  <li>When adding the server, choose <span class="ui">Managed gateway (production)</span> and enter <code>https://apps.example.com</code> as the <span class="ui">Gateway base URL</span>.</li>
+  <li>Run the install command from the Agent dialog. It contains <code>--gateway-domain apps.example.com</code> and at the end prints the SHA-256 fingerprint of the CA certificate.</li>
+  <li>In the Agent dialog, in the <span class="ui">Application gateway</span> section, choose <span class="ui">Test gateway</span>. The test is read-only: it checks the wildcard DNS, trusted TLS on port 443 and the inner gateway without changing any route. The server can receive deployments once the test passes.</li>
+  <li><a href="#gateway-ca">Install the gateway certificate</a> on the computers that open the applications.</li>
+</ol>
+<p>Agent 0.16 and newer refresh the gateway themselves after an update. For an older Agent, or if that did not happen, run the command from the collapsible <span class="ui">Refresh the gateway on the server</span> section on the server; no enrollment token is needed. Changing the exposure or the gateway URL resets the test result and the gateway must be tested again.</p>
+
+<h3 id="gateway-ca">Gateway certificate</h3>
+<p>The gateway signs the applications' HTTPS certificates with its own CA. Browsers trust them once you install that CA, which you do once per computer.</p>
+<ol class="steps">
+  <li>In the Agent dialog, in the <span class="ui">Gateway certificate</span> section, choose <span class="ui">Download certificate</span>. This downloads <code>initpad-gateway-ca.crt</code> from <code>http://apps.example.com/initpad-ca.crt</code>.</li>
+  <li>Compare the fingerprint. The dialog shows <q>SHA-256 fingerprint. Compare it with the downloaded file before installing it:</q>. Get the file's fingerprint with <code>openssl x509 -in initpad-gateway-ca.crt -noout -fingerprint -sha256</code>. Until the gateway test has run, the dialog has no fingerprint; compare with the one the installer printed instead.</li>
+  <li>Install the certificate for your system:
+    <ul>
+      <li><b>Windows:</b> open the file → <span class="ui">Install Certificate</span> → <span class="ui">Local Machine</span> → <span class="ui">Trusted Root Certification Authorities</span>. Chrome and Edge then trust it too.</li>
+      <li><b>macOS:</b> double-click the file, add it to <span class="ui">Keychain Access</span> (<span class="ui">System</span>) and in its trust settings choose <span class="ui">Always Trust</span>.</li>
+      <li><b>Firefox</b> (it has its own certificate store): <span class="ui">Settings → Privacy &amp; Security → View Certificates → Authorities → Import</span> and tick trust for identifying websites.</li>
+    </ul>
+  </li>
+  <li>Check the installation: restart the browser and open the address of a deployed application. The browser must not report an untrusted certificate, and the certificate details show the InitPad CA as the issuer.</li>
+</ol>
+
+<h3 id="sftp">SFTP hosting</h3>
+<p>InitPad deploys static sites (React, Vue) and PHP applications (Nette, Laravel, Symfony) to shared web hosting. PHP also needs shell access through the same account. Other templates need an Agent server.</p>
+<div class="box warn"><div class="t">Publicly reachable hosting only</div>
+Unlike with the Agent, InitPad connects to SFTP hosting itself. In the public edition the host and the public URL must therefore resolve to public internet addresses; hosting behind a VPN, on a home network or at a private address cannot be added. A self-hosted instance can also connect to hosting on its internal network.</div>
+<ol class="steps">
+  <li>In <span class="ui">Servers</span> choose <span class="ui">Add server</span> and as the <span class="ui">Connection method</span> choose <span class="ui">SFTP shared web hosting</span>.</li>
+  <li>Fill in the <span class="ui">Name</span> and <span class="ui">Port</span> (usually 22) and in <span class="ui">Can run</span> tick Static and, if needed, PHP.</li>
+  <li>Fill in the <span class="ui">Host</span> and <span class="ui">Username</span>, and in <span class="ui">Auth</span> choose <span class="ui">Password</span>, or <span class="ui">SSH key</span> and paste an OpenSSH private key.</li>
+  <li>Choose <span class="ui">Get fingerprint</span>. InitPad retrieves the server's public key without sending the password. Compare the fingerprint with the value from the hosting administrator and confirm with <span class="ui">Trust and save</span>. InitPad requires exactly this key for every later connection.</li>
+  <li>Fill in the <span class="ui">Remote path</span> (the site directory, for example <code>/www/myapp</code>) and the <span class="ui">Public URL</span> where the site is visible.</li>
+  <li>Choose <span class="ui">Add server</span>, then <span class="ui">Test connection</span> on the server. Only a verified server can receive deployments.</li>
+</ol>
+
+<h3 id="agent-updates">Agent updates and the offline state</h3>
+<p>When a new Agent version is released, the <span class="ui">Manage Agent</span> dialog shows <q>Agent … is available</q>. Agent 0.13 and newer update remotely with <span class="ui">Install update</span>: only the Agent container is replaced, applications keep running, and if the new Agent cannot sign in, the previous one is restored. The Agent must be online for this. An older Agent gets a one-time manual command to run on the server; the server identity is kept and no new token is needed.</p>
+<p>A server is <b>offline</b> when no heartbeat has arrived from the Agent for 90 seconds. The dialog then shows <q>Agent is offline</q> and the time of the last contact. Jobs wait safely in the queue and continue once the Agent is back; a deployment meanwhile shows <q>Waiting for Agent</q>. Check that the server is running, Docker is started and the server can reach the InitPad address. If the Agent container is not running, run the command from the <span class="ui">Reconnect Agent</span> section of the dialog on the server.</p>
+
 <h3>Disconnecting, retiring and deleting a server</h3>
-<p>A server has a visible <span class="ui">Disconnect and delete</span> section with three buttons:</p>
+<p>A server has a <span class="ui">Disconnect and delete</span> section with three buttons:</p>
 <div class="scroll"><table>
   <tr><th>Button</th><th>What it does</th></tr>
   <tr><td><span class="ui">Disconnect server</span></td><td>InitPad stops managing the server and revokes its access. Running applications stay online.</td></tr>
@@ -122,34 +191,61 @@ That works. The Agent only makes outbound connections and checks by itself that 
   <tr><td><span class="ui">Delete server</span></td><td>Removes the server from InitPad. Nothing on the server itself is deleted.</td></tr>
 </table></div>
 <p>A disconnected server can be deleted only when none of its environments still records a deployment. Otherwise InitPad shows <q>Release the deployments on this server first: …</q>; release them with <span class="ui">Release deployment</span>, see <a href="#deployments">Deployments and environments</a>.</p>
-<h3>Uninstalling the Agent from a server</h3>
-<p>In <span class="ui">Manage Agent</span>, expand <span class="ui">Diagnostics and removal</span>, open <span class="ui">Uninstall from the server</span> and run the command on the server. It verifies the installer checksum, refuses a server enrolled for another target, lists what it removes and asks you to confirm. It removes the Agent container, its saved identity and the InitPad CA installed for it. The section is also available for a disconnected Agent.</p>
+
+<h3 id="agent-uninstall">Uninstalling the Agent from a server</h3>
+<p>In the <span class="ui">Manage Agent</span> dialog, expand <span class="ui">Diagnostics and removal → Uninstall from the server</span> and run the command on the server. It verifies the installer checksum, refuses a server enrolled for another target, lists what it removes and asks you to confirm. It removes the Agent container, its saved identity and the InitPad CA installed for it. The section is also available for a disconnected Agent. A managed gateway on the server stays.</p>
 <p>The <span class="ui">Also remove applications InitPad deployed on this server</span> option deletes their containers and networks directly on the server. InitPad keeps showing them as deployed, so prefer removing environments in InitPad while the Agent is connected. After uninstalling, disconnect the Agent in InitPad or delete the server, so InitPad no longer waits for it.</p>
 
 <h2 id="new-project">5. New project</h2>
 <ol class="steps">
-  <li>Choose <span class="ui">New project</span> and enter a name: lowercase letters, digits and hyphens.</li>
-  <li>In <span class="ui">GitHub repository owner</span>, pick the account or organization where the repository should be created.</li>
+  <li>Choose <span class="ui">New project</span> and enter the <span class="ui">Project name</span>: 2–41 lowercase letters, digits or hyphens, starting with a letter. The name is also used for the repository and the application address.</li>
+  <li>In the public edition, pick the account or organization where the repository should be created in <span class="ui">GitHub repository owner</span>. In the self-hosted edition the repository is created in the built-in Gitea.</li>
   <li>Pick a <span class="ui">Template</span> and a <span class="ui">Pipeline</span>, i.e. which environments the project has: dev, test and prod; dev and prod only; or prod only.</li>
-  <li>Under <span class="ui">Deployment targets</span>, assign a server to each environment. One server can host several environments.</li>
+  <li>Under <span class="ui">Deployment targets</span>, assign a server to each environment. One server can host several environments. A server that cannot be used yet shows why, for example <q>Agent not ready</q> or <q>gateway check failed</q>.</li>
   <li>Choose <span class="ui">Create project</span>.</li>
 </ol>
-<p>InitPad creates a private repository with the application skeleton, a Dockerfile and a GitHub Actions workflow, and sets the secrets it needs. The first pipeline run starts right away; when it finishes, the application is deployed to the dev environment.</p>
+<p>InitPad creates a private repository with the application skeleton, a Dockerfile and a CI workflow, and sets the secrets it needs. The project page then shows <q>Preparing the project…</q> and, once the first pipeline starts, <q>Building the first version…</q>; it refreshes by itself. When the pipeline finishes, the application is deployed to the dev environment.</p>
+<h3>When something goes wrong</h3>
+<div class="scroll"><table>
+  <tr><th>Situation</th><th>What to do</th></tr>
+  <tr><td>A repository with the same name already exists</td><td>If it has history, InitPad neither adopts nor overwrites it and stops with <code>A repository named '…' already exists in …. Choose a different project name, or import the existing repository.</code> Choose another name, or <a href="#import">import</a> the repository.</td></tr>
+  <tr><td><q>The first pipeline has not started yet</q></td><td>The repository is ready, but CI has not reported a run. Check that the workflow is enabled in the repository; in the self-hosted edition also that the CI runner is online (the instance administrator checks that).</td></tr>
+  <tr><td>The overview shows <q>Provisioning needs attention</q></td><td>A project setup did not finish. Choose <span class="ui">Retry setup</span>, or <span class="ui">Retry cleanup</span> to remove what it left behind.</td></tr>
+  <tr><td>You no longer need a failed setup</td><td>When the problem was resolved by hand, or there is nothing left to retry or clean up, choose <span class="ui">Hide</span>. The record stays in the audit log; only the overview stops showing it. Leftover resources are not cleaned up automatically.</td></tr>
+</table></div>
 
 <h2 id="import">6. Importing an existing repository</h2>
 <p>On the <span class="ui">New project</span> page choose <span class="ui">Import existing repository</span>. InitPad does not change your code during the import. The repository must however meet three conditions, which InitPad checks before importing:</p>
 <div class="scroll"><table>
   <tr><th>Condition</th><th>Details</th></tr>
   <tr><td>Dockerfile</td><td>In the root of the default branch. Purely static templates do not need one.</td></tr>
-  <tr><td>InitPad workflow</td><td>Exactly in the file <code>.github/workflows/ci.yml</code>. Download the starter version on the import screen and commit it yourself.</td></tr>
-  <tr><td>Repository name</td><td>Lowercase letters, digits and hyphens, at most 41 characters. It becomes the project name.</td></tr>
+  <tr><td>InitPad workflow</td><td>Exactly in the file <code>.github/workflows/ci.yml</code> (public edition) or <code>.gitea/workflows/ci.yml</code> (self-hosted). Download the starter version on the import screen and commit it yourself.</td></tr>
+  <tr><td>Repository name</td><td>2–41 lowercase letters, digits or hyphens, starting with a letter. It becomes the project name.</td></tr>
 </table></div>
+
+<h3 id="templates">Templates: port, health check and runtime</h3>
+<p>On import you choose the template whose contract the repository follows. The application must listen on the template's port and answer successfully on <code>/health</code>, otherwise the deployment ends with a failed health check. InitPad sets the <code>PORT</code> variable itself.</p>
+<div class="scroll"><table>
+  <tr><th>Template</th><th>Runtime</th><th>Port</th><th>Health check</th><th>Deploys to</th></tr>
+  <tr><td>Django (Python)</td><td>Python</td><td>8000</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>FastAPI (Python)</td><td>Python</td><td>8000</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>Flask (Python)</td><td>Python</td><td>8000</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>Laravel</td><td>PHP</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
+  <tr><td>NestJS API</td><td>Node</td><td>8080</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>Nette</td><td>PHP</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
+  <tr><td>Next.js</td><td>Node</td><td>8080</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>Node.js API (Express)</td><td>Node</td><td>8080</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>PHP</td><td>PHP</td><td>8080</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>React (Vite)</td><td>Static</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
+  <tr><td>Symfony</td><td>PHP</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
+  <tr><td>Vue (Vite)</td><td>Static</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
+</table></div>
+
 <h3>A project that already has its own pipeline</h3>
 <ul>
   <li>Your workflows in other files keep running unchanged.</li>
   <li>InitPad reads the status only from <code>ci.yml</code>. If your pipeline already has that name, rename it or add the InitPad steps to it.</li>
   <li>Only the InitPad workflow triggers a deployment. If your tests in another file fail, InitPad does not see it and deploys anyway. Tests that should stop a deployment belong in <code>ci.yml</code>.</li>
-  <li>The application must listen on the port of the chosen template and answer on its health-check path, otherwise the deployment ends with a failed health check.</li>
 </ul>
 
 <h2 id="deployments">7. Deployments and environments</h2>
@@ -165,73 +261,194 @@ That works. The Agent only makes outbound connections and checks by itself that 
   <tr><td>Move an environment to another server</td><td><span class="ui">Change target</span>. Remove a deployment managed through a connected Agent first.</td></tr>
   <tr><td>Release a deployment on a disconnected or retired server</td><td>Environment menu, <span class="ui">Release deployment</span>. Only the InitPad record is released; the container may keep running on the server and must be removed there manually.</td></tr>
   <tr><td>Find out why the application is not running</td><td><span class="ui">Workload diagnostics…</span> and the <span class="ui">Deployment activity</span> section.</td></tr>
-  <tr><td>Retry a failed pipeline</td><td><span class="ui">Re-run failed GitHub jobs</span>.</td></tr>
+  <tr><td>Retry a failed pipeline</td><td>In the public edition, <span class="ui">Re-run failed GitHub jobs</span>.</td></tr>
 </table></div>
-<p>The pipeline steps of a commit link straight to the run logs on GitHub.</p>
+<p>The pipeline steps of a commit link straight to the run logs on GitHub, or in Gitea in the self-hosted edition.</p>
 
 <h2 id="variables">8. Variables and secrets</h2>
 <p>The project detail has a <span class="ui">Configuration</span> section with variables for each environment separately. InitPad passes them to the application on deployment. A change takes effect only after the environment is redeployed.</p>
+<div class="scroll"><table>
+  <tr><th>Rule</th><th>Details</th></tr>
+  <tr><td>Key</td><td>Uppercase letters, digits and underscore, not starting with a digit (<code>^[A-Z_][A-Z0-9_]*$</code>), for example <code>DATABASE_URL</code>.</td></tr>
+  <tr><td>Reserved key</td><td>InitPad sets <code>PORT</code> from the template; it cannot be saved.</td></tr>
+  <tr><td>Value</td><td>At most 8192 characters.</td></tr>
+  <tr><td>Running operation</td><td>While an environment is deploying or running another operation, its variables cannot be changed. Wait for it to finish.</td></tr>
+</table></div>
 <p>Secret values are stored encrypted and nobody can see them after saving, not even you. You can only replace a secret with a new value or delete it. Rolling back changes the application code; the variables stay as they are.</p>
 
-<h2 id="team">9. Team and roles</h2>
-<p>Projects, servers and GitHub App installations belong to a workspace. Besides your personal workspace you can create a team one from the workspace menu in the left sidebar with <span class="ui">Add new workspace</span>. In the public edition one account can own at most five team workspaces.</p>
-<p>A personal workspace is yours alone. Add members to a team workspace in <span class="ui">Workspace settings</span> (the <span class="ui">Workspace</span> menu item), in the <span class="ui">Workspace members</span> section, with <span class="ui">Add member</span>. Enter a username or e-mail. The person must have signed in to InitPad at least once, otherwise their account does not exist.</p>
+<h2 id="team">9. Team, roles and quotas</h2>
+<p>Projects, servers and GitHub App installations belong to a workspace. Besides your personal workspace you can create a team one from the workspace menu in the left sidebar with <span class="ui">Add new workspace</span>. In the public edition one account can own at most five team workspaces; the self-hosted edition has no such limit by default.</p>
+<p>A personal workspace is yours alone. Add members to a team workspace in <span class="ui">Workspace settings</span> (the <span class="ui">Workspace</span> menu item), in the <span class="ui">Workspace members</span> section, with <span class="ui">Add member</span>. Enter a username or e-mail. In the public edition the person must have signed in to InitPad at least once; in the self-hosted edition the instance administrator must create their account first.</p>
 <p>A workspace member has one of five roles:</p>
 <div class="scroll"><table>
   <tr><th>Role</th><th>What it adds to the previous one</th></tr>
-  <tr><td>viewer</td><td>View projects and their status.</td></tr>
-  <tr><td>member</td><td>Create and import projects, and deploy.</td></tr>
-  <tr><td>maintainer</td><td>Add servers and approve production deployments.</td></tr>
-  <tr><td>admin</td><td>Install the GitHub App for the workspace and manage members.</td></tr>
-  <tr><td>owner</td><td>Change the production approval rule.</td></tr>
+  <tr><td>Viewer</td><td>View projects, servers and their status.</td></tr>
+  <tr><td>Member</td><td>Create and import projects, deploy and change variables.</td></tr>
+  <tr><td>Maintainer</td><td>Add and verify SFTP servers, edit servers, change the project pipeline and approve production deployments.</td></tr>
+  <tr><td>Admin</td><td>Add Agent servers and connect the Agent, manage workspace access to servers, install the GitHub App for the workspace and manage members.</td></tr>
+  <tr><td>Owner</td><td>Change the production approval rule.</td></tr>
 </table></div>
 <p>A workspace can require production to be approved by someone other than the requester. The <span class="ui">Audit log</span> shows who did what.</p>
 
+<h3 id="quotas">Workspace quotas</h3>
+<p>Every workspace has limits, shown in <span class="ui">Workspace settings</span> under <span class="ui">Workspace capacity</span>. A platform administrator can raise them.</p>
+<div class="scroll"><table>
+  <tr><th>Limit</th><th>Default</th></tr>
+  <tr><td>Projects</td><td>50</td></tr>
+  <tr><td>Members</td><td>100</td></tr>
+  <tr><td>Servers</td><td>20</td></tr>
+  <tr><td>Concurrent operations (deployments and setups)</td><td>10</td></tr>
+  <tr><td>Artifact storage</td><td>20 GiB</td></tr>
+</table></div>
+<p>On each server the workspace also has its own limits: by default at most 50 environments and, per environment, 1 CPU, 512 MB of memory and 256 processes. Change them on the server with <span class="ui">Edit access</span>.</p>
+
 <h2 id="rename-delete">10. Renaming and deleting</h2>
 <h3>Renaming a repository or organization</h3>
-<p>InitPad follows renames on GitHub by itself. The project picks up the new name shortly and the next push deploys as before. The container on the server keeps its original name so the running application does not move.</p>
+<p>In the public edition InitPad follows renames on GitHub by itself. The project picks up the new name shortly and the next push deploys as before. The container on the server keeps its original name so the running application does not move.</p>
 <div class="box warn"><div class="t">Transferring a repository</div>
 A transfer to another owner is not a rename. When the repository is no longer available to the GitHub App installation, InitPad treats it as deleted and cleans the project up.</div>
 <h3>Deleting a project</h3>
 <ol class="steps">
   <li>For every environment deployed through a connected Agent, first choose <span class="ui">Remove deployment</span> and wait for the cleanup to finish. Release deployments on a disconnected or retired server with <span class="ui">Release deployment</span>, or let the dialog flag them.</li>
   <li>Choose <span class="ui">Delete project</span>.</li>
-  <li>Tick <span class="ui">Also delete the source repository and release its name</span> only if you also want to delete the repository on GitHub. Without it, the repository stays and can be imported again later.</li>
+  <li>Tick <span class="ui">Also delete the source repository and release its name</span> only if you also want to delete the repository. Without it, the repository stays, its name stays taken, and it can be imported again later.</li>
 </ol>
 <p>A project with a deployment on a disconnected or retired server can be deleted too. The dialog marks that deployment <q>server disconnected · left on the server</q> and requires you to tick <span class="ui">Delete the InitPad record with protected cleanup still pending</span>. The containers may keep running there and must be removed on the server manually.</p>
 <p>An environment whose build or deployment failed before anything reached the server needs no cleanup. A project with it is deleted right away.</p>
 
 <h2 id="troubleshooting">11. Troubleshooting</h2>
+<p>Server error messages are quoted verbatim; <code>…</code> stands for a specific name or number.</p>
 <div class="scroll"><table>
   <tr><th>What you see</th><th>Why, and what to do</th></tr>
-  <tr><td>No connected and verified target can run the template</td><td>The workspace has no connected server that can run the template. Connect a server, or add the runtime in its settings.</td></tr>
+  <tr><td><q>No connected and verified target can run …</q></td><td>The workspace has no connected server that can run the template. Connect a server, or add the runtime in its settings.</td></tr>
   <tr><td><code>Too many attempts. Try again later.</code></td><td>A protective limit against repeated attempts. Wait a while and try again; a few minutes is usually enough.</td></tr>
-  <tr><td><code>Remove Agent-managed deployments first</code></td><td>The project has an application deployed through a connected Agent. Choose Remove deployment first. For a deployment on a disconnected or retired server use Release deployment instead.</td></tr>
-  <tr><td><code>Release the deployments on this server first: …</code></td><td>A disconnected server can be deleted only when none of its environments still records a deployment. Release them with Release deployment, then delete the server.</td></tr>
+  <tr><td><code>A repository named '…' already exists in …. Choose a different project name, or import the existing repository.</code></td><td>The name is taken by a repository with history. Choose another name, or import the repository.</td></tr>
+  <tr><td><code>Remove Agent-managed deployments first (…). The project can be deleted after their cleanup jobs succeed.</code></td><td>The project has an application deployed through a connected Agent. Choose Remove deployment first. For a deployment on a disconnected or retired server use Release deployment instead.</td></tr>
+  <tr><td><q>Release the deployments on this server first: …</q></td><td>A disconnected server can be deleted only when none of its environments still records a deployment. Release them with Release deployment, then delete the server.</td></tr>
   <tr><td>The import marks the repository as empty</td><td>It has no commit.</td></tr>
-  <tr><td><code>No Dockerfile on 'main'</code></td><td>The template builds the image from a Dockerfile on the default branch. Add one.</td></tr>
-  <tr><td><code>No InitPad-compatible workflow at '.github/workflows/ci.yml'</code></td><td>Download the starter workflow on the import screen and commit it under this name.</td></tr>
-  <tr><td><code>You can own at most 5 team workspaces.</code></td><td>You have reached the team workspace limit. Delete a workspace you no longer need, or ask the platform administrator to raise the limit.</td></tr>
-  <tr><td><code>User '…' not found</code> when adding a member</td><td>InitPad has no account with that username or e-mail. The person must sign in with GitHub once first.</td></tr>
+  <tr><td><code>No Dockerfile on '…' — the '…' template builds the image from one.</code></td><td>The template builds the image from a Dockerfile on the default branch. Add one.</td></tr>
+  <tr><td><code>No InitPad-compatible workflow at '…' — download the starter workflow from this import screen.</code></td><td>Download the starter workflow on the import screen and commit it under the given name.</td></tr>
+  <tr><td><code>Key must match ^[A-Z_][A-Z0-9_]* (uppercase letters, digits and underscore)</code></td><td>The variable key has a disallowed form, see <a href="#variables">Variables and secrets</a>.</td></tr>
+  <tr><td><code>'PORT' is a reserved platform variable</code></td><td>InitPad sets the port from the template.</td></tr>
+  <tr><td><code>Environment '…' is busy. Wait for or cancel its operation before changing config.</code></td><td>The environment is deploying or running another operation. Wait for it to finish.</td></tr>
+  <tr><td><code>Workspace … quota reached (max …)</code></td><td>The workspace has reached a <a href="#quotas">quota</a>. Free something up, or ask the platform administrator to raise it.</td></tr>
+  <tr><td><code>You can own at most 5 team workspaces. Delete one you no longer need or ask the platform administrator.</code></td><td>You have reached the team workspace limit of the public edition. Delete a workspace you no longer need, or ask the platform administrator to raise the limit.</td></tr>
+  <tr><td><code>User '…' not found</code> when adding a member</td><td>InitPad has no account with that username or e-mail. In the public edition the person must sign in with GitHub once first; in the self-hosted edition the instance administrator creates the account.</td></tr>
+  <tr><td><code>Hosted SFTP targets must resolve only to public internet addresses</code></td><td>The public edition accepts only SFTP hosting at a public internet address. Connect hosting on an internal network through a self-hosted instance, or use an Agent server instead.</td></tr>
   <tr><td>An organization is missing from the owner list</td><td>The GitHub App is not installed in it, or the installation is waiting for the organization owner's approval ("Waiting for a GitHub organization owner to approve the App"). Once approved, the organization connects by itself when you return to the InitPad window.</td></tr>
-  <tr><td>The pipeline is green but the dev environment failed</td><td>The build passed, the deployment did not. The reason is on the environment card and in the Deployment activity section. Once you fix the cause, choose the retry icon.</td></tr>
-  <tr><td>A server shows as disconnected</td><td>The Agent is not reporting in. Check that the server is running, Docker is started and the server can reach the InitPad address.</td></tr>
-  <tr><td>The Agent installer stops because of the server size</td><td>The server has less than 1.5 GB RAM, 1 CPU or 10 GiB of free space for Docker. Use a bigger server, or free up space for Docker.</td></tr>
-  <tr><td>The browser warns about the certificate of an application behind the managed gateway</td><td>This computer lacks the gateway certificate. Download it in Manage Agent under Application gateway and install it.</td></tr>
-  <tr><td>InitPad was updated</td><td>The page belongs to the previous version. InitPad usually reloads it by itself; otherwise choose Reload.</td></tr>
+  <tr><td>The pipeline is green but the dev environment failed</td><td>The build passed, the deployment did not. The reason is on the environment card and in the Deployment activity section. A common cause is an application that does not listen on the template's port or does not answer on <code>/health</code>, see the <a href="#templates">template table</a>. Once you fix the cause, choose the retry icon.</td></tr>
+  <tr><td>A server shows as offline, a deployment shows <q>Waiting for Agent</q></td><td>The Agent has not reported in for 90 seconds. Check that the server is running, Docker is started and the server can reach the InitPad address, see <a href="#agent-updates">Agent updates and the offline state</a>.</td></tr>
+  <tr><td>The Agent installer stops with <code>this server is below the minimum size</code></td><td>The server lacks RAM, CPU or disk space, see the <a href="#server-requirements">requirements</a>. Make it bigger.</td></tr>
+</table></div>
+<h3 id="gateway-troubleshooting">Managed gateway check</h3>
+<p>The state of the last gateway test is shown in the Agent dialog in the <span class="ui">Application gateway</span> section and in the target picker of a project.</p>
+<div class="scroll"><table>
+  <tr><th>State or message</th><th>What it means and what to do</th></tr>
+  <tr><td><code>not-run</code>, in the target picker <q>gateway not checked</q></td><td>The test has not run yet, or the settings changed since. Choose Test gateway.</td></tr>
+  <tr><td><code>queued</code> or <code>running</code>, in the target picker <q>gateway check running</q></td><td>The test is waiting for the Agent or running. The target picker refreshes by itself.</td></tr>
+  <tr><td><code>passed</code></td><td>The gateway is ready and the server can be picked as a target.</td></tr>
+  <tr><td><code>failed</code>, in the target picker <q>gateway check failed</q></td><td>The reason is shown below the state, see the rows below. Run the test again after fixing it.</td></tr>
+  <tr><td><code>Gateway DNS lookup failed</code> or <code>Gateway DNS lookup returned no addresses</code></td><td>The wildcard record <code>*.domain</code> is missing, or the server cannot resolve it. Check the DNS records and the DNS server the Agent server uses.</td></tr>
+  <tr><td><code>Gateway TLS handshake failed</code></td><td>No gateway with a certificate from the InitPad CA answers on port 443: the port is blocked, another server occupies it, or the gateway was not installed. Check the firewall and run the install command with the gateway again.</td></tr>
+  <tr><td><code>Caddy adapter is not configured on this Agent</code> or <code>Caddy adapter readiness returned HTTP …</code></td><td>The inner gateway is not running, or the Agent does not know about it. Run the command from Refresh the gateway on the server.</td></tr>
+  <tr><td>The browser reports an untrusted application certificate</td><td>The <a href="#gateway-ca">gateway certificate</a> is missing on this computer, or Firefox does not have it in its own store.</td></tr>
 </table></div>
 
 <h2 id="limitations">12. Public edition limits</h2>
 <ul>
-  <li>Applications are deployed only to servers with the Agent. The public edition cannot deploy to shared web hosting over SFTP yet.</li>
+  <li>SFTP hosting must be reachable from the internet. Connect a server behind a VPN or on an internal network through the Agent, if it runs Docker.</li>
   <li>GitHub is the source of code. The public edition does not support other Git servers.</li>
   <li>An application on a server behind a VPN is reachable only from that network. InitPad does not publish it to the outside.</li>
-  <li>The InitPad workflow must be in the file <code>ci.yml</code>.</li>
+  <li>The InitPad workflow must be in the file <code>.github/workflows/ci.yml</code>.</li>
   <li>One account can own at most five team workspaces.</li>
 </ul>
+<p>The self-hosted edition has different rules, see <a href="#self-hosted-differences">What is different in the self-hosted edition</a>.</p>
 
-<footer>InitPad, public edition help. Current as of version 0.2.32, November 2026.</footer>
+<h2 id="self-hosted">13. Self-hosted InitPad</h2>
+<p>A self-hosted InitPad runs entirely on your server: web, API, database, Gitea with a CI runner and artifact storage. This chapter is for users and administrators of such an instance. Detailed operating instructions are in the repository in <a href="https://github.com/kudrle01/initpad/blob/main/deploy/README.md">deploy/README.md</a> and <a href="https://github.com/kudrle01/initpad/blob/main/deploy/OPERATIONS.md">deploy/OPERATIONS.md</a> (in Czech).</p>
+
+<h3 id="self-hosted-install">Installation</h3>
+<p>The InitPad server needs Linux with Docker Engine and the Compose plugin, at least 2 CPUs, 6 GiB of RAM and 20 GiB of space for Docker (4 vCPUs, 8 GiB and 40 GiB recommended). On Ubuntu 24.04 and newer, run <code>sudo ./prepare-rootless-runner.sh</code> first; the installer tells you if it is needed.</p>
+<pre><code>git clone https://github.com/kudrle01/initpad.git
+cd initpad/deploy
+./install.sh</code></pre>
+<p>On the first run the installer asks how users will open InitPad:</p>
+<div class="scroll"><table>
+  <tr><th>Option</th><th>When</th><th>Address and HTTPS</th></tr>
+  <tr><td>Only this computer</td><td>Trying it out on your own computer</td><td><code>http://localhost:8080</code>, no HTTPS</td></tr>
+  <tr><td>Internal network with DNS</td><td>A school or company with names on its own DNS server</td><td>For example <code>https://initpad.school.example</code>, InitPad's own certificate authority</td></tr>
+  <tr><td>Public domain</td><td>A server reachable from the internet on ports 80 and 443</td><td>For example <code>https://initpad.example.org</code>, a Let's Encrypt certificate</td></tr>
+  <tr><td>Local network by IP address</td><td>From the release following 0.2.35. A lab or virtual machine without DNS; InitPad is opened by the server's IP address.</td><td>An address like <code>http://192.168.1.50:8080</code></td></tr>
+</table></div>
+<p>The options with a domain need two DNS records pointing at the server: the platform name and the Git name (for example <code>git.school.example</code>). At the end the installer prints the platform address, the setup token and, for an internal network, the certificate fingerprint. You can run the script again at any time and it only fixes what is missing; change the domain or mode with <code>./install.sh --reconfigure</code>.</p>
+
+<h3 id="self-hosted-admin">The first administrator</h3>
+<ol class="steps">
+  <li>Open the platform address the installer printed.</li>
+  <li>Choose <span class="ui">Create account</span> and fill in a username, e-mail, password (at least 12 characters) and the <span class="ui">Setup token</span> from the end of the installer output.</li>
+  <li>The first account becomes the platform administrator. It creates the other accounts, see below.</li>
+</ol>
+<p>The message <code>The setup token is not valid. Use the token printed at the end of install.sh.</code> means the token is wrong. It is stored in <code>deploy/.env</code> as <code>INITPAD_BOOTSTRAP_TOKEN</code>.</p>
+
+<h3 id="self-hosted-accounts">Password sign-in and account activation</h3>
+<p>By default users do not register themselves; the administrator creates their accounts:</p>
+<ol class="steps">
+  <li>The administrator opens <span class="ui">Platform</span> in the left menu and in the <span class="ui">Users</span> section chooses <span class="ui">Add user</span>.</li>
+  <li>If the instance has e-mail configured, the user receives an activation link. Otherwise the link is shown once and the administrator passes it on securely. <span class="ui">New activation link</span> creates a new one and invalidates the old one.</li>
+  <li>The user opens the link, chooses a password (at least 12 characters) on the <span class="ui">Activate your account</span> page and confirms with <span class="ui">Activate and sign in</span>.</li>
+  <li>From then on they sign in on the start page with their username or e-mail and password. A sign-in lasts seven days.</li>
+</ol>
+<p>The administrator can reset a password (the user gets a temporary password they must change at the next sign-in) or deactivate an account; a deactivated account cannot sign in to InitPad or Gitea.</p>
+
+<h3 id="self-hosted-gitea">Gitea and Git</h3>
+<p>Project repositories live in the built-in Gitea at the Git address the installer printed (<code>http://gitea.localhost:3001</code> for a local installation). Sign in to Gitea with your InitPad account through single sign-on (SSO): on the Gitea sign-in page choose sign-in with <code>initpad-sso</code>. You do not create a separate Gitea password.</p>
+<p>To work from the command line, open <span class="ui">Account settings → Connect Git</span>, choose <span class="ui">Show setup command</span> and run the command once in a terminal. You can then clone, pull and push without a password prompt. The command stores your personal Gitea token in <code>~/.gitconfig</code>, so keep it private.</p>
+
+<h3 id="self-hosted-certificate">Platform certificate</h3>
+<p>An installation for an internal network issues HTTPS certificates from its own certificate authority. For the browser to trust InitPad and Gitea without a warning, install its certificate once on every computer:</p>
+<ul>
+  <li>in InitPad under <span class="ui">Account settings → Platform certificate</span> (the file <code>initpad-root-ca.crt</code>, its SHA-256 fingerprint and instructions for Windows, macOS and Firefox, the same as for the <a href="#gateway-ca">gateway certificate</a>),</li>
+  <li>on a computer that does not trust InitPad yet, over HTTP from <code>http://&lt;platform name&gt;/initpad-ca.crt</code>; compare the fingerprint with the installer output,</li>
+  <li>in a Windows domain the administrator distributes it with a group policy into <span class="ui">Trusted Root Certification Authorities</span>.</li>
+</ul>
+<p>Agent servers receive the platform certificate automatically: the command from the Agent dialog downloads it, checks the fingerprint and trusts it for the InitPad registry only. The platform certificate and the <a href="#gateway-ca">managed gateway certificate</a> are two different files.</p>
+
+<h3 id="self-hosted-servers">Workspace access to servers</h3>
+<p>Besides the workspace's own servers (added the same way as in the <a href="#servers">public edition</a>), an instance can offer platform servers, for example the built-in Docker on the InitPad host (<q>Docker · self-hosted direct</q>). A workspace may deploy to them once a workspace owner or admin enables access:</p>
+<ol class="steps">
+  <li>In <span class="ui">Servers</span>, on a server marked <span class="ui">Not enabled for this workspace</span>, choose <span class="ui">Enable for …</span>.</li>
+  <li>Set the <span class="ui">Allowed runtimes</span>, the <span class="ui">Environment quota</span>, the CPU, memory and process limits per environment and, optionally, automatic cleanup of dev and test environments.</li>
+  <li>Access can later be changed with <span class="ui">Edit access</span>, <span class="ui">Pause access</span> or <span class="ui">Remove access</span>. Running applications are not stopped.</li>
+</ol>
+<p>The built-in Docker is meant for trying things out. On a local installation it publishes application ports on this computer only. For applications reachable from other computers use an Agent server, ideally with a <a href="#gateway">managed gateway</a>.</p>
+
+<h3 id="self-hosted-updates">The Platform page and updates</h3>
+<p>Only platform administrators see <span class="ui">Platform</span> in the left menu. It holds user management, workspace capacity and the <span class="ui">Platform updates</span> section. The installed version is also shown at the bottom of the left menu.</p>
+<ol class="steps">
+  <li>In <span class="ui">Platform updates</span> choose <span class="ui">Refresh</span> to load the list of signed releases.</li>
+  <li>For a newer version choose <span class="ui">Install update</span> and confirm.</li>
+  <li>InitPad backs up the database, replaces the API, web and Supervisor images and checks that the new version runs. The web UI and API restart briefly; project applications are not restarted.</li>
+  <li>If the new version fails its checks, the previous one is restored automatically and the page shows <q>The update to InitPad … did not complete. The previous version is running.</q></li>
+</ol>
+<p>Agent servers are updated separately, see <a href="#agent-updates">Agent updates</a>.</p>
+
+<h3 id="self-hosted-backup">Backup and restore</h3>
+<p>The administrator makes a backup on the server, in the <code>deploy</code> folder, with <code>./backup.sh /secure/path/initpad-backup</code>. The backup contains the database, Gitea repositories, artifacts, configuration and credentials, so encrypt it and keep a copy off the server. Restore with <code>./restore.sh &lt;backup directory&gt;</code>; try it on a disposable installation first. The exact procedure, scheduling and restore drills are in <a href="https://github.com/kudrle01/initpad/blob/main/deploy/OPERATIONS.md">deploy/OPERATIONS.md</a>, sections Zálohy (backups) and Obnova (restore).</p>
+
+<h3 id="self-hosted-differences">What is different in the self-hosted edition</h3>
+<ul>
+  <li>The <a href="#sign-in">Signing in</a> and <a href="#github">Connecting GitHub</a> chapters do not apply. You sign in with a password; there is no GitHub App and no GitHub repository owner field.</li>
+  <li>Repositories live in Gitea, the workflow is in <code>.gitea/workflows/ci.yml</code> and pipeline logs are in Gitea. There is no button to re-run GitHub jobs.</li>
+  <li>Following repository renames and transfers, as described in <a href="#rename-delete">Renaming and deleting</a>, applies to GitHub only.</li>
+  <li>The limit of five team workspaces does not apply by default. Workspace quotas apply the same way.</li>
+  <li>SFTP hosting may also be on the internal network.</li>
+  <li>A new workspace member must first be created by the platform administrator.</li>
+  <li>In version 0.2.35 the <span class="ui">Help</span> and <span class="ui">Learn more</span> links appear only when the administrator sets <code>INITPAD_DOCS_URL</code> in <code>deploy/.env</code>. From the release following 0.2.35 they point to <a href="https://docs.initpad.me">https://docs.initpad.me</a> by default.</li>
+</ul>
+
+<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.35, November 2026.</footer>
 </main>
 </div>
+<script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
 </body>
 </html>

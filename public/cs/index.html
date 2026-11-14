@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nápověda InitPad</title>
-<meta name="description" content="Jak ve veřejné edici InitPadu propojit GitHub, připojit vlastní server, založit nebo importovat projekt a nasazovat ho.">
+<meta name="description" content="Jak v InitPadu propojit GitHub, připojit vlastní server, založit nebo importovat projekt a nasazovat ho. Veřejná edice s GitHubem i self-hosted instalace.">
 <link rel="alternate" hreflang="cs" href="/cs/">
 <link rel="alternate" hreflang="en" href="/en/">
 <link rel="alternate" hreflang="x-default" href="/en/">
@@ -25,10 +25,11 @@
   <a href="#import">6. Import repozitáře</a>
   <a href="#deployments">7. Nasazení a prostředí</a>
   <a href="#variables">8. Proměnné a secrety</a>
-  <a href="#team">9. Tým a role</a>
+  <a href="#team">9. Tým, role a kvóty</a>
   <a href="#rename-delete">10. Přejmenování a smazání</a>
   <a href="#troubleshooting">11. Řešení potíží</a>
   <a href="#limitations">12. Omezení veřejné edice</a>
+  <a href="#self-hosted">13. Self-hosted InitPad</a>
 </nav>
 <main>
 
@@ -41,16 +42,28 @@
 </div>
 
 <h1>Nápověda InitPad</h1>
-<p class="subtitle">Veřejná edice propojená s GitHubem. Popisuje verzi 0.2.32.</p>
+<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.35.</p>
 
 <h2 id="getting-started">1. Začínáme</h2>
 <p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
-<p>Budete potřebovat:</p>
+
+<h3 id="editions">Dvě edice</h3>
+<p>InitPad existuje ve dvou edicích. Většina této nápovědy platí pro obě, rozdíly jsou vždy uvedené u textu.</p>
+<div class="scroll"><table>
+  <tr><th></th><th>Veřejná edice (GitHub)</th><th>Self-hosted edice</th></tr>
+  <tr><td>Kde běží</td><td>Provozuje ji autor InitPadu na adrese <a href="https://staging.initpad.me">https://staging.initpad.me</a> (zatím zkušební provoz).</td><td>Na vašem serveru. Adresu určí správce při instalaci, například <code>http://localhost:8080</code> nebo <code>https://initpad.skola.example</code>.</td></tr>
+  <tr><td>Přihlášení</td><td>Účtem GitHub.</td><td>Uživatelským jménem a heslem, účty zakládá správce instance.</td></tr>
+  <tr><td>Repozitáře a CI</td><td>GitHub a GitHub Actions, workflow <code>.github/workflows/ci.yml</code>.</td><td>Vestavěná Gitea a její CI runner, workflow <code>.gitea/workflows/ci.yml</code>.</td></tr>
+  <tr><td>Servery</td><td>Vlastní servery s InitPad Agentem, případně veřejně dostupný SFTP hosting.</td><td>Totéž a navíc servery platformy, které správce zpřístupní workspace.</td></tr>
+  <tr><td>Kapitoly jen pro tuto edici</td><td><a href="#sign-in">Přihlášení</a>, <a href="#github">Propojení GitHubu</a>, <a href="#limitations">Omezení veřejné edice</a></td><td><a href="#self-hosted">Self-hosted InitPad</a></td></tr>
+</table></div>
+
+<h3>Co budete potřebovat</h3>
 <ul>
-  <li>účet na GitHubu,</li>
-  <li>Linux server s Dockerem, na kterém aplikace poběží. Stačí mu odchozí přístup na internet, takže může stát za routerem i za VPN.</li>
+  <li>ve veřejné edici účet na GitHubu, v self-hosted edici účet od správce instance,</li>
+  <li>Linux server s Dockerem, na kterém aplikace poběží (viz <a href="#server-requirements">požadavky na server</a>). Stačí mu odchozí přístup na adresu InitPadu, takže může stát za routerem i za VPN.</li>
 </ul>
-<p>Celá cesta má pět kroků:</p>
+<p>Cesta ve veřejné edici má pět kroků:</p>
 <ol class="steps">
   <li><a href="#sign-in">Přihlaste se</a> účtem GitHub.</li>
   <li><a href="#github">Nainstalujte GitHub App</a>, aby InitPad směl pracovat s vašimi repozitáři.</li>
@@ -58,16 +71,19 @@
   <li><a href="#new-project">Založte projekt</a> ze šablony, nebo <a href="#import">importujte</a> existující repozitář.</li>
   <li>Pushněte změnu. InitPad ji nasadí do prostředí dev a vy ji pak <a href="#deployments">povyšujete</a> dál.</li>
 </ol>
+<p>V self-hosted edici kroky 1 a 2 odpadají: přihlásíte se heslem a repozitáře vznikají ve vestavěné Gitee. Postup najdete v kapitole <a href="#self-hosted">Self-hosted InitPad</a>.</p>
 <div class="box tip"><div class="t">Nápověda v aplikaci</div>
-Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v jazyce, který máte v InitPadu nastavený. Odkazy <span class="ui">Více v nápovědě</span> u jednotlivých obrazovek vedou rovnou na příslušnou kapitolu.</div>
+Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v jazyce, který máte v InitPadu nastavený. Odkazy <span class="ui">Více v nápovědě</span> u jednotlivých obrazovek vedou rovnou na příslušnou kapitolu. Přepínač jazyka nahoře zachová kapitolu, na které právě jste.</div>
 
 <h2 id="sign-in">2. Přihlášení</h2>
+<p>Tato kapitola platí pro veřejnou edici. Přihlášení v self-hosted edici popisuje část <a href="#self-hosted-accounts">Přihlášení heslem a aktivace účtu</a>.</p>
 <p>Na úvodní stránce zvolte <span class="ui">Pokračovat přes GitHub</span>. Účet v InitPadu vznikne při prvním přihlášení, heslo se nezakládá.</p>
-<p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu.</p>
-<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.32</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
+<p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu. Když mezitím vyjde nová verze InitPadu, otevřená karta ukáže <q>InitPad byl aktualizován</q> a novou verzi načtete tlačítkem <span class="ui">Obnovit</span>.</p>
+<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.35</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
 <p>V <span class="ui">Nastavení účtu</span> najdete v části <span class="ui">Přihlášené prohlížeče</span> všechna zařízení, kde jste přihlášení. Prohlížeč, který nepoznáváte, odhlaste, případně zvolte <span class="ui">Odhlásit všechny ostatní</span>.</p>
 
 <h2 id="github">3. Propojení GitHubu</h2>
+<p>Tato kapitola platí pro veřejnou edici. Self-hosted edice GitHub nepoužívá.</p>
 <p>InitPad s repozitáři nepracuje pod vaším jménem, ale přes GitHub App. Vidí jen účty a organizace, do kterých ji nainstalujete, a jen repozitáře, které jí povolíte.</p>
 <ol class="steps">
   <li>Otevřete <span class="ui">Nastavení účtu</span> a v části <span class="ui">Účet GitHub</span> zvolte <span class="ui">Nainstalovat GitHub App</span>. Otevře se okno GitHubu, proto povolte vyskakovací okna.</li>
@@ -79,42 +95,95 @@ Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHu
 <p>Samotné členství v organizaci nestačí. Repozitáře organizace uvidíte v InitPadu až po instalaci App do ní.</p>
 
 <h2 id="servers">4. Připojení serveru</h2>
-<p>Aplikace neběží u InitPadu, ale na vašem serveru. Na něm běží malý program InitPad Agent, který si sám chodí pro práci. InitPad se na váš server nikdy nepřipojuje, takže nemusíte otevírat žádný port pro správu ani předávat SSH klíč.</p>
-<h3>Co server potřebuje</h3>
+<p>Aplikace neběží u InitPadu, ale na vašem serveru. InitPad umí dva druhy serverů:</p>
+<div class="scroll"><table>
+  <tr><th>Způsob připojení</th><th>Pro co</th><th>Kdo ho smí přidat</th></tr>
+  <tr><td><span class="ui">InitPad Agent pro Docker (doporučeno)</span></td><td>Všechny šablony. Na serveru běží malý program InitPad Agent, který si sám chodí pro práci. InitPad se na server nepřipojuje, takže nemusíte otevírat port pro správu ani předávat SSH klíč.</td><td>Vlastník nebo administrátor workspace</td></tr>
+  <tr><td><span class="ui">Sdílený webhosting přes SFTP</span></td><td>Statické weby a PHP (Nette, Laravel, Symfony) na běžném webhostingu. InitPad se k hostingu připojuje sám přes SFTP.</td><td>Vlastník, administrátor nebo správce workspace</td></tr>
+</table></div>
+<p>Server typu Agent smí přidat jen ten, kdo smí Agenta i připojit, tedy vlastník nebo administrátor workspace. Správce workspace smí přidat a ověřit SFTP server a používat všechny servery, které už workspace má. Ostatní role servery jen vidí.</p>
+
+<h3 id="server-requirements">Co server s Agentem potřebuje</h3>
 <ul>
-  <li>Linux a běžící Docker,</li>
-  <li>odchozí HTTPS spojení na adresu InitPadu,</li>
-  <li>aspoň 1,5 GB RAM, 1 CPU a 10 GiB volného místa pro Docker. S menším serverem instalátor skončí ještě před registrací. Pod 4 GB RAM, 2 CPU nebo 20 GiB jen upozorní, že server může být na sestavování aplikací pomalý,</li>
-  <li>oprávnění správce pro jednorázové spuštění instalátoru.</li>
+  <li>Linux (<code>amd64</code> nebo <code>arm64</code>) s Docker Engine běžícím pod rootem, tedy se socketem <code>/var/run/docker.sock</code>. Rootless Docker Agent nepodporuje. Grafické prostředí není potřeba.</li>
+  <li>Odchozí HTTPS spojení na adresu InitPadu. Příchozí porty potřebuje jen <a href="#gateway">spravovaná brána</a> (80 a 443).</li>
+  <li>Oprávnění root pro jednorázové spuštění instalátoru.</li>
 </ul>
-<h3>Postup</h3>
+<p>Instalátor před registrací zkontroluje velikost serveru. Pod minimem skončí s výpisem, co chybí, mezi minimem a doporučením jen varuje.</p>
+<div class="scroll"><table>
+  <tr><th></th><th>Minimum</th><th>Doporučeno</th></tr>
+  <tr><td>RAM</td><td>1,5 GB</td><td>4 GB</td></tr>
+  <tr><td>CPU</td><td>1</td><td>2</td></tr>
+  <tr><td>Volné místo pro Docker</td><td>10 GiB</td><td>20 GiB</td></tr>
+</table></div>
+<p>Minimum stačí na Agenta a jedno prostředí, doporučená velikost na projekt s prostředími dev, test a prod. Každé prostředí má ve výchozím stavu limit 512 MB paměti a 1 CPU a při nasazení nové verze krátce běží stará i nová verze vedle sebe.</p>
+
+<h3 id="agent-install">Postup pro server s Agentem</h3>
 <ol class="steps">
   <li>Otevřete <span class="ui">Servery</span> a zvolte <span class="ui">Přidat server</span>.</li>
-  <li>Jako způsob připojení ponechte <span class="ui">InitPad Agent pro Docker (doporučeno)</span> a vyplňte název.</li>
-  <li>V poli <span class="ui">Umí spustit</span> zaškrtněte runtimy, které server zvládne. Šablonu půjde nasadit jen na server, který její runtime umí.</li>
-  <li>Zvolte <span class="ui">Zpřístupnění aplikací</span>, viz tabulka níže, a vyplňte veřejnou URL serveru.</li>
-  <li>InitPad zobrazí příkaz <span class="ui">Instalace a registrace na Docker serveru</span>. Zkopírujte ho a spusťte na serveru. Instalátor se zeptá na registrační token, který vidíte ve stejném okně.</li>
-  <li>Po chvíli se server v seznamu ukáže jako připojený.</li>
+  <li>Jako <span class="ui">Způsob připojení</span> ponechte <span class="ui">InitPad Agent pro Docker (doporučeno)</span> a vyplňte <span class="ui">Název</span>.</li>
+  <li>Zvolte <span class="ui">Zpřístupnění aplikací</span> (viz tabulka níže) a vyplňte <span class="ui">Základní URL aplikací</span>, u spravované brány <span class="ui">Základní URL brány</span>.</li>
+  <li>V poli <span class="ui">Umí spustit</span> zaškrtněte runtimy, které má server nabízet. Šablonu půjde nasadit jen na server, který její runtime umí. Podporu Dockeru Agent po registraci potvrdí sám.</li>
+  <li>Zvolte <span class="ui">Přidat server</span>. Otevře se dialog <span class="ui">InitPad Agent</span>; později ho otevřete u serveru tlačítkem <span class="ui">Spravovat Agenta</span>. Až budete u serveru, zvolte <span class="ui">Vygenerovat registraci</span>.</li>
+  <li><span class="ui">1. Instalace a registrace na Docker serveru</span>: zkopírujte příkaz a spusťte ho v interaktivním terminálu na serveru. Ověří kontrolní součet instalátoru a image Agenta, zkontroluje velikost serveru a Agenta spustí. Tlačítko <span class="ui">Jen stáhnout skript</span> stáhne instalátor bez spuštění.</li>
+  <li><span class="ui">2. Registrační token</span>: až si o něj instalátor řekne, vložte token. Zadává se skrytě, do historie shellu se nedostane. Token se zobrazí jen jednou, po zavření dialogu ho už neuvidíte, platí krátce a jen pro jedno použití.</li>
+  <li>Po chvíli dialog ukáže <q>Agent … je aktuální</q> a server se v seznamu objeví jako připojený.</li>
 </ol>
 <div class="scroll"><table>
   <tr><th>Zpřístupnění</th><th>Kdy ho zvolit</th><th>Adresa aplikace</th></tr>
-  <tr><td>Přímé porty</td><td>Zkoušení, laboratoř, server ve vnitřní síti</td><td>Adresa serveru a port. Port se při novém nasazení může změnit.</td></tr>
-  <tr><td>Spravovaná brána</td><td>Produkce</td><td>Stálá adresa pro každý projekt a prostředí. Vyžaduje vlastní doménu směrovanou na server.</td></tr>
+  <tr><td><span class="ui">Přímé porty (lokálně / laboratoř)</span></td><td>Zkoušení, laboratoř, server ve vnitřní síti</td><td>Adresa serveru a port, například <code>http://192.168.1.50:32768</code>. Port se při novém nasazení může změnit.</td></tr>
+  <tr><td><span class="ui">Spravovaná brána (produkce)</span></td><td>Produkce, stálé HTTPS adresy</td><td>Stálá adresa pro každý projekt a prostředí, například <code>https://shop-prod-1a2b3c4d.apps.example.cz</code>. Vyžaduje doménu, viz <a href="#gateway">Spravovaná brána</a>.</td></tr>
 </table></div>
-<h3>Spravovaná brána</h3>
-<p>U spravované brány instalační příkaz nastaví zároveň bránu pro vaši doménu: soukromou certifikační autoritu, TLS vstup a samotnou bránu. Předem v DNS nasměrujte doménu i <code>*.doména</code> na server.</p>
-<p>HTTPS certifikáty aplikací vydává tato soukromá autorita, proto ji nainstalujte do prohlížeče na každém počítači, ze kterého aplikace otevíráte. Jinak prohlížeč u každé aplikace ukáže varování.</p>
-<ol class="steps">
-  <li>U serveru otevřete <span class="ui">Spravovat Agenta</span> a v části <span class="ui">Brána aplikací</span> zvolte <span class="ui">Otestovat bránu</span>. Po úspěšném testu se zobrazí otisk certifikátu.</li>
-  <li>Zvolte <span class="ui">Stáhnout certifikát</span> a otisk SHA-256 porovnejte se staženým souborem.</li>
-  <li>Certifikát nainstalujte podle návodu pro Windows, macOS nebo Firefox v části <span class="ui">Jak certifikát nainstalovat</span>.</li>
-</ol>
-<p>Agent 0.16 a novější po své aktualizaci obnoví bránu sám. Příkaz <span class="ui">Obnovit bránu na serveru</span> je jen pro starší Agenty a nový registrační token nepotřebuje.</p>
 <div class="box tip"><div class="t">Server za VPN nebo doma</div>
 Funguje to. Agent navazuje jen odchozí spojení a po nasazení si sám ověří, že aplikace odpovídá. Aplikaci pak otevře jen ten, kdo se na server dostane, tedy typicky kdo je ve stejné síti nebo na stejné VPN.</div>
 
+<h3 id="gateway">Spravovaná brána</h3>
+<p>Brána dá každému prostředí stálou HTTPS adresu pod vaší doménou. Instalátor Agenta ji na serveru nastaví sám: soukromou certifikační autoritu (CA), TLS vstup na portech 80 a 443 a vnitřní bránu.</p>
+<ol class="steps">
+  <li>Zvolte doménu pro aplikace, například <code>apps.example.cz</code>. Musí to být DNS jméno, ne IP adresa.</li>
+  <li>V DNS nasměrujte na server dva záznamy: samotnou doménu <code>apps.example.cz</code> a wildcard <code>*.apps.example.cz</code>. Ve vnitřní síti je založte na svém DNS serveru.</li>
+  <li>Na serveru a ve firewallu povolte příchozí porty 80 a 443. Nesmí je obsadit jiný webový server. Do aktivního <code>ufw</code> instalátor doplní potřebné pravidlo sám.</li>
+  <li>Při přidání serveru zvolte <span class="ui">Spravovaná brána (produkce)</span> a jako <span class="ui">Základní URL brány</span> zadejte <code>https://apps.example.cz</code>.</li>
+  <li>Spusťte instalační příkaz z dialogu Agenta. Obsahuje volbu <code>--gateway-domain apps.example.cz</code> a na konci vypíše otisk SHA-256 certifikátu CA.</li>
+  <li>V dialogu Agenta v části <span class="ui">Brána aplikací</span> zvolte <span class="ui">Otestovat bránu</span>. Test jen čte: ověří wildcard DNS, důvěryhodné TLS na portu 443 a vnitřní bránu, žádnou routu nemění. Na server lze nasazovat, až test projde.</li>
+  <li><a href="#gateway-ca">Nainstalujte certifikát brány</a> na počítače, ze kterých se aplikace otevírají.</li>
+</ol>
+<p>Agent 0.16 a novější bránu po své aktualizaci obnoví sám. U staršího Agenta, nebo když se obnova nestala, spusťte na serveru příkaz ze sbalitelné části <span class="ui">Obnovit bránu na serveru</span>; registrační token k tomu není potřeba. Změna zpřístupnění nebo URL brány zruší výsledek testu a bránu je potřeba otestovat znovu.</p>
+
+<h3 id="gateway-ca">Certifikát brány</h3>
+<p>Brána podepisuje HTTPS certifikáty aplikací vlastní CA. Prohlížeč jim bude důvěřovat, až tuto CA nainstalujete. Stačí to jednou na každý počítač.</p>
+<ol class="steps">
+  <li>V dialogu Agenta v části <span class="ui">Certifikát brány</span> zvolte <span class="ui">Stáhnout certifikát</span>. Stáhne se soubor <code>initpad-gateway-ca.crt</code> z adresy <code>http://apps.example.cz/initpad-ca.crt</code>.</li>
+  <li>Porovnejte otisk. Dialog ukazuje <q>Otisk SHA-256. Před instalací ho porovnejte se staženým souborem:</q>. Otisk souboru zjistíte příkazem <code>openssl x509 -in initpad-gateway-ca.crt -noout -fingerprint -sha256</code>. Dokud test brány neproběhl, otisk v dialogu chybí; porovnejte ho pak s otiskem, který vypsal instalátor.</li>
+  <li>Certifikát nainstalujte podle systému:
+    <ul>
+      <li><b>Windows:</b> otevřete soubor → <span class="ui">Nainstalovat certifikát</span> → <span class="ui">Místní počítač</span> → <span class="ui">Důvěryhodné kořenové certifikační autority</span>. Chrome a Edge pak certifikátu důvěřují také.</li>
+      <li><b>macOS:</b> dvakrát klikněte na soubor, přidejte ho do <span class="ui">Klíčenky</span> (<span class="ui">Systém</span>) a v jeho nastavení důvěry zvolte <span class="ui">Vždy důvěřovat</span>.</li>
+      <li><b>Firefox</b> (má vlastní úložiště certifikátů): <span class="ui">Nastavení → Soukromí a zabezpečení → Zobrazit certifikáty → Autority → Importovat</span> a zaškrtněte důvěru pro identifikaci webových stránek.</li>
+    </ul>
+  </li>
+  <li>Ověřte instalaci: restartujte prohlížeč a otevřete adresu nasazené aplikace. Prohlížeč nesmí hlásit nedůvěryhodný certifikát a v podrobnostech certifikátu uvidíte jako vydavatele CA InitPadu.</li>
+</ol>
+
+<h3 id="sftp">SFTP hosting</h3>
+<p>Na sdílený webhosting nasadí InitPad statické weby (React, Vue) a PHP aplikace (Nette, Laravel, Symfony). PHP navíc vyžaduje shellový přístup pod stejným účtem. Ostatní šablony potřebují server s Agentem.</p>
+<div class="box warn"><div class="t">Jen veřejně dosažitelný hosting</div>
+Na rozdíl od Agenta se k SFTP hostingu připojuje InitPad sám. Ve veřejné edici proto musí host i veřejná URL vést na veřejnou internetovou adresu; hosting za VPN, v domácí síti nebo na privátní adrese nepůjde přidat. Self-hosted instance se může připojit i k hostingu ve své vnitřní síti.</div>
+<ol class="steps">
+  <li>V <span class="ui">Servery</span> zvolte <span class="ui">Přidat server</span> a jako <span class="ui">Způsob připojení</span> <span class="ui">Sdílený webhosting přes SFTP</span>.</li>
+  <li>Vyplňte <span class="ui">Název</span>, <span class="ui">Port</span> (obvykle 22) a v <span class="ui">Umí spustit</span> zaškrtněte Static, případně PHP.</li>
+  <li>Vyplňte <span class="ui">Host</span>, <span class="ui">Uživatelské jméno</span> a v poli <span class="ui">Ověření</span> zvolte <span class="ui">Heslo</span>, nebo <span class="ui">SSH klíč</span> a vložte soukromý klíč OpenSSH.</li>
+  <li>Zvolte <span class="ui">Získat otisk</span>. InitPad načte veřejný klíč serveru, aniž by poslal heslo. Otisk porovnejte s hodnotou od správce hostingu a potvrďte <span class="ui">Důvěřovat a uložit</span>. Při každém dalším připojení InitPad vyžaduje přesně tento klíč.</li>
+  <li>Vyplňte <span class="ui">Vzdálená cesta</span> (adresář webu, například <code>/www/myapp</code>) a <span class="ui">Veřejná URL</span>, na které je web vidět.</li>
+  <li>Zvolte <span class="ui">Přidat server</span> a pak u serveru <span class="ui">Otestovat připojení</span>. Nasazovat lze jen na ověřený server.</li>
+</ol>
+
+<h3 id="agent-updates">Aktualizace Agenta a stav offline</h3>
+<p>Když vyjde nová verze Agenta, dialog <span class="ui">Spravovat Agenta</span> ukáže <q>Je k dispozici Agent …</q>. Agent 0.13 a novější se aktualizuje vzdáleně tlačítkem <span class="ui">Nainstalovat aktualizaci</span>: vymění se jen kontejner Agenta, aplikace běží dál, a když se nový Agent nepřihlásí, vrátí se předchozí. Agent přitom musí být online. Starší Agent dostane jednorázový ruční příkaz, který spustíte na serveru; identita serveru zůstane a nový token není potřeba.</p>
+<p>Server je <b>offline</b>, když od Agenta 90 sekund nepřišel heartbeat. Dialog pak ukáže <q>Agent je offline</q> a čas posledního kontaktu. Úlohy bezpečně čekají ve frontě a po návratu Agenta pokračují; nasazení mezitím ukazuje <q>Čeká se na Agenta</q>. Ověřte, že server běží, Docker je spuštěný a server se dostane na adresu InitPadu. Když kontejner Agenta neběží, spusťte na serveru příkaz z části <span class="ui">Znovu připojit Agenta</span> v dialogu.</p>
+
 <h3>Odpojení, vyřazení a smazání serveru</h3>
-<p>U serveru je viditelná sekce <span class="ui">Odpojení a smazání</span> se třemi tlačítky:</p>
+<p>U serveru je sekce <span class="ui">Odpojení a smazání</span> se třemi tlačítky:</p>
 <div class="scroll"><table>
   <tr><th>Tlačítko</th><th>Co udělá</th></tr>
   <tr><td><span class="ui">Odpojit server</span></td><td>InitPad přestane server spravovat a zneplatní jeho přístup. Běžící aplikace zůstanou online.</td></tr>
@@ -122,34 +191,61 @@ Funguje to. Agent navazuje jen odchozí spojení a po nasazení si sám ověří
   <tr><td><span class="ui">Smazat server</span></td><td>Odebere server z InitPadu. Na samotném serveru se nic nesmaže.</td></tr>
 </table></div>
 <p>Odpojený server jde smazat, jen když žádné jeho prostředí neeviduje nasazení. Jinak InitPad ukáže <q>Nejdřív uvolněte nasazení na tomto serveru: …</q>; nasazení uvolníte akcí <span class="ui">Uvolnit nasazení</span>, viz <a href="#deployments">Nasazení a prostředí</a>.</p>
-<h3>Odinstalace Agenta ze serveru</h3>
-<p>V <span class="ui">Spravovat Agenta</span> rozbalte <span class="ui">Diagnostika a odebrání</span>, otevřete <span class="ui">Odinstalovat ze serveru</span> a příkaz spusťte na serveru. Ověří kontrolní součet instalátoru, odmítne server registrovaný pro jiný cíl, vypíše, co odstraní, a vyžádá potvrzení. Odstraní kontejner Agenta, jeho uloženou identitu a certifikační autoritu InitPadu, kterou pro něj nainstaloval. Sekce je dostupná i pro odpojeného Agenta.</p>
+
+<h3 id="agent-uninstall">Odinstalace Agenta ze serveru</h3>
+<p>V dialogu <span class="ui">Spravovat Agenta</span> rozbalte <span class="ui">Diagnostika a odebrání → Odinstalovat ze serveru</span> a příkaz spusťte na serveru. Ověří kontrolní součet instalátoru, odmítne server registrovaný pro jiný cíl, vypíše, co odstraní, a vyžádá potvrzení. Odstraní kontejner Agenta, jeho uloženou identitu a certifikát InitPadu, který pro něj byl nainstalován. Sekce je dostupná i pro odpojeného Agenta. Spravovaná brána na serveru zůstane.</p>
 <p>Volba <span class="ui">Odstranit i aplikace, které InitPad na tento server nasadil</span> smaže jejich kontejnery a sítě přímo na serveru. InitPad je pak dál zobrazuje jako nasazené, proto je raději odeberte v InitPadu, dokud je Agent připojený. Po odinstalaci Agenta v InitPadu odpojte, nebo server smažte, aby na něj InitPad už nečekal.</p>
 
 <h2 id="new-project">5. Nový projekt</h2>
 <ol class="steps">
-  <li>Zvolte <span class="ui">Nový projekt</span> a zadejte název: malá písmena, číslice a pomlčky.</li>
-  <li>V poli <span class="ui">Vlastník repozitáře na GitHubu</span> vyberte účet nebo organizaci, kde má repozitář vzniknout.</li>
+  <li>Zvolte <span class="ui">Nový projekt</span> a zadejte <span class="ui">Název projektu</span>: 2–41 malých písmen, číslic nebo pomlček, začíná písmenem. Název se použije i pro repozitář a adresu aplikace.</li>
+  <li>Ve veřejné edici vyberte v poli <span class="ui">Vlastník repozitáře na GitHubu</span> účet nebo organizaci, kde má repozitář vzniknout. V self-hosted edici vznikne repozitář ve vestavěné Gitee.</li>
   <li>Vyberte <span class="ui">Šablonu</span> a <span class="ui">Pipeline</span>, tedy která prostředí projekt bude mít: dev, test a prod, jen dev a prod, nebo jen prod.</li>
-  <li>V části <span class="ui">Cíle nasazení</span> přiřaďte každému prostředí server. Jeden server může hostit více prostředí.</li>
+  <li>V části <span class="ui">Cíle nasazení</span> přiřaďte každému prostředí server. Jeden server může hostit více prostředí. Server, který zatím nejde použít, má u sebe důvod, například <q>Agent není připraven</q> nebo <q>kontrola gateway selhala</q>.</li>
   <li>Zvolte <span class="ui">Vytvořit projekt</span>.</li>
 </ol>
-<p>InitPad založí soukromý repozitář s kostrou aplikace, souborem Dockerfile a workflow pro GitHub Actions a nastaví mu potřebné secrety. První běh pipeline začne hned a po jeho dokončení se aplikace nasadí do prostředí dev.</p>
+<p>InitPad založí soukromý repozitář s kostrou aplikace, souborem Dockerfile a workflow pro CI a nastaví mu potřebné secrety. Stránka projektu pak ukazuje <q>Projekt se připravuje…</q> a po startu první pipeline <q>Sestavuje se první verze…</q>; obnovuje se sama. Po dokončení pipeline se aplikace nasadí do prostředí dev.</p>
+<h3>Když něco nejde</h3>
+<div class="scroll"><table>
+  <tr><th>Situace</th><th>Co dělat</th></tr>
+  <tr><td>Repozitář se stejným názvem už existuje</td><td>Když má historii, InitPad ho nepřevezme ani nepřepíše a skončí hláškou <code>A repository named '…' already exists in …. Choose a different project name, or import the existing repository.</code> Zvolte jiný název, nebo repozitář <a href="#import">importujte</a>.</td></tr>
+  <tr><td><q>První pipeline se zatím nespustila</q></td><td>Repozitář je připravený, ale CI nenahlásilo žádný běh. Ověřte, že je workflow v repozitáři povolené; v self-hosted edici také, že je CI runner online (to zkontroluje správce instance).</td></tr>
+  <tr><td>Na přehledu je <q>Zakládání vyžaduje pozornost</q></td><td>Zakládání se nedokončilo. Zvolte <span class="ui">Zopakovat zakládání</span>, nebo <span class="ui">Zopakovat úklid</span> pro odstranění toho, co po něm zůstalo.</td></tr>
+  <tr><td>Nedokončené zakládání už nepotřebujete</td><td>Když je problém vyřešený ručně, nebo už není co zopakovat ani uklidit, zvolte <span class="ui">Skrýt</span>. Záznam zůstane v auditním logu, jen zmizí z přehledu. Co po zakládání zůstalo, se automaticky neuklidí.</td></tr>
+</table></div>
 
 <h2 id="import">6. Import existujícího repozitáře</h2>
 <p>Na stránce <span class="ui">Nový projekt</span> zvolte <span class="ui">Import existujícího repozitáře</span>. InitPad při importu váš kód nemění. Repozitář ale musí splnit tři podmínky a InitPad je před importem sám zkontroluje:</p>
 <div class="scroll"><table>
   <tr><th>Podmínka</th><th>Podrobnosti</th></tr>
   <tr><td>Dockerfile</td><td>V kořeni výchozí větve. Čistě statické šablony ho nevyžadují.</td></tr>
-  <tr><td>Workflow InitPadu</td><td>Přesně v souboru <code>.github/workflows/ci.yml</code>. Startovní verzi si stáhnete na obrazovce importu a commitnete ji sami.</td></tr>
-  <tr><td>Název repozitáře</td><td>Malá písmena, číslice a pomlčky, nejvýše 41 znaků. Stane se názvem projektu.</td></tr>
+  <tr><td>Workflow InitPadu</td><td>Přesně v souboru <code>.github/workflows/ci.yml</code> (veřejná edice), nebo <code>.gitea/workflows/ci.yml</code> (self-hosted). Startovní verzi si stáhnete na obrazovce importu a commitnete ji sami.</td></tr>
+  <tr><td>Název repozitáře</td><td>2–41 malých písmen, číslic nebo pomlček, začíná písmenem. Stane se názvem projektu.</td></tr>
 </table></div>
+
+<h3 id="templates">Šablony: port, kontrola zdraví a runtime</h3>
+<p>Při importu zvolíte šablonu, jejímuž kontraktu repozitář odpovídá. Aplikace musí poslouchat na portu šablony a na adrese <code>/health</code> odpovídat úspěšně, jinak nasazení skončí neúspěšnou kontrolou zdraví. Proměnnou <code>PORT</code> nastavuje InitPad sám.</p>
+<div class="scroll"><table>
+  <tr><th>Šablona</th><th>Runtime</th><th>Port</th><th>Kontrola zdraví</th><th>Kam lze nasadit</th></tr>
+  <tr><td>Django (Python)</td><td>Python</td><td>8000</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>FastAPI (Python)</td><td>Python</td><td>8000</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>Flask (Python)</td><td>Python</td><td>8000</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>Laravel</td><td>PHP</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
+  <tr><td>NestJS API</td><td>Node</td><td>8080</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>Nette</td><td>PHP</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
+  <tr><td>Next.js</td><td>Node</td><td>8080</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>Node.js API (Express)</td><td>Node</td><td>8080</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>PHP</td><td>PHP</td><td>8080</td><td><code>/health</code></td><td>Agent</td></tr>
+  <tr><td>React (Vite)</td><td>Static</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
+  <tr><td>Symfony</td><td>PHP</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
+  <tr><td>Vue (Vite)</td><td>Static</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
+</table></div>
+
 <h3>Projekt, který už má vlastní pipeline</h3>
 <ul>
   <li>Vaše workflow v jiných souborech běží dál beze změny.</li>
   <li>InitPad čte stav jen z <code>ci.yml</code>. Pokud se tak jmenuje vaše pipeline, přejmenujte ji, nebo kroky InitPadu přidejte do ní.</li>
   <li>Nasazení spouští jen workflow InitPadu. Když vaše testy v jiném souboru selžou, InitPad to nevidí a nasadí i tak. Testy, které mají nasazení zastavit, patří do <code>ci.yml</code>.</li>
-  <li>Aplikace musí poslouchat na portu zvolené šablony a odpovídat na její kontrolní adrese, jinak nasazení skončí neúspěšnou kontrolou zdraví.</li>
 </ul>
 
 <h2 id="deployments">7. Nasazení a prostředí</h2>
@@ -165,74 +261,194 @@ Funguje to. Agent navazuje jen odchozí spojení a po nasazení si sám ověří
   <tr><td>Přesunout prostředí na jiný server</td><td><span class="ui">Změnit cíl</span>. Aplikaci nasazenou přes připojeného Agenta nejdřív odstraňte.</td></tr>
   <tr><td>Uvolnit nasazení na odpojeném nebo vyřazeném serveru</td><td>Nabídka prostředí, <span class="ui">Uvolnit nasazení</span>. Uvolní se jen záznam v InitPadu, kontejner může na serveru dál běžet a je potřeba ho tam odstranit ručně.</td></tr>
   <tr><td>Zjistit, proč aplikace neběží</td><td><span class="ui">Diagnostika workloadu…</span> a část <span class="ui">Aktivita nasazení</span>.</td></tr>
-  <tr><td>Zopakovat neúspěšnou pipeline</td><td><span class="ui">Znovu spustit neúspěšné úlohy na GitHubu</span>.</td></tr>
+  <tr><td>Zopakovat neúspěšnou pipeline</td><td>Ve veřejné edici <span class="ui">Znovu spustit neúspěšné úlohy na GitHubu</span>.</td></tr>
 </table></div>
-<p>Kroky pipeline u commitu vedou přímo na logy běhu na GitHubu.</p>
+<p>Kroky pipeline u commitu vedou přímo na logy běhu na GitHubu, v self-hosted edici v Gitee.</p>
 
 <h2 id="variables">8. Proměnné a secrety</h2>
 <p>V detailu projektu je část <span class="ui">Konfigurace</span> s proměnnými pro každé prostředí zvlášť. InitPad je aplikaci předá při nasazení. Změna se projeví až po opětovném nasazení prostředí.</p>
+<div class="scroll"><table>
+  <tr><th>Pravidlo</th><th>Podrobnosti</th></tr>
+  <tr><td>Klíč</td><td>Velká písmena, číslice a podtržítko, nezačíná číslicí (<code>^[A-Z_][A-Z0-9_]*$</code>), například <code>DATABASE_URL</code>.</td></tr>
+  <tr><td>Rezervovaný klíč</td><td><code>PORT</code> nastavuje InitPad podle šablony a nejde ho uložit.</td></tr>
+  <tr><td>Hodnota</td><td>Nejvýše 8192 znaků.</td></tr>
+  <tr><td>Běžící operace</td><td>Během nasazení nebo jiné operace prostředí se jeho proměnné nedají měnit. Počkejte na její dokončení.</td></tr>
+</table></div>
 <p>Hodnoty secretů se ukládají šifrovaně a po uložení už je nikdo neuvidí, ani vy. Secret můžete jen nahradit novou hodnotou, nebo smazat. Vrácení na předchozí verzi mění kód aplikace, proměnné zůstávají aktuální.</p>
 
-<h2 id="team">9. Tým a role</h2>
-<p>Projekty, servery i instalace GitHub App patří do workspace. Kromě osobního workspace si můžete založit týmový v nabídce workspace v levém menu volbou <span class="ui">Přidat nový workspace</span>. Ve veřejné edici může jeden účet vlastnit nejvýše pět týmových workspace.</p>
-<p>Osobní workspace je jen váš. Členy přidáte do týmového workspace v <span class="ui">Nastavení workspace</span> (položka <span class="ui">Workspace</span> v menu) v části <span class="ui">Členové workspace</span> tlačítkem <span class="ui">Přidat člena</span>. Zadáte uživatelské jméno nebo e-mail. Dotyčný se musí do InitPadu aspoň jednou přihlásit, jinak jeho účet neexistuje.</p>
+<h2 id="team">9. Tým, role a kvóty</h2>
+<p>Projekty, servery i instalace GitHub App patří do workspace. Kromě osobního workspace si můžete založit týmový v nabídce workspace v levém menu volbou <span class="ui">Přidat nový workspace</span>. Ve veřejné edici může jeden účet vlastnit nejvýše pět týmových workspace, v self-hosted edici limit ve výchozím stavu není.</p>
+<p>Osobní workspace je jen váš. Členy přidáte do týmového workspace v <span class="ui">Nastavení workspace</span> (položka <span class="ui">Workspace</span> v menu) v části <span class="ui">Členové workspace</span> tlačítkem <span class="ui">Přidat člena</span>. Zadáte uživatelské jméno nebo e-mail. Ve veřejné edici se dotyčný musí do InitPadu aspoň jednou přihlásit, v self-hosted edici mu účet musí nejdřív založit správce instance.</p>
 <p>Člen workspace má jednu z pěti rolí:</p>
 <div class="scroll"><table>
   <tr><th>Role</th><th>Co smí navíc oproti předchozí</th></tr>
-  <tr><td>Čtenář</td><td>Prohlížet projekty a jejich stav.</td></tr>
-  <tr><td>Člen</td><td>Zakládat a importovat projekty a nasazovat.</td></tr>
-  <tr><td>Správce</td><td>Přidávat servery a schvalovat nasazení do produkce.</td></tr>
-  <tr><td>Administrátor</td><td>Instalovat GitHub App pro workspace a spravovat členy.</td></tr>
+  <tr><td>Čtenář</td><td>Prohlížet projekty, servery a jejich stav.</td></tr>
+  <tr><td>Člen</td><td>Zakládat a importovat projekty, nasazovat a měnit proměnné.</td></tr>
+  <tr><td>Správce</td><td>Přidávat a ověřovat SFTP servery, upravovat servery, měnit pipeline projektu a schvalovat nasazení do produkce.</td></tr>
+  <tr><td>Administrátor</td><td>Přidávat servery s Agentem a připojovat Agenta, spravovat přístup workspace k serverům, instalovat GitHub App pro workspace a spravovat členy.</td></tr>
   <tr><td>Vlastník</td><td>Měnit pravidlo pro schvalování produkce.</td></tr>
 </table></div>
 <p>Workspace může vyžadovat, aby produkci schválil někdo jiný než žadatel. Kdo co udělal, najdete v části <span class="ui">Auditní log</span>.</p>
 
+<h3 id="quotas">Kvóty workspace</h3>
+<p>Každý workspace má limity, které vidíte v <span class="ui">Nastavení workspace</span> v části <span class="ui">Kapacita workspace</span>. Zvýšit je může správce platformy.</p>
+<div class="scroll"><table>
+  <tr><th>Limit</th><th>Výchozí hodnota</th></tr>
+  <tr><td>Projekty</td><td>50</td></tr>
+  <tr><td>Členové</td><td>100</td></tr>
+  <tr><td>Servery</td><td>20</td></tr>
+  <tr><td>Souběžné operace (nasazení a zakládání)</td><td>10</td></tr>
+  <tr><td>Úložiště artefaktů</td><td>20 GiB</td></tr>
+</table></div>
+<p>Na každém serveru má workspace navíc vlastní limity: ve výchozím stavu nejvýše 50 prostředí a pro každé prostředí 1 CPU, 512 MB paměti a 256 procesů. Upravíte je u serveru tlačítkem <span class="ui">Upravit přístup</span>.</p>
+
 <h2 id="rename-delete">10. Přejmenování a smazání</h2>
 <h3>Přejmenování repozitáře nebo organizace</h3>
-<p>InitPad přejmenování na GitHubu sleduje sám. Projekt si do chvíle převezme nový název a další push se nasadí jako dřív. Kontejner na serveru si ponechá původní jméno, aby se běžící aplikace nepřesouvala.</p>
+<p>Ve veřejné edici InitPad přejmenování na GitHubu sleduje sám. Projekt si do chvíle převezme nový název a další push se nasadí jako dřív. Kontejner na serveru si ponechá původní jméno, aby se běžící aplikace nepřesouvala.</p>
 <div class="box warn"><div class="t">Převod repozitáře</div>
 Převod na jiného vlastníka přejmenování není. Když repozitář přestane být pro instalaci GitHub App dostupný, InitPad ho považuje za smazaný a projekt uklidí.</div>
 <h3>Smazání projektu</h3>
 <ol class="steps">
   <li>U každého prostředí nasazeného přes připojeného Agenta nejdřív zvolte <span class="ui">Odstranit nasazení</span> a počkejte, až úklid doběhne. Nasazení na odpojeném nebo vyřazeném serveru nejdřív uvolněte akcí <span class="ui">Uvolnit nasazení</span>, nebo je nechte označit v dialogu.</li>
   <li>Zvolte <span class="ui">Smazat projekt</span>.</li>
-  <li>Volbu <span class="ui">Smazat také zdrojový repozitář a uvolnit jeho název</span> zaškrtněte jen tehdy, když chcete smazat i repozitář na GitHubu. Bez ní repozitář zůstane a půjde později znovu importovat.</li>
+  <li>Volbu <span class="ui">Smazat také zdrojový repozitář a uvolnit jeho název</span> zaškrtněte jen tehdy, když chcete smazat i repozitář. Bez ní repozitář zůstane, jeho název zůstane obsazený a půjde ho později znovu importovat.</li>
 </ol>
 <p>Projekt s nasazením na odpojeném nebo vyřazeném serveru jde smazat taky. Dialog toto nasazení označí <q>server odpojen · zůstane na serveru</q> a vyžaduje zaškrtnout <span class="ui">Smazat záznam v InitPadu, i když chráněný úklid ještě čeká</span>. Kontejnery tam mohou dál běžet a je potřeba je na serveru odstranit ručně.</p>
 <p>Prostředí, jehož sestavení nebo nasazení selhalo dřív, než se na server cokoli dostalo, úklid nepotřebuje. Projekt s ním smažete rovnou.</p>
 
 <h2 id="troubleshooting">11. Řešení potíží</h2>
-<p>Chybové hlášky ze serveru jsou zatím anglicky.</p>
+<p>Chybové hlášky ze serveru jsou zatím anglicky. Níže jsou citované doslovně, <code>…</code> zastupuje konkrétní název nebo číslo.</p>
 <div class="scroll"><table>
   <tr><th>Co vidíte</th><th>Proč a co s tím</th></tr>
-  <tr><td>Žádný připojený a ověřený cíl neumí spustit daný runtime</td><td>Workspace nemá připojený server, který šablonu zvládne. Připojte server, nebo mu v jeho nastavení doplňte runtime.</td></tr>
+  <tr><td><q>Žádný připojený a ověřený cíl neumí spustit …</q></td><td>Workspace nemá připojený server, který šablonu zvládne. Připojte server, nebo mu v jeho nastavení doplňte runtime.</td></tr>
   <tr><td><code>Too many attempts. Try again later.</code></td><td>Ochranný limit proti opakovaným pokusům. Chvíli počkejte a zkuste to znovu, obvykle stačí několik minut.</td></tr>
-  <tr><td><code>Remove Agent-managed deployments first</code></td><td>Projekt má aplikaci nasazenou přes připojeného Agenta. Nejdřív zvolte Odstranit nasazení. Nasazení na odpojeném nebo vyřazeném serveru se týká jiná cesta: Uvolnit nasazení.</td></tr>
-  <tr><td><code>Release the deployments on this server first: …</code></td><td>Odpojený server jde smazat, jen když žádné jeho prostředí neeviduje nasazení. Uvolněte je akcí Uvolnit nasazení a server pak smažte.</td></tr>
+  <tr><td><code>A repository named '…' already exists in …. Choose a different project name, or import the existing repository.</code></td><td>Název je obsazený repozitářem s historií. Zvolte jiný název, nebo repozitář importujte.</td></tr>
+  <tr><td><code>Remove Agent-managed deployments first (…). The project can be deleted after their cleanup jobs succeed.</code></td><td>Projekt má aplikaci nasazenou přes připojeného Agenta. Nejdřív zvolte Odstranit nasazení. Nasazení na odpojeném nebo vyřazeném serveru se týká jiná cesta: Uvolnit nasazení.</td></tr>
+  <tr><td><q>Nejdřív uvolněte nasazení na tomto serveru: …</q></td><td>Odpojený server jde smazat, jen když žádné jeho prostředí neeviduje nasazení. Uvolněte je akcí Uvolnit nasazení a server pak smažte.</td></tr>
   <tr><td>Repozitář je v importu označený jako prázdný</td><td>Nemá žádný commit.</td></tr>
-  <tr><td><code>No Dockerfile on 'main'</code></td><td>Šablona sestavuje image ze souboru Dockerfile ve výchozí větvi. Přidejte ho.</td></tr>
-  <tr><td><code>No InitPad-compatible workflow at '.github/workflows/ci.yml'</code></td><td>Stáhněte startovní workflow na obrazovce importu a commitněte ho pod tímto názvem.</td></tr>
-  <tr><td><code>You can own at most 5 team workspaces.</code></td><td>Dosáhli jste limitu týmových workspace. Smažte workspace, který už nepotřebujete, nebo požádejte o navýšení správce platformy.</td></tr>
-  <tr><td><code>User '…' not found</code> při přidávání člena</td><td>Účet s tímto jménem nebo e-mailem v InitPadu není. Dotyčný se musí nejdřív jednou přihlásit přes GitHub.</td></tr>
+  <tr><td><code>No Dockerfile on '…' — the '…' template builds the image from one.</code></td><td>Šablona sestavuje image ze souboru Dockerfile ve výchozí větvi. Přidejte ho.</td></tr>
+  <tr><td><code>No InitPad-compatible workflow at '…' — download the starter workflow from this import screen.</code></td><td>Stáhněte startovní workflow na obrazovce importu a commitněte ho pod uvedeným názvem.</td></tr>
+  <tr><td><code>Key must match ^[A-Z_][A-Z0-9_]* (uppercase letters, digits and underscore)</code></td><td>Klíč proměnné nemá povolený tvar, viz <a href="#variables">Proměnné a secrety</a>.</td></tr>
+  <tr><td><code>'PORT' is a reserved platform variable</code></td><td>Port nastavuje InitPad podle šablony.</td></tr>
+  <tr><td><code>Environment '…' is busy. Wait for or cancel its operation before changing config.</code></td><td>Prostředí právě nasazuje nebo provádí jinou operaci. Počkejte na její konec.</td></tr>
+  <tr><td><code>Workspace … quota reached (max …)</code></td><td>Workspace dosáhl <a href="#quotas">kvóty</a>. Uvolněte místo, nebo požádejte správce platformy o navýšení.</td></tr>
+  <tr><td><code>You can own at most 5 team workspaces. Delete one you no longer need or ask the platform administrator.</code></td><td>Dosáhli jste limitu týmových workspace ve veřejné edici. Smažte workspace, který už nepotřebujete, nebo požádejte o navýšení správce platformy.</td></tr>
+  <tr><td><code>User '…' not found</code> při přidávání člena</td><td>Účet s tímto jménem nebo e-mailem v InitPadu není. Ve veřejné edici se dotyčný musí nejdřív jednou přihlásit přes GitHub, v self-hosted edici mu účet založí správce instance.</td></tr>
+  <tr><td><code>Hosted SFTP targets must resolve only to public internet addresses</code></td><td>Ve veřejné edici lze přidat jen SFTP hosting na veřejné internetové adrese. Hosting ve vnitřní síti připojte přes self-hosted instanci, nebo místo něj použijte server s Agentem.</td></tr>
   <tr><td>Organizace chybí v nabídce vlastníků</td><td>Není v ní nainstalovaná GitHub App, nebo instalace čeká na schválení vlastníkem organizace („Čeká se, až vlastník organizace na GitHubu schválí aplikaci“). Po schválení se organizace připojí sama, když se vrátíte do okna InitPadu.</td></tr>
-  <tr><td>Pipeline je zelená, ale prostředí dev selhalo</td><td>Sestavení prošlo, nasazení ne. Důvod je na kartě prostředí a v části Aktivita nasazení. Po odstranění příčiny zvolte ikonu opakování.</td></tr>
-  <tr><td>Server je v seznamu odpojený</td><td>Agent se neozývá. Ověřte, že server běží, Docker je spuštěný a server se dostane na adresu InitPadu.</td></tr>
-  <tr><td>Instalátor Agenta skončí kvůli velikosti serveru</td><td>Server nemá aspoň 1,5 GB RAM, 1 CPU nebo 10 GiB volného místa pro Docker. Použijte větší server, nebo Dockeru uvolněte místo.</td></tr>
-  <tr><td>Prohlížeč u aplikace za spravovanou bránou varuje před certifikátem</td><td>Na tomto počítači chybí certifikát brány. Stáhněte ho ve Spravovat Agenta v části Brána aplikací a nainstalujte.</td></tr>
-  <tr><td>InitPad byl aktualizován</td><td>Stránka patří k předchozí verzi. InitPad ji obvykle obnoví sám, jinak zvolte Obnovit.</td></tr>
+  <tr><td>Pipeline je zelená, ale prostředí dev selhalo</td><td>Sestavení prošlo, nasazení ne. Důvod je na kartě prostředí a v části Aktivita nasazení. Častá příčina je, že aplikace neposlouchá na portu šablony nebo neodpovídá na <code>/health</code>, viz <a href="#templates">tabulka šablon</a>. Po odstranění příčiny zvolte ikonu opakování.</td></tr>
+  <tr><td>Server je v seznamu offline, nasazení <q>Čeká se na Agenta</q></td><td>Agent se 90 sekund neozval. Ověřte, že server běží, Docker je spuštěný a server se dostane na adresu InitPadu, viz <a href="#agent-updates">Aktualizace Agenta a stav offline</a>.</td></tr>
+  <tr><td>Instalátor Agenta skončí <code>this server is below the minimum size</code></td><td>Server nemá dost RAM, CPU nebo místa, viz <a href="#server-requirements">požadavky</a>. Zvětšete ho.</td></tr>
+</table></div>
+<h3 id="gateway-troubleshooting">Kontrola spravované brány</h3>
+<p>Stav posledního testu brány vidíte v dialogu Agenta v části <span class="ui">Brána aplikací</span> a ve výběru cíle u projektu.</p>
+<div class="scroll"><table>
+  <tr><th>Stav nebo hláška</th><th>Co znamená a co dělat</th></tr>
+  <tr><td><code>not-run</code>, ve výběru cíle <q>gateway není zkontrolovaná</q></td><td>Test zatím neproběhl, nebo se od něj změnilo nastavení. Zvolte Otestovat bránu.</td></tr>
+  <tr><td><code>queued</code> nebo <code>running</code>, ve výběru cíle <q>probíhá kontrola gateway</q></td><td>Test čeká na Agenta nebo běží. Výběr cíle se sám obnoví.</td></tr>
+  <tr><td><code>passed</code></td><td>Brána je připravená a server lze vybrat jako cíl.</td></tr>
+  <tr><td><code>failed</code>, ve výběru cíle <q>kontrola gateway selhala</q></td><td>Pod stavem je důvod, viz řádky níže. Po opravě test spusťte znovu.</td></tr>
+  <tr><td><code>Gateway DNS lookup failed</code> nebo <code>Gateway DNS lookup returned no addresses</code></td><td>Chybí wildcard záznam <code>*.doména</code>, nebo ho server nepřeloží. Zkontrolujte DNS záznamy a DNS server, který Agent server používá.</td></tr>
+  <tr><td><code>Gateway TLS handshake failed</code></td><td>Na portu 443 neodpovídá brána s certifikátem od CA InitPadu: port je zablokovaný, obsadil ho jiný server, nebo instalace brány neproběhla. Zkontrolujte firewall a spusťte znovu instalační příkaz s bránou.</td></tr>
+  <tr><td><code>Caddy adapter is not configured on this Agent</code> nebo <code>Caddy adapter readiness returned HTTP …</code></td><td>Vnitřní brána neběží, nebo o ní Agent neví. Spusťte příkaz z části Obnovit bránu na serveru.</td></tr>
+  <tr><td>Prohlížeč hlásí nedůvěryhodný certifikát aplikace</td><td>Na tomto počítači chybí <a href="#gateway-ca">certifikát brány</a>, nebo ho Firefox nemá ve vlastním úložišti.</td></tr>
 </table></div>
 
 <h2 id="limitations">12. Omezení veřejné edice</h2>
 <ul>
-  <li>Aplikace se nasazují jen na servery s Agentem. Sdílený webhosting přes SFTP veřejná edice zatím nenasadí.</li>
+  <li>SFTP hosting musí být dosažitelný z internetu. Server za VPN nebo ve vnitřní síti připojte přes Agenta, pokud na něm běží Docker.</li>
   <li>Zdrojem kódu je GitHub. Jiné Git servery veřejná edice nepodporuje.</li>
   <li>Aplikace na serveru za VPN je dostupná jen z té sítě. InitPad ji ven nezveřejní.</li>
-  <li>Workflow InitPadu musí být v souboru <code>ci.yml</code>.</li>
+  <li>Workflow InitPadu musí být v souboru <code>.github/workflows/ci.yml</code>.</li>
   <li>Jeden účet může vlastnit nejvýše pět týmových workspace.</li>
 </ul>
+<p>Self-hosted edice má jiná pravidla, viz <a href="#self-hosted-differences">Co v self-hosted edici platí jinak</a>.</p>
 
-<footer>InitPad, nápověda veřejné edice. Stav k verzi 0.2.32, listopad 2026.</footer>
+<h2 id="self-hosted">13. Self-hosted InitPad</h2>
+<p>Self-hosted InitPad běží celý na vašem serveru: web, API, databáze, Gitea s CI runnerem a úložiště artefaktů. Kapitola je pro uživatele i správce takové instance. Podrobný provozní návod je v repozitáři v <a href="https://github.com/kudrle01/initpad/blob/main/deploy/README.md">deploy/README.md</a> a <a href="https://github.com/kudrle01/initpad/blob/main/deploy/OPERATIONS.md">deploy/OPERATIONS.md</a>.</p>
+
+<h3 id="self-hosted-install">Instalace</h3>
+<p>Server pro InitPad potřebuje Linux s Docker Engine a pluginem Compose, minimálně 2 CPU, 6 GiB RAM a 20 GiB místa pro Docker (doporučeno 4 vCPU, 8 GiB a 40 GiB). Na Ubuntu 24.04 a novějším nejdřív spusťte <code>sudo ./prepare-rootless-runner.sh</code>; instalátor na to sám upozorní.</p>
+<pre><code>git clone https://github.com/kudrle01/initpad.git
+cd initpad/deploy
+./install.sh</code></pre>
+<p>Při prvním spuštění se instalátor zeptá, jak budou uživatelé InitPad otevírat:</p>
+<div class="scroll"><table>
+  <tr><th>Volba</th><th>Kdy</th><th>Adresa a HTTPS</th></tr>
+  <tr><td>Jen tento počítač</td><td>Vyzkoušení na vlastním počítači</td><td><code>http://localhost:8080</code>, bez HTTPS</td></tr>
+  <tr><td>Interní síť s DNS</td><td>Škola nebo firma, jména na vlastním DNS serveru</td><td>Například <code>https://initpad.skola.example</code>, vlastní certifikační autorita InitPadu</td></tr>
+  <tr><td>Veřejná doména</td><td>Server dostupný z internetu na portech 80 a 443</td><td>Například <code>https://initpad.example.org</code>, certifikát Let's Encrypt</td></tr>
+  <tr><td>Místní síť přes IP adresu</td><td>Od verze následující po 0.2.35. Laboratoř nebo virtuální počítač bez DNS, InitPad se otevírá přes IP adresu serveru.</td><td>Adresa ve tvaru <code>http://192.168.1.50:8080</code></td></tr>
+</table></div>
+<p>U voleb s doménou potřebujete dva DNS záznamy na IP serveru: jméno platformy a jméno Gitu (například <code>git.skola.example</code>). Na konci instalátor vypíše adresu platformy, instalační token a u interní sítě otisk certifikátu. Skript lze kdykoli spustit znovu, doplní jen to, co chybí; doménu nebo režim změníte příkazem <code>./install.sh --reconfigure</code>.</p>
+
+<h3 id="self-hosted-admin">První administrátor</h3>
+<ol class="steps">
+  <li>Otevřete adresu platformy, kterou instalátor vypsal.</li>
+  <li>Zvolte <span class="ui">Vytvořit účet</span> a vyplňte uživatelské jméno, e-mail, heslo (aspoň 12 znaků) a <span class="ui">Instalační token</span> z konce výpisu instalátoru.</li>
+  <li>První účet se stane administrátorem platformy. Další účty zakládá on, viz níže.</li>
+</ol>
+<p>Hláška <code>The setup token is not valid. Use the token printed at the end of install.sh.</code> znamená chybu v tokenu. Token je uložený v <code>deploy/.env</code> jako <code>INITPAD_BOOTSTRAP_TOKEN</code>.</p>
+
+<h3 id="self-hosted-accounts">Přihlášení heslem a aktivace účtu</h3>
+<p>Ve výchozím režimu se uživatelé sami neregistrují, účty zakládá administrátor:</p>
+<ol class="steps">
+  <li>Administrátor otevře v levém menu <span class="ui">Platforma</span> a v části <span class="ui">Uživatelé</span> zvolí <span class="ui">Přidat uživatele</span>.</li>
+  <li>Když má instance nastavený e-mail, odejde uživateli aktivační odkaz. Jinak se odkaz zobrazí jednou a administrátor ho předá bezpečnou cestou. Nový odkaz vytvoří akcí <span class="ui">Nový aktivační odkaz</span>; starý tím přestane platit.</li>
+  <li>Uživatel otevře odkaz, na stránce <span class="ui">Aktivujte svůj účet</span> zvolí heslo (aspoň 12 znaků) a potvrdí <span class="ui">Aktivovat a přihlásit se</span>.</li>
+  <li>Dál se přihlašuje na úvodní stránce uživatelským jménem nebo e-mailem a heslem. Přihlášení platí sedm dní.</li>
+</ol>
+<p>Administrátor může heslo resetovat (uživatel dostane dočasné heslo, které musí při dalším přihlášení změnit) nebo účet deaktivovat; deaktivovaný účet se nepřihlásí do InitPadu ani do Gitey.</p>
+
+<h3 id="self-hosted-gitea">Gitea a Git</h3>
+<p>Repozitáře projektů jsou ve vestavěné Gitee na adrese Gitu, kterou vypsal instalátor (u lokální instalace <code>http://gitea.localhost:3001</code>). Do Gitey se přihlásíte účtem InitPadu přes jednotné přihlášení (SSO): na přihlašovací stránce Gitey zvolte přihlášení přes <code>initpad-sso</code>. Zvláštní heslo pro Giteu nezakládáte.</p>
+<p>Pro práci z příkazové řádky otevřete <span class="ui">Nastavení účtu → Připojit Git</span>, zvolte <span class="ui">Zobrazit příkaz pro nastavení</span> a příkaz jednou spusťte v terminálu. Pak klonujete, stahujete i pushujete bez zadávání hesla. Příkaz uloží váš osobní token Gitey do <code>~/.gitconfig</code>, proto ho nesdílejte.</p>
+
+<h3 id="self-hosted-certificate">Certifikát platformy</h3>
+<p>U instalace pro interní síť vydává InitPad HTTPS certifikáty vlastní certifikační autoritou. Aby prohlížeč InitPadu i Gitee důvěřoval bez varování, nainstalujte její certifikát jednou na každý počítač:</p>
+<ul>
+  <li>v InitPadu v <span class="ui">Nastavení účtu → Certifikát platformy</span> (soubor <code>initpad-root-ca.crt</code>, otisk SHA-256 a návod pro Windows, macOS a Firefox, stejně jako u <a href="#gateway-ca">certifikátu brány</a>),</li>
+  <li>na počítači, který InitPadu ještě nedůvěřuje, přes HTTP z adresy <code>http://&lt;jméno platformy&gt;/initpad-ca.crt</code>; otisk porovnejte s výpisem instalátoru,</li>
+  <li>v doméně Windows ho správce rozdá skupinovou politikou do úložiště <span class="ui">Důvěryhodné kořenové certifikační autority</span>.</li>
+</ul>
+<p>Servery s Agentem certifikát platformy dostanou automaticky: příkaz z dialogu Agenta ho stáhne, ověří otisk a nastaví ho jen pro registry InitPadu. Certifikát platformy a <a href="#gateway-ca">certifikát spravované brány</a> jsou dva různé soubory.</p>
+
+<h3 id="self-hosted-servers">Přístup workspace k serverům</h3>
+<p>Kromě vlastních serverů workspace (přidávají se stejně jako ve <a href="#servers">veřejné edici</a>) může instance nabízet servery platformy, například vestavěný Docker na hostiteli InitPadu (<q>Docker · přímý self-hosted</q>). Workspace na nich smí nasazovat, až mu vlastník nebo administrátor workspace povolí přístup:</p>
+<ol class="steps">
+  <li>V <span class="ui">Servery</span> u serveru s označením <span class="ui">Pro tento workspace není povoleno</span> zvolte <span class="ui">Povolit pro …</span>.</li>
+  <li>Nastavte <span class="ui">Povolené runtimy</span>, <span class="ui">Kvóta prostředí</span>, limity CPU, paměti a procesů na prostředí a případně automatický úklid prostředí dev a test.</li>
+  <li>Přístup lze později <span class="ui">Upravit přístup</span>, <span class="ui">Pozastavit přístup</span> nebo <span class="ui">Odebrat přístup</span>. Běžící aplikace to nezastaví.</li>
+</ol>
+<p>Vestavěný Docker se hodí na vyzkoušení. U lokální instalace publikuje porty aplikací jen na tomto počítači. Pro aplikace dostupné z jiných počítačů použijte server s Agentem, ideálně se <a href="#gateway">spravovanou bránou</a>.</p>
+
+<h3 id="self-hosted-updates">Stránka Platforma a aktualizace</h3>
+<p>Položku <span class="ui">Platforma</span> v levém menu vidí jen administrátoři platformy. Najdou tam správu uživatelů, kapacitu workspace a část <span class="ui">Aktualizace platformy</span>. Nainstalovanou verzi ukazuje i spodní část levého menu.</p>
+<ol class="steps">
+  <li>V části <span class="ui">Aktualizace platformy</span> zvolte <span class="ui">Obnovit</span>, aby se načetl seznam podepsaných vydání.</li>
+  <li>U novější verze zvolte <span class="ui">Nainstalovat aktualizaci</span> a potvrďte.</li>
+  <li>InitPad zazálohuje databázi, vymění image API, webu a Supervisoru a ověří, že nová verze běží. Web a API se krátce restartují; aplikace v projektech se nerestartují.</li>
+  <li>Když nová verze neprojde kontrolou, automaticky se vrátí předchozí a stránka ukáže <q>Aktualizace na InitPad … se nedokončila. Běží předchozí verze.</q></li>
+</ol>
+<p>Servery s Agentem se aktualizují zvlášť, viz <a href="#agent-updates">Aktualizace Agenta</a>.</p>
+
+<h3 id="self-hosted-backup">Záloha a obnova</h3>
+<p>Zálohu dělá správce na serveru ve složce <code>deploy</code> příkazem <code>./backup.sh /bezpecna/cesta/initpad-backup</code>. Záloha obsahuje databázi, repozitáře Gitey, artefakty, konfiguraci i přihlašovací údaje, proto ji zašifrujte a uchovávejte mimo server. Obnovu provádí <code>./restore.sh &lt;adresář zálohy&gt;</code>; vyzkoušejte ji nejdřív na zkušební instalaci. Přesný postup, plánování a cvičnou obnovu popisuje <a href="https://github.com/kudrle01/initpad/blob/main/deploy/OPERATIONS.md">deploy/OPERATIONS.md</a> v částech Zálohy a Obnova.</p>
+
+<h3 id="self-hosted-differences">Co v self-hosted edici platí jinak</h3>
+<ul>
+  <li>Kapitoly <a href="#sign-in">Přihlášení</a> a <a href="#github">Propojení GitHubu</a> neplatí. Přihlašujete se heslem, GitHub App ani pole Vlastník repozitáře na GitHubu nejsou.</li>
+  <li>Repozitáře jsou v Gitee, workflow je v <code>.gitea/workflows/ci.yml</code> a logy pipeline jsou v Gitee. Tlačítko pro opakování úloh na GitHubu není.</li>
+  <li>Sledování přejmenování a převodu repozitářů z kapitoly <a href="#rename-delete">Přejmenování a smazání</a> se týká jen GitHubu.</li>
+  <li>Limit pěti týmových workspace ve výchozím stavu neplatí. Kvóty workspace platí stejně.</li>
+  <li>SFTP hosting může být i ve vnitřní síti.</li>
+  <li>Nového člena workspace musí nejdřív založit administrátor platformy.</li>
+  <li>Odkazy <span class="ui">Nápověda</span> a <span class="ui">Více v nápovědě</span> se ve verzi 0.2.35 zobrazí, jen když správce v <code>deploy/.env</code> nastaví proměnnou <code>INITPAD_DOCS_URL</code>. Od verze následující po 0.2.35 vedou ve výchozím stavu na <a href="https://docs.initpad.me">https://docs.initpad.me</a>.</li>
+</ul>
+
+<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.35, listopad 2026.</footer>
 </main>
 </div>
+<script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 # InitPad Docs
 
-Uživatelská nápověda veřejné edice [InitPadu](https://github.com/kudrle01/initpad)
-v češtině a angličtině. Statické stránky bez build kroku: vše, co se zveřejňuje,
+Uživatelská nápověda [InitPadu](https://github.com/kudrle01/initpad), veřejné
+edice s GitHubem i self-hosted instalace, v češtině a angličtině. Statické stránky bez build kroku: vše, co se zveřejňuje,
 je ve složce `public/`.
 
 | Cesta        | Obsah                                                     |
@@ -21,7 +21,10 @@ nebo odebrat je lze jen spolu s typem `HelpTopic` v
 
 `getting-started`, `sign-in`, `github`, `servers`, `new-project`, `import`,
 `deployments`, `variables`, `team`, `rename-delete`, `troubleshooting`,
-`limitations`.
+`limitations`, `self-hosted`.
+
+Kotvu `self-hosted` přidává platforma ve verzi následující po 0.2.35. Podkapitoly
+(`h3`) mají vlastní kotvy, které jsou rovněž v obou jazycích stejné.
 
 ## Úprava a náhled
 
@@ -51,9 +54,17 @@ Název projektu se musí shodovat s `name` ve `wrangler.jsonc`, jinak nasazení
 selže.
 
 Soubor `public/_headers` nastavuje bezpečnostní hlavičky. Stránky nenačítají
-žádné skripty ani zdroje z jiných adres a styly berou jen ze souboru
-`guide.css`, ne z atributů `style` nebo bloků `<style>`. Kdo to změní, musí
-upravit i `Content-Security-Policy`.
+žádné zdroje z jiných adres a styly berou jen ze souboru `guide.css`, ne
+z atributů `style` nebo bloků `<style>`. Jediný skript je malý inline skript
+na konci obou stránek, který přepínači jazyka přidá aktuální `#kotvu`.
+`Content-Security-Policy` ho povoluje přes jeho otisk SHA-256 (`script-src
+'sha256-…'`). Kdo skript změní, musí přepočítat otisk, například:
+
+```bash
+python3 -c "import re,hashlib,base64;s=re.search(r'<script>(.*?)</script>',open('public/cs/index.html').read(),re.S).group(1);print(base64.b64encode(hashlib.sha256(s.encode()).digest()).decode())"
+```
+
+Obě jazykové verze musí obsahovat skript znak po znaku stejný.
 
 ## Pravidla obsahu
 
