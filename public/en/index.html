@@ -42,7 +42,7 @@
 </div>
 
 <h1>InitPad Help</h1>
-<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.35.</p>
+<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.36.</p>
 
 <h2 id="getting-started">1. Getting started</h2>
 <p>InitPad creates a repository with an application skeleton and a ready-made pipeline for you, and after every push it builds, tests and deploys the application to your server. You write the code; you do not have to set up Docker or CI.</p>
@@ -79,7 +79,7 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
 <p>This chapter applies to the public edition. Signing in to a self-hosted edition is described in <a href="#self-hosted-accounts">Password sign-in and account activation</a>.</p>
 <p>On the start page choose <span class="ui">Continue with GitHub</span>. Your InitPad account is created on the first sign-in; there is no password to set.</p>
 <p>A sign-in lasts seven days. After a platform update you may have to sign in again. When a new InitPad version is released while a tab is open, the tab shows <q>InitPad was updated</q>; load the new version with <span class="ui">Reload</span>.</p>
-<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.35</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
+<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.36</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
 <p>Under <span class="ui">Account settings</span>, the <span class="ui">Signed-in browsers</span> section lists every device where you are signed in. Sign out any browser you do not recognise, or choose <span class="ui">Sign out all others</span>.</p>
 
 <h2 id="github">3. Connecting GitHub</h2>
@@ -131,7 +131,7 @@ An installation into an organization must be approved by its owner. If that is n
 </ol>
 <div class="scroll"><table>
   <tr><th>Exposure</th><th>When to choose it</th><th>Application address</th></tr>
-  <tr><td><span class="ui">Direct ports (local / lab)</span></td><td>Trying things out, a lab, a server on an internal network</td><td>The server address and a port, for example <code>http://192.168.1.50:32768</code>. The port may change on a new deployment.</td></tr>
+  <tr><td><span class="ui">Direct ports (local / lab)</span></td><td>Trying things out, a lab, a server on an internal network</td><td>The server address and a port, for example <code>http://192.168.1.50:32768</code>. With Agent 0.17 or newer the port stays the same after a container or server restart and lies in the range 30000–32767, which is all the firewall needs to allow.</td></tr>
   <tr><td><span class="ui">Managed gateway (production)</span></td><td>Production, stable HTTPS addresses</td><td>A stable address for each project and environment, for example <code>https://shop-prod-1a2b3c4d.apps.example.com</code>. Requires a domain, see <a href="#gateway">Managed gateway</a>.</td></tr>
 </table></div>
 <div class="box tip"><div class="t">A server behind a VPN or at home</div>
@@ -378,7 +378,7 @@ cd initpad/deploy
   <tr><td>Only this computer</td><td>Trying it out on your own computer</td><td><code>http://localhost:8080</code>, no HTTPS</td></tr>
   <tr><td>Internal network with DNS</td><td>A school or company with names on its own DNS server</td><td>For example <code>https://initpad.school.example</code>, InitPad's own certificate authority</td></tr>
   <tr><td>Public domain</td><td>A server reachable from the internet on ports 80 and 443</td><td>For example <code>https://initpad.example.org</code>, a Let's Encrypt certificate</td></tr>
-  <tr><td>Local network by IP address</td><td>From the release following 0.2.35. A lab or virtual machine without DNS; InitPad is opened by the server's IP address.</td><td>An address like <code>http://192.168.1.50:8080</code></td></tr>
+  <tr><td>Local network by IP address</td><td>From version 0.2.36 (<code>./install.sh --ip &lt;address&gt;</code>). A lab or virtual machine without DNS; InitPad is opened by the server's IP address.</td><td>An address like <code>http://192.168.1.50:8080</code></td></tr>
 </table></div>
 <p>The options with a domain need two DNS records pointing at the server: the platform name and the Git name (for example <code>git.school.example</code>). At the end the installer prints the platform address, the setup token and, for an internal network, the certificate fingerprint. You can run the script again at any time and it only fixes what is missing; change the domain or mode with <code>./install.sh --reconfigure</code>.</p>
 
@@ -443,10 +443,10 @@ cd initpad/deploy
   <li>The limit of five team workspaces does not apply by default. Workspace quotas apply the same way.</li>
   <li>SFTP hosting may also be on the internal network.</li>
   <li>A new workspace member must first be created by the platform administrator.</li>
-  <li>In version 0.2.35 the <span class="ui">Help</span> and <span class="ui">Learn more</span> links appear only when the administrator sets <code>INITPAD_DOCS_URL</code> in <code>deploy/.env</code>. From the release following 0.2.35 they point to <a href="https://docs.initpad.me">https://docs.initpad.me</a> by default.</li>
+  <li>From version 0.2.36 the <span class="ui">Help</span> and <span class="ui">Learn more</span> links point to <a href="https://docs.initpad.me">https://docs.initpad.me</a> by default.</li>
 </ul>
 
-<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.35, November 2026.</footer>
+<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.36, November 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
