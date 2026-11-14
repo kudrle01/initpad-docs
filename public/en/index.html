@@ -79,6 +79,7 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
 <p>This chapter applies to the public edition. Signing in to a self-hosted edition is described in <a href="#self-hosted-accounts">Password sign-in and account activation</a>.</p>
 <p>On the start page choose <span class="ui">Continue with GitHub</span>. Your InitPad account is created on the first sign-in; there is no password to set.</p>
 <p>A sign-in lasts seven days. After a platform update you may have to sign in again. When a new InitPad version is released while a tab is open, the tab shows <q>InitPad was updated</q>; load the new version with <span class="ui">Reload</span>.</p>
+<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.35</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
 <p>Under <span class="ui">Account settings</span>, the <span class="ui">Signed-in browsers</span> section lists every device where you are signed in. Sign out any browser you do not recognise, or choose <span class="ui">Sign out all others</span>.</p>
 
 <h2 id="github">3. Connecting GitHub</h2>
@@ -313,6 +314,7 @@ A transfer to another owner is not a rename. When the repository is no longer av
   <li>Tick <span class="ui">Also delete the source repository and release its name</span> only if you also want to delete the repository. Without it, the repository stays, its name stays taken, and it can be imported again later.</li>
 </ol>
 <p>A project with a deployment on a disconnected or retired server can be deleted too. The dialog marks that deployment <q>server disconnected · left on the server</q> and requires you to tick <span class="ui">Delete the InitPad record with protected cleanup still pending</span>. The containers may keep running there and must be removed on the server manually.</p>
+<p>An environment whose build or deployment failed before anything reached the server needs no cleanup. A project with it is deleted right away.</p>
 
 <h2 id="troubleshooting">11. Troubleshooting</h2>
 <p>Server error messages are quoted verbatim; <code>…</code> stands for a specific name or number.</p>
