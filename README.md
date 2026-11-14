@@ -23,7 +23,7 @@ nebo odebrat je lze jen spolu s typem `HelpTopic` v
 `deployments`, `variables`, `team`, `rename-delete`, `troubleshooting`,
 `limitations`, `self-hosted`.
 
-Kotvu `self-hosted` přidává platforma ve verzi následující po 0.2.35. Podkapitoly
+Kotvu `self-hosted` přidává platforma ve verzi 0.2.36. Podkapitoly
 (`h3`) mají vlastní kotvy, které jsou rovněž v obou jazycích stejné.
 
 ## Úprava a náhled

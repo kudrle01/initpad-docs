@@ -42,7 +42,7 @@
 </div>
 
 <h1>Nápověda InitPad</h1>
-<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.35.</p>
+<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.37.</p>
 
 <h2 id="getting-started">1. Začínáme</h2>
 <p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
@@ -79,7 +79,7 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
 <p>Tato kapitola platí pro veřejnou edici. Přihlášení v self-hosted edici popisuje část <a href="#self-hosted-accounts">Přihlášení heslem a aktivace účtu</a>.</p>
 <p>Na úvodní stránce zvolte <span class="ui">Pokračovat přes GitHub</span>. Účet v InitPadu vznikne při prvním přihlášení, heslo se nezakládá.</p>
 <p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu. Když mezitím vyjde nová verze InitPadu, otevřená karta ukáže <q>InitPad byl aktualizován</q> a novou verzi načtete tlačítkem <span class="ui">Obnovit</span>.</p>
-<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.35</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
+<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.37</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
 <p>V <span class="ui">Nastavení účtu</span> najdete v části <span class="ui">Přihlášené prohlížeče</span> všechna zařízení, kde jste přihlášení. Prohlížeč, který nepoznáváte, odhlaste, případně zvolte <span class="ui">Odhlásit všechny ostatní</span>.</p>
 
 <h2 id="github">3. Propojení GitHubu</h2>
@@ -131,7 +131,7 @@ Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHu
 </ol>
 <div class="scroll"><table>
   <tr><th>Zpřístupnění</th><th>Kdy ho zvolit</th><th>Adresa aplikace</th></tr>
-  <tr><td><span class="ui">Přímé porty (lokálně / laboratoř)</span></td><td>Zkoušení, laboratoř, server ve vnitřní síti</td><td>Adresa serveru a port, například <code>http://192.168.1.50:32768</code>. Port se při novém nasazení může změnit.</td></tr>
+  <tr><td><span class="ui">Přímé porty (lokálně / laboratoř)</span></td><td>Zkoušení, laboratoř, server ve vnitřní síti</td><td>Adresa serveru a port, například <code>http://192.168.1.50:32768</code>. S Agentem 0.17 a novějším zůstává port stejný i po restartu kontejneru nebo serveru a leží v rozsahu 30000–32767, který stačí povolit ve firewallu.</td></tr>
   <tr><td><span class="ui">Spravovaná brána (produkce)</span></td><td>Produkce, stálé HTTPS adresy</td><td>Stálá adresa pro každý projekt a prostředí, například <code>https://shop-prod-1a2b3c4d.apps.example.cz</code>. Vyžaduje doménu, viz <a href="#gateway">Spravovaná brána</a>.</td></tr>
 </table></div>
 <div class="box tip"><div class="t">Server za VPN nebo doma</div>
@@ -378,7 +378,7 @@ cd initpad/deploy
   <tr><td>Jen tento počítač</td><td>Vyzkoušení na vlastním počítači</td><td><code>http://localhost:8080</code>, bez HTTPS</td></tr>
   <tr><td>Interní síť s DNS</td><td>Škola nebo firma, jména na vlastním DNS serveru</td><td>Například <code>https://initpad.skola.example</code>, vlastní certifikační autorita InitPadu</td></tr>
   <tr><td>Veřejná doména</td><td>Server dostupný z internetu na portech 80 a 443</td><td>Například <code>https://initpad.example.org</code>, certifikát Let's Encrypt</td></tr>
-  <tr><td>Místní síť přes IP adresu</td><td>Od verze následující po 0.2.35. Laboratoř nebo virtuální počítač bez DNS, InitPad se otevírá přes IP adresu serveru.</td><td>Adresa ve tvaru <code>http://192.168.1.50:8080</code></td></tr>
+  <tr><td>Místní síť přes IP adresu</td><td>Od verze 0.2.36 (<code>./install.sh --ip &lt;adresa&gt;</code>). Laboratoř nebo virtuální počítač bez DNS, InitPad se otevírá přes IP adresu serveru.</td><td>Adresa ve tvaru <code>http://192.168.1.50:8080</code></td></tr>
 </table></div>
 <p>U voleb s doménou potřebujete dva DNS záznamy na IP serveru: jméno platformy a jméno Gitu (například <code>git.skola.example</code>). Na konci instalátor vypíše adresu platformy, instalační token a u interní sítě otisk certifikátu. Skript lze kdykoli spustit znovu, doplní jen to, co chybí; doménu nebo režim změníte příkazem <code>./install.sh --reconfigure</code>.</p>
 
@@ -443,10 +443,10 @@ cd initpad/deploy
   <li>Limit pěti týmových workspace ve výchozím stavu neplatí. Kvóty workspace platí stejně.</li>
   <li>SFTP hosting může být i ve vnitřní síti.</li>
   <li>Nového člena workspace musí nejdřív založit administrátor platformy.</li>
-  <li>Odkazy <span class="ui">Nápověda</span> a <span class="ui">Více v nápovědě</span> se ve verzi 0.2.35 zobrazí, jen když správce v <code>deploy/.env</code> nastaví proměnnou <code>INITPAD_DOCS_URL</code>. Od verze následující po 0.2.35 vedou ve výchozím stavu na <a href="https://docs.initpad.me">https://docs.initpad.me</a>.</li>
+  <li>Odkazy <span class="ui">Nápověda</span> a <span class="ui">Více v nápovědě</span> vedou od verze 0.2.36 ve výchozím stavu na <a href="https://docs.initpad.me">https://docs.initpad.me</a>.</li>
 </ul>
 
-<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.35, listopad 2026.</footer>
+<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.37, listopad 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
