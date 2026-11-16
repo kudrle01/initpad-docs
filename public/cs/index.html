@@ -42,7 +42,7 @@
 </div>
 
 <h1>Nápověda InitPad</h1>
-<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.37.</p>
+<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.40.</p>
 
 <h2 id="getting-started">1. Začínáme</h2>
 <p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
@@ -52,7 +52,7 @@
 <div class="scroll"><table>
   <tr><th></th><th>Veřejná edice (GitHub)</th><th>Self-hosted edice</th></tr>
   <tr><td>Kde běží</td><td>Provozuje ji autor InitPadu na adrese <a href="https://staging.initpad.me">https://staging.initpad.me</a> (zatím zkušební provoz).</td><td>Na vašem serveru. Adresu určí správce při instalaci, například <code>http://localhost:8080</code> nebo <code>https://initpad.skola.example</code>.</td></tr>
-  <tr><td>Přihlášení</td><td>Účtem GitHub.</td><td>Uživatelským jménem a heslem, účty zakládá správce instance.</td></tr>
+  <tr><td>Přihlášení</td><td>Účtem GitHub, od verze 0.2.40 také e-mailem a heslem.</td><td>Uživatelským jménem a heslem, účty zakládá správce instance.</td></tr>
   <tr><td>Repozitáře a CI</td><td>GitHub a GitHub Actions, workflow <code>.github/workflows/ci.yml</code>.</td><td>Vestavěná Gitea a její CI runner, workflow <code>.gitea/workflows/ci.yml</code>.</td></tr>
   <tr><td>Servery</td><td>Vlastní servery s InitPad Agentem, případně veřejně dostupný SFTP hosting.</td><td>Totéž a navíc servery platformy, které správce zpřístupní workspace.</td></tr>
   <tr><td>Kapitoly jen pro tuto edici</td><td><a href="#sign-in">Přihlášení</a>, <a href="#github">Propojení GitHubu</a>, <a href="#limitations">Omezení veřejné edice</a></td><td><a href="#self-hosted">Self-hosted InitPad</a></td></tr>
@@ -60,12 +60,12 @@
 
 <h3>Co budete potřebovat</h3>
 <ul>
-  <li>ve veřejné edici účet na GitHubu, v self-hosted edici účet od správce instance,</li>
+  <li>ve veřejné edici účet na GitHubu (účet si můžete založit i e-mailem, repozitáře se ale vždy propojují přes GitHub), v self-hosted edici účet od správce instance,</li>
   <li>Linux server s Dockerem, na kterém aplikace poběží (viz <a href="#server-requirements">požadavky na server</a>). Stačí mu odchozí přístup na adresu InitPadu, takže může stát za routerem i za VPN.</li>
 </ul>
 <p>Cesta ve veřejné edici má pět kroků:</p>
 <ol class="steps">
-  <li><a href="#sign-in">Přihlaste se</a> účtem GitHub.</li>
+  <li><a href="#sign-in">Přihlaste se</a> účtem GitHub, nebo si založte účet e-mailem.</li>
   <li><a href="#github">Nainstalujte GitHub App</a>, aby InitPad směl pracovat s vašimi repozitáři.</li>
   <li><a href="#servers">Připojte server</a> jedním příkazem.</li>
   <li><a href="#new-project">Založte projekt</a> ze šablony, nebo <a href="#import">importujte</a> existující repozitář.</li>
@@ -77,13 +77,29 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
 
 <h2 id="sign-in">2. Přihlášení</h2>
 <p>Tato kapitola platí pro veřejnou edici. Přihlášení v self-hosted edici popisuje část <a href="#self-hosted-accounts">Přihlášení heslem a aktivace účtu</a>.</p>
-<p>Na úvodní stránce zvolte <span class="ui">Pokračovat přes GitHub</span>. Účet v InitPadu vznikne při prvním přihlášení, heslo se nezakládá.</p>
+<p>Úvodní stránka nabízí dva způsoby přihlášení. Oba vedou ke stejnému druhu účtu a později je můžete kombinovat.</p>
+<ul>
+  <li><span class="ui">Pokračovat přes GitHub</span>: účet v InitPadu vznikne při prvním přihlášení a heslo se nezakládá. Přístup k repozitářům se uděluje zvlášť přes GitHub App, viz <a href="#github">Propojení GitHubu</a>.</li>
+  <li>E-mail a heslo, od verze 0.2.40. Postup popisuje část <a href="#email-sign-in">Založení účtu e-mailem</a> níže.</li>
+</ul>
 <p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu. Když mezitím vyjde nová verze InitPadu, otevřená karta ukáže <q>InitPad byl aktualizován</q> a novou verzi načtete tlačítkem <span class="ui">Obnovit</span>.</p>
-<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.37</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
+<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.40</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
+<h3 id="email-sign-in">Založení účtu e-mailem</h3>
+<ol class="steps">
+  <li>Na úvodní stránce zvolte <span class="ui">Vytvořit účet</span> a vyplňte <span class="ui">Uživatelské jméno</span>, <span class="ui">E-mail</span>, <span class="ui">Heslo</span> (aspoň 12 znaků) a <span class="ui">Potvrzení hesla</span>.</li>
+  <li>Po volbě <span class="ui">Vytvořit účet</span> stránka ukáže <q>Na adresu … jsme poslali potvrzovací odkaz. Otevřete ho, tím dokončíte registraci, a pak se přihlaste.</q> Účet zatím nejde použít.</li>
+  <li>Otevřete odkaz z e-mailu. Platí 24 hodin. Po potvrzení adresy vznikne váš osobní workspace.</li>
+  <li>Přihlaste se volbou <span class="ui">Přihlásit se</span> uživatelským jménem nebo e-mailem a heslem.</li>
+</ol>
+<p>Když e-mail nepřišel, podívejte se do spamu a zvolte <span class="ui">Poslat odkaz znovu</span>. Při pokusu o přihlášení před potvrzením InitPad ukáže <q>Před přihlášením potvrďte e-mailovou adresu.</q> a tlačítko <span class="ui">Poslat potvrzovací odkaz znovu</span>. Účet nepotvrzený do 24 hodin už jméno ani e-mail neblokuje, stačí se zaregistrovat znovu. Zapomenuté heslo obnovíte odkazem <span class="ui">Zapomněli jste heslo?</span> na úvodní stránce.</p>
+<p>Účet bez GitHubu se přihlásí a pracuje v týmovém workspace, který už má nainstalovanou GitHub App. Repozitáře ve vlastním účtu na GitHubu vytvoříte, až v <span class="ui">Nastavení účtu</span> zvolíte <span class="ui">Propojit účet GitHub</span>. Naopak účet s heslem a potvrzeným e-mailem může GitHub odpojit volbou <span class="ui">Odpojit GitHub</span> a přihlašovat se dál.</p>
+
+<h3 id="sessions">Přihlášené prohlížeče</h3>
 <p>V <span class="ui">Nastavení účtu</span> najdete v části <span class="ui">Přihlášené prohlížeče</span> všechna zařízení, kde jste přihlášení. Prohlížeč, který nepoznáváte, odhlaste, případně zvolte <span class="ui">Odhlásit všechny ostatní</span>.</p>
 
 <h2 id="github">3. Propojení GitHubu</h2>
 <p>Tato kapitola platí pro veřejnou edici. Self-hosted edice GitHub nepoužívá.</p>
+<p>Pokud jste se přihlásili e-mailem, nejdřív v <span class="ui">Nastavení účtu</span> zvolte <span class="ui">Propojit účet GitHub</span>.</p>
 <p>InitPad s repozitáři nepracuje pod vaším jménem, ale přes GitHub App. Vidí jen účty a organizace, do kterých ji nainstalujete, a jen repozitáře, které jí povolíte.</p>
 <ol class="steps">
   <li>Otevřete <span class="ui">Nastavení účtu</span> a v části <span class="ui">Účet GitHub</span> zvolte <span class="ui">Nainstalovat GitHub App</span>. Otevře se okno GitHubu, proto povolte vyskakovací okna.</li>
@@ -278,7 +294,7 @@ Na rozdíl od Agenta se k SFTP hostingu připojuje InitPad sám. Ve veřejné ed
 
 <h2 id="team">9. Tým, role a kvóty</h2>
 <p>Projekty, servery i instalace GitHub App patří do workspace. Kromě osobního workspace si můžete založit týmový v nabídce workspace v levém menu volbou <span class="ui">Přidat nový workspace</span>. Ve veřejné edici může jeden účet vlastnit nejvýše pět týmových workspace, v self-hosted edici limit ve výchozím stavu není.</p>
-<p>Osobní workspace je jen váš. Členy přidáte do týmového workspace v <span class="ui">Nastavení workspace</span> (položka <span class="ui">Workspace</span> v menu) v části <span class="ui">Členové workspace</span> tlačítkem <span class="ui">Přidat člena</span>. Zadáte uživatelské jméno nebo e-mail. Ve veřejné edici se dotyčný musí do InitPadu aspoň jednou přihlásit, v self-hosted edici mu účet musí nejdřív založit správce instance.</p>
+<p>Osobní workspace je jen váš. Do týmového workspace se vstupuje <a href="#invitations">pozvánkou</a>, kterou musí pozvaný přijmout. V self-hosted edici může vlastník nebo administrátor přidat existující účet i přímo v <span class="ui">Nastavení workspace</span> (položka <span class="ui">Workspace</span> v menu) v části <span class="ui">Členové workspace</span> tlačítkem <span class="ui">Přidat člena</span>; účet musí nejdřív založit správce instance.</p>
 <p>Člen workspace má jednu z pěti rolí:</p>
 <div class="scroll"><table>
   <tr><th>Role</th><th>Co smí navíc oproti předchozí</th></tr>
@@ -288,6 +304,19 @@ Na rozdíl od Agenta se k SFTP hostingu připojuje InitPad sám. Ve veřejné ed
   <tr><td>Administrátor</td><td>Přidávat servery s Agentem a připojovat Agenta, spravovat přístup workspace k serverům, instalovat GitHub App pro workspace a spravovat členy.</td></tr>
   <tr><td>Vlastník</td><td>Měnit pravidlo pro schvalování produkce.</td></tr>
 </table></div>
+<h3 id="invitations">Pozvání členů</h3>
+<p>Od verze 0.2.40 zve vlastník nebo administrátor workspace další lidi e-mailem. Ve veřejné edici je to jediná cesta do týmového workspace.</p>
+<ol class="steps">
+  <li>Otevřete <span class="ui">Nastavení workspace</span> týmového workspace. Osobní workspace sdílet nejde.</li>
+  <li>V části <span class="ui">Pozvánky</span> zadejte e-mail, vyberte roli a zvolte <span class="ui">Poslat pozvánku</span>. Pozvání administrátora je nutné ještě potvrdit.</li>
+  <li>InitPad pošle pozvanému odkaz e-mailem. Když instance e-maily posílat neumí, ukáže odkaz jednou místo toho: <q>Odesílání e-mailů není nastavené. Pošlete tento odkaz na … sami; funguje jednou.</q></li>
+  <li>Pozvaný otevře odkaz, uvidí workspace, roli a kdo ho zve, a zvolí <span class="ui">Přijmout pozvánku</span>. Kdo není přihlášený, zvolí <span class="ui">Přihlásit se a přijmout</span>; bez účtu si ho nejdřív <a href="#email-sign-in">založí</a> a odkaz pak otevře znovu.</li>
+</ol>
+<p>Pozvánka funguje jednou a platí 7 dní. Nová pozvánka na stejnou adresu tu předchozí nahradí. Čekající pozvánky jsou vypsané i s platností a lze je stáhnout volbou <span class="ui">Zrušit pozvánku</span>; odkaz tím okamžitě přestane fungovat.</p>
+<div class="box warn"><div class="t">Odkaz je pozvánka</div>
+Kdo odkaz otevře a přijme, ten se do workspace připojí, i s účtem na jiný e-mail. Odkaz proto nepřeposílejte. Audit zaznamená, koho jste pozvali a který účet pozvánku přijal.</div>
+
+<h3 id="approvals">Schvalování a audit</h3>
 <p>Workspace může vyžadovat, aby produkci schválil někdo jiný než žadatel. Kdo co udělal, najdete v části <span class="ui">Auditní log</span>.</p>
 
 <h3 id="quotas">Kvóty workspace</h3>
@@ -333,7 +362,11 @@ Převod na jiného vlastníka přejmenování není. Když repozitář přestane
   <tr><td><code>Environment '…' is busy. Wait for or cancel its operation before changing config.</code></td><td>Prostředí právě nasazuje nebo provádí jinou operaci. Počkejte na její konec.</td></tr>
   <tr><td><code>Workspace … quota reached (max …)</code></td><td>Workspace dosáhl <a href="#quotas">kvóty</a>. Uvolněte místo, nebo požádejte správce platformy o navýšení.</td></tr>
   <tr><td><code>You can own at most 5 team workspaces. Delete one you no longer need or ask the platform administrator.</code></td><td>Dosáhli jste limitu týmových workspace ve veřejné edici. Smažte workspace, který už nepotřebujete, nebo požádejte o navýšení správce platformy.</td></tr>
-  <tr><td><code>User '…' not found</code> při přidávání člena</td><td>Účet s tímto jménem nebo e-mailem v InitPadu není. Ve veřejné edici se dotyčný musí nejdřív jednou přihlásit přes GitHub, v self-hosted edici mu účet založí správce instance.</td></tr>
+  <tr><td><q>Uživatel … nebyl nalezen</q> při přidávání člena</td><td>Jen v self-hosted edici: účet s tímto jménem nebo e-mailem v InitPadu není. Založí ho správce instance, případně dotyčného <a href="#invitations">pozvěte</a>.</td></tr>
+  <tr><td><q>Před přihlášením potvrďte e-mailovou adresu. Otevřete odkaz, který jsme vám poslali, nebo si ho pošlete znovu.</q></td><td>Účet byl založen e-mailem, který ještě není potvrzený. Otevřete odkaz z e-mailu, nebo zvolte Poslat potvrzovací odkaz znovu, viz <a href="#email-sign-in">Založení účtu e-mailem</a>.</td></tr>
+  <tr><td><q>Hesla se neshodují</q></td><td>Heslo a jeho potvrzení se liší. Zadejte obě znovu.</td></tr>
+  <tr><td><q>Tato pozvánka je neplatná, vypršela nebo už byla použita</q></td><td>Odkaz už byl přijat, zrušen, nahrazen novější pozvánkou, nebo je starší než 7 dní. Požádejte vlastníka nebo administrátora workspace o novou pozvánku.</td></tr>
+  <tr><td><q>Před pozváním dalších členů vytvořte týmový workspace</q></td><td>Osobní workspace sdílet nejde. Založte týmový workspace a pozvěte lidi do něj.</td></tr>
   <tr><td><code>Hosted SFTP targets must resolve only to public internet addresses</code></td><td>Ve veřejné edici lze přidat jen SFTP hosting na veřejné internetové adrese. Hosting ve vnitřní síti připojte přes self-hosted instanci, nebo místo něj použijte server s Agentem.</td></tr>
   <tr><td>Organizace chybí v nabídce vlastníků</td><td>Není v ní nainstalovaná GitHub App, nebo instalace čeká na schválení vlastníkem organizace („Čeká se, až vlastník organizace na GitHubu schválí aplikaci“). Po schválení se organizace připojí sama, když se vrátíte do okna InitPadu.</td></tr>
   <tr><td>Pipeline je zelená, ale prostředí dev selhalo</td><td>Sestavení prošlo, nasazení ne. Důvod je na kartě prostředí a v části Aktivita nasazení. Častá příčina je, že aplikace neposlouchá na portu šablony nebo neodpovídá na <code>/health</code>, viz <a href="#templates">tabulka šablon</a>. Po odstranění příčiny zvolte ikonu opakování.</td></tr>
@@ -420,7 +453,7 @@ cd initpad/deploy
   <li>Nastavte <span class="ui">Povolené runtimy</span>, <span class="ui">Kvóta prostředí</span>, limity CPU, paměti a procesů na prostředí a případně automatický úklid prostředí dev a test.</li>
   <li>Přístup lze později <span class="ui">Upravit přístup</span>, <span class="ui">Pozastavit přístup</span> nebo <span class="ui">Odebrat přístup</span>. Běžící aplikace to nezastaví.</li>
 </ol>
-<p>Vestavěný Docker se hodí na vyzkoušení. U lokální instalace publikuje porty aplikací jen na tomto počítači. Pro aplikace dostupné z jiných počítačů použijte server s Agentem, ideálně se <a href="#gateway">spravovanou bránou</a>.</p>
+<p>Vestavěný Docker se hodí na vyzkoušení. U lokální instalace publikuje porty aplikací jen na tomto počítači. Od verze 0.2.38 se vestavěné cíle jmenují <q>Test environment (Docker)</q> a <q>Test static hosting (SFTP)</q>. U instalace pro interní síť s DNS vedou odkazy na aplikace na IP adresu serveru, například <code>http://192.168.1.50:32768</code>, protože prohlížeč by jinak adresu přepnul na HTTPS, které aplikace neumí. Opraví se i odkazy dříve nasazených aplikací. Aby se otevřely i z ostatních počítačů, musí instalace starší než 0.2.38 jednou spustit <code>./install.sh --reconfigure</code>. Pro aplikace dostupné z jiných počítačů použijte server s Agentem, ideálně se <a href="#gateway">spravovanou bránou</a>.</p>
 
 <h3 id="self-hosted-updates">Stránka Platforma a aktualizace</h3>
 <p>Položku <span class="ui">Platforma</span> v levém menu vidí jen administrátoři platformy. Najdou tam správu uživatelů, kapacitu workspace a část <span class="ui">Aktualizace platformy</span>. Nainstalovanou verzi ukazuje i spodní část levého menu.</p>
@@ -442,11 +475,11 @@ cd initpad/deploy
   <li>Sledování přejmenování a převodu repozitářů z kapitoly <a href="#rename-delete">Přejmenování a smazání</a> se týká jen GitHubu.</li>
   <li>Limit pěti týmových workspace ve výchozím stavu neplatí. Kvóty workspace platí stejně.</li>
   <li>SFTP hosting může být i ve vnitřní síti.</li>
-  <li>Nového člena workspace musí nejdřív založit administrátor platformy.</li>
+  <li>Nového člena workspace musí nejdřív založit administrátor platformy. Vlastník nebo administrátor workspace ho pak přidá přímo, nebo ho <a href="#invitations">pozve</a>.</li>
   <li>Odkazy <span class="ui">Nápověda</span> a <span class="ui">Více v nápovědě</span> vedou od verze 0.2.36 ve výchozím stavu na <a href="https://docs.initpad.me">https://docs.initpad.me</a>.</li>
 </ul>
 
-<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.37, listopad 2026.</footer>
+<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.40, listopad 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
