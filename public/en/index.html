@@ -42,7 +42,7 @@
 </div>
 
 <h1>InitPad Help</h1>
-<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.37.</p>
+<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.40.</p>
 
 <h2 id="getting-started">1. Getting started</h2>
 <p>InitPad creates a repository with an application skeleton and a ready-made pipeline for you, and after every push it builds, tests and deploys the application to your server. You write the code; you do not have to set up Docker or CI.</p>
@@ -52,7 +52,7 @@
 <div class="scroll"><table>
   <tr><th></th><th>Public edition (GitHub)</th><th>Self-hosted edition</th></tr>
   <tr><td>Where it runs</td><td>Operated by the InitPad author at <a href="https://staging.initpad.me">https://staging.initpad.me</a> (currently a trial service).</td><td>On your own server. The administrator picks the address during installation, for example <code>http://localhost:8080</code> or <code>https://initpad.school.example</code>.</td></tr>
-  <tr><td>Signing in</td><td>With a GitHub account.</td><td>With a username and password; accounts are created by the instance administrator.</td></tr>
+  <tr><td>Signing in</td><td>With a GitHub account, or from version 0.2.40 with an e-mail address and password.</td><td>With a username and password; accounts are created by the instance administrator.</td></tr>
   <tr><td>Repositories and CI</td><td>GitHub and GitHub Actions, workflow <code>.github/workflows/ci.yml</code>.</td><td>The built-in Gitea and its CI runner, workflow <code>.gitea/workflows/ci.yml</code>.</td></tr>
   <tr><td>Servers</td><td>Your own servers with InitPad Agent, or publicly reachable SFTP hosting.</td><td>The same, plus platform servers the administrator makes available to a workspace.</td></tr>
   <tr><td>Chapters for this edition only</td><td><a href="#sign-in">Signing in</a>, <a href="#github">Connecting GitHub</a>, <a href="#limitations">Public edition limits</a></td><td><a href="#self-hosted">Self-hosted InitPad</a></td></tr>
@@ -60,12 +60,12 @@
 
 <h3>What you need</h3>
 <ul>
-  <li>in the public edition a GitHub account, in the self-hosted edition an account from the instance administrator,</li>
+  <li>in the public edition a GitHub account (you can also create an account with an e-mail address, but repositories are always connected through GitHub), in the self-hosted edition an account from the instance administrator,</li>
   <li>a Linux server with Docker for the application to run on (see <a href="#server-requirements">server requirements</a>). It only needs outbound access to the InitPad address, so it can sit behind a router or a VPN.</li>
 </ul>
 <p>In the public edition the path has five steps:</p>
 <ol class="steps">
-  <li><a href="#sign-in">Sign in</a> with your GitHub account.</li>
+  <li><a href="#sign-in">Sign in</a> with your GitHub account, or create an account with an e-mail address.</li>
   <li><a href="#github">Install the GitHub App</a> so InitPad may work with your repositories.</li>
   <li><a href="#servers">Connect a server</a> with a single command.</li>
   <li><a href="#new-project">Create a project</a> from a template, or <a href="#import">import</a> an existing repository.</li>
@@ -77,13 +77,29 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
 
 <h2 id="sign-in">2. Signing in</h2>
 <p>This chapter applies to the public edition. Signing in to a self-hosted edition is described in <a href="#self-hosted-accounts">Password sign-in and account activation</a>.</p>
-<p>On the start page choose <span class="ui">Continue with GitHub</span>. Your InitPad account is created on the first sign-in; there is no password to set.</p>
+<p>The start page offers two ways to sign in. Both lead to the same kind of account and you can combine them later.</p>
+<ul>
+  <li><span class="ui">Continue with GitHub</span>: your InitPad account is created on the first sign-in and there is no password to set. Repository access is granted separately through the GitHub App, see <a href="#github">Connecting GitHub</a>.</li>
+  <li>An e-mail address and password, from version 0.2.40. See <a href="#email-sign-in">Creating an account with an e-mail address</a> below.</li>
+</ul>
 <p>A sign-in lasts seven days. After a platform update you may have to sign in again. When a new InitPad version is released while a tab is open, the tab shows <q>InitPad was updated</q>; load the new version with <span class="ui">Reload</span>.</p>
-<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.37</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
+<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.40</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
+<h3 id="email-sign-in">Creating an account with an e-mail address</h3>
+<ol class="steps">
+  <li>On the start page choose <span class="ui">Create account</span> and fill in the <span class="ui">Username</span>, <span class="ui">E-mail</span>, <span class="ui">Password</span> (at least 12 characters) and <span class="ui">Confirm password</span>.</li>
+  <li>After <span class="ui">Create account</span> the page shows <q>We sent a confirmation link to …. Open it to finish creating your account, then sign in.</q> The account is not usable yet.</li>
+  <li>Open the link from the e-mail. It is valid for 24 hours. Your personal workspace is created once the address is confirmed.</li>
+  <li>Sign in with <span class="ui">Sign in</span> using your username or e-mail and password.</li>
+</ol>
+<p>If no e-mail arrived, check your spam folder and choose <span class="ui">Send the link again</span>. When you try to sign in before confirming, InitPad shows <q>Confirm your e-mail address before signing in.</q> and the <span class="ui">Send the confirmation link again</span> button. An account that was not confirmed within 24 hours no longer blocks its username or e-mail; you can simply register again. A forgotten password is reset with <span class="ui">Forgot your password?</span> on the start page.</p>
+<p>An account without GitHub can sign in and work in a team workspace that already has the GitHub App installed. To create repositories in your own GitHub account, connect it under <span class="ui">Account settings</span> with <span class="ui">Link GitHub account</span>. Conversely, an account that has a password and a confirmed e-mail can disconnect its GitHub account with <span class="ui">Unlink GitHub</span> and still sign in.</p>
+
+<h3 id="sessions">Signed-in browsers</h3>
 <p>Under <span class="ui">Account settings</span>, the <span class="ui">Signed-in browsers</span> section lists every device where you are signed in. Sign out any browser you do not recognise, or choose <span class="ui">Sign out all others</span>.</p>
 
 <h2 id="github">3. Connecting GitHub</h2>
 <p>This chapter applies to the public edition. The self-hosted edition does not use GitHub.</p>
+<p>If you signed in with an e-mail address, first connect your GitHub account under <span class="ui">Account settings</span> with <span class="ui">Link GitHub account</span>.</p>
 <p>InitPad does not work with repositories in your name but through a GitHub App. It sees only the accounts and organizations you install it into, and only the repositories you allow.</p>
 <ol class="steps">
   <li>Open <span class="ui">Account settings</span> and in the <span class="ui">GitHub account</span> section choose <span class="ui">Install GitHub App</span>. A GitHub window opens, so allow pop-ups.</li>
@@ -278,7 +294,7 @@ Unlike with the Agent, InitPad connects to SFTP hosting itself. In the public ed
 
 <h2 id="team">9. Team, roles and quotas</h2>
 <p>Projects, servers and GitHub App installations belong to a workspace. Besides your personal workspace you can create a team one from the workspace menu in the left sidebar with <span class="ui">Add new workspace</span>. In the public edition one account can own at most five team workspaces; the self-hosted edition has no such limit by default.</p>
-<p>A personal workspace is yours alone. Add members to a team workspace in <span class="ui">Workspace settings</span> (the <span class="ui">Workspace</span> menu item), in the <span class="ui">Workspace members</span> section, with <span class="ui">Add member</span>. Enter a username or e-mail. In the public edition the person must have signed in to InitPad at least once; in the self-hosted edition the instance administrator must create their account first.</p>
+<p>A personal workspace is yours alone. People join a team workspace by <a href="#invitations">invitation</a>, which they must accept. In the self-hosted edition an owner or admin can also add an existing account directly in <span class="ui">Workspace settings</span> (the <span class="ui">Workspace</span> menu item), in the <span class="ui">Workspace members</span> section, with <span class="ui">Add member</span>; the instance administrator must create that account first.</p>
 <p>A workspace member has one of five roles:</p>
 <div class="scroll"><table>
   <tr><th>Role</th><th>What it adds to the previous one</th></tr>
@@ -288,6 +304,19 @@ Unlike with the Agent, InitPad connects to SFTP hosting itself. In the public ed
   <tr><td>Admin</td><td>Add Agent servers and connect the Agent, manage workspace access to servers, install the GitHub App for the workspace and manage members.</td></tr>
   <tr><td>Owner</td><td>Change the production approval rule.</td></tr>
 </table></div>
+<h3 id="invitations">Inviting members</h3>
+<p>From version 0.2.40 a workspace owner or admin invites people by e-mail. In the public edition this is the only way into a team workspace.</p>
+<ol class="steps">
+  <li>Open <span class="ui">Workspace settings</span> of a team workspace. A personal workspace cannot be shared.</li>
+  <li>In the <span class="ui">Invitations</span> section enter the e-mail address, pick the role and choose <span class="ui">Send invitation</span>. Inviting an admin asks for confirmation first.</li>
+  <li>InitPad e-mails the person a link. When the instance cannot send e-mail, the link is shown once instead: <q>E-mail delivery is not configured. Send this link to … yourself; it works once.</q></li>
+  <li>The person opens the link, sees the workspace, role and who invited them, and chooses <span class="ui">Accept invitation</span>. Someone who is not signed in chooses <span class="ui">Sign in to accept</span>; without an account they <a href="#email-sign-in">create one</a> first and then open the link again.</li>
+</ol>
+<p>An invitation works once and expires in 7 days. A new invitation to the same address replaces the previous one. Pending invitations are listed with their validity and can be withdrawn with <span class="ui">Cancel invitation</span>; the link stops working immediately.</p>
+<div class="box warn"><div class="t">The link is the invitation</div>
+Whoever opens the link and accepts it joins the workspace, even with an account under a different e-mail. Do not forward it. The audit log records who was invited and which account accepted.</div>
+
+<h3 id="approvals">Approvals and the audit log</h3>
 <p>A workspace can require production to be approved by someone other than the requester. The <span class="ui">Audit log</span> shows who did what.</p>
 
 <h3 id="quotas">Workspace quotas</h3>
@@ -333,7 +362,11 @@ A transfer to another owner is not a rename. When the repository is no longer av
   <tr><td><code>Environment '…' is busy. Wait for or cancel its operation before changing config.</code></td><td>The environment is deploying or running another operation. Wait for it to finish.</td></tr>
   <tr><td><code>Workspace … quota reached (max …)</code></td><td>The workspace has reached a <a href="#quotas">quota</a>. Free something up, or ask the platform administrator to raise it.</td></tr>
   <tr><td><code>You can own at most 5 team workspaces. Delete one you no longer need or ask the platform administrator.</code></td><td>You have reached the team workspace limit of the public edition. Delete a workspace you no longer need, or ask the platform administrator to raise the limit.</td></tr>
-  <tr><td><code>User '…' not found</code> when adding a member</td><td>InitPad has no account with that username or e-mail. In the public edition the person must sign in with GitHub once first; in the self-hosted edition the instance administrator creates the account.</td></tr>
+  <tr><td><code>User '…' not found</code> when adding a member</td><td>Self-hosted edition only: InitPad has no account with that username or e-mail. The instance administrator creates the account, or <a href="#invitations">invite</a> the person instead.</td></tr>
+  <tr><td><code>Confirm your e-mail address before signing in. Open the link we sent you or send it again.</code></td><td>The account was created with an e-mail address that is not confirmed yet. Open the link from the e-mail, or choose Send the confirmation link again, see <a href="#email-sign-in">Creating an account with an e-mail address</a>.</td></tr>
+  <tr><td><code>Passwords do not match</code></td><td>The password and its confirmation differ. Type both again.</td></tr>
+  <tr><td><code>This invitation is invalid, expired or already used</code></td><td>The link was already accepted, cancelled, replaced by a newer invitation or is older than 7 days. Ask the workspace owner or admin for a new invitation.</td></tr>
+  <tr><td><code>Create a team workspace before inviting other members</code></td><td>A personal workspace cannot be shared. Create a team workspace and invite people there.</td></tr>
   <tr><td><code>Hosted SFTP targets must resolve only to public internet addresses</code></td><td>The public edition accepts only SFTP hosting at a public internet address. Connect hosting on an internal network through a self-hosted instance, or use an Agent server instead.</td></tr>
   <tr><td>An organization is missing from the owner list</td><td>The GitHub App is not installed in it, or the installation is waiting for the organization owner's approval ("Waiting for a GitHub organization owner to approve the App"). Once approved, the organization connects by itself when you return to the InitPad window.</td></tr>
   <tr><td>The pipeline is green but the dev environment failed</td><td>The build passed, the deployment did not. The reason is on the environment card and in the Deployment activity section. A common cause is an application that does not listen on the template's port or does not answer on <code>/health</code>, see the <a href="#templates">template table</a>. Once you fix the cause, choose the retry icon.</td></tr>
@@ -420,7 +453,7 @@ cd initpad/deploy
   <li>Set the <span class="ui">Allowed runtimes</span>, the <span class="ui">Environment quota</span>, the CPU, memory and process limits per environment and, optionally, automatic cleanup of dev and test environments.</li>
   <li>Access can later be changed with <span class="ui">Edit access</span>, <span class="ui">Pause access</span> or <span class="ui">Remove access</span>. Running applications are not stopped.</li>
 </ol>
-<p>The built-in Docker is meant for trying things out. On a local installation it publishes application ports on this computer only. For applications reachable from other computers use an Agent server, ideally with a <a href="#gateway">managed gateway</a>.</p>
+<p>The built-in Docker is meant for trying things out. On a local installation it publishes application ports on this computer only. From version 0.2.38 the built-in targets are called <q>Test environment (Docker)</q> and <q>Test static hosting (SFTP)</q>. On an installation for an internal network with DNS, application links point to the server's IP address, for example <code>http://192.168.1.50:32768</code>, because the browser would otherwise switch the address to HTTPS, which the application does not speak. Links of applications deployed earlier are corrected too. For them to open from other computers, an installation from before 0.2.38 must run <code>./install.sh --reconfigure</code> once. For applications reachable from other computers use an Agent server, ideally with a <a href="#gateway">managed gateway</a>.</p>
 
 <h3 id="self-hosted-updates">The Platform page and updates</h3>
 <p>Only platform administrators see <span class="ui">Platform</span> in the left menu. It holds user management, workspace capacity and the <span class="ui">Platform updates</span> section. The installed version is also shown at the bottom of the left menu.</p>
@@ -442,11 +475,11 @@ cd initpad/deploy
   <li>Following repository renames and transfers, as described in <a href="#rename-delete">Renaming and deleting</a>, applies to GitHub only.</li>
   <li>The limit of five team workspaces does not apply by default. Workspace quotas apply the same way.</li>
   <li>SFTP hosting may also be on the internal network.</li>
-  <li>A new workspace member must first be created by the platform administrator.</li>
+  <li>A new workspace member must first be created by the platform administrator. A workspace owner or admin then adds them directly or <a href="#invitations">invites</a> them.</li>
   <li>From version 0.2.36 the <span class="ui">Help</span> and <span class="ui">Learn more</span> links point to <a href="https://docs.initpad.me">https://docs.initpad.me</a> by default.</li>
 </ul>
 
-<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.37, November 2026.</footer>
+<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.40, November 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
