@@ -42,7 +42,7 @@
 </div>
 
 <h1>Nápověda InitPad</h1>
-<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.43.</p>
+<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.45.</p>
 
 <h2 id="getting-started">1. Začínáme</h2>
 <p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
@@ -83,7 +83,7 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
   <li>E-mail a heslo, od verze 0.2.40. Postup popisuje část <a href="#email-sign-in">Založení účtu e-mailem</a> níže.</li>
 </ul>
 <p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu. Když mezitím vyjde nová verze InitPadu, otevřená karta ukáže <q>InitPad byl aktualizován</q> a novou verzi načtete tlačítkem <span class="ui">Obnovit</span>.</p>
-<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.43</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
+<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.45</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
 <h3 id="email-sign-in">Založení účtu e-mailem</h3>
 <ol class="steps">
   <li>Na úvodní stránce zvolte <span class="ui">Vytvořit účet</span> a vyplňte <span class="ui">Uživatelské jméno</span>, <span class="ui">E-mail</span>, <span class="ui">Heslo</span> (aspoň 12 znaků) a <span class="ui">Potvrzení hesla</span>.</li>
@@ -109,6 +109,7 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
 <div class="box why"><div class="t">Organizace</div>
 Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHub mu pošle žádost a Nastavení ukážou <q>Čeká se, až vlastník organizace na GitHubu schválí aplikaci. Po schválení se organizace propojí sem.</q> Jakmile vlastník App schválí a vy se vrátíte do okna InitPadu, organizace se připojí sama.</div>
 <p>Samotné členství v organizaci nestačí. Repozitáře organizace uvidíte v InitPadu až po instalaci App do ní.</p>
+<p>Účet nebo organizaci, kterou workspace už nepotřebuje, odpojí vlastník nebo administrátor tlačítkem <span class="ui">Odpojit</span> u její položky v části <span class="ui">GitHub</span>. Odpojí se jen z tohoto workspace: aplikace InitPad zůstane na GitHubu nainstalovaná a jiné workspace ji používají dál. Dokud ve workspace zůstávají projekty z toho účtu, odpojení nejde a hláška je vyjmenuje. Členy, které InitPad do organizace pozval kvůli tomuto workspace, z ní odebere, pokud ji nepoužívá jiný jejich workspace. Odpojení se zapíše do auditního logu.</p>
 <div class="box why"><div class="t">Týmový workspace potřebuje organizaci</div>
 Od verze 0.2.42 se týmový workspace připojuje jen ke GitHub organizaci; stačí i bezplatná. Osobní workspace dál přijme osobní účet i organizaci. InitPad pak členy týmu do organizace sám zve a nastavuje jim práva k repozitářům podle role, viz <a href="#repository-access">Přístup členů k repozitářům</a>. Na osobním účtu GitHub role jako čtenář nebo správce neumí.</div>
 
@@ -259,6 +260,8 @@ Na rozdíl od Agenta se k SFTP hostingu připojuje InitPad sám. Ve veřejné ed
   <tr><td>Vue (Vite)</td><td>Static</td><td>8080</td><td><code>/health</code></td><td>Agent, SFTP</td></tr>
 </table></div>
 
+<p>Po importu InitPad sám spustí první build posledního commitu výchozí větve. Běh, který proběhl před importem, InitPadu nic nedoručil, protože repozitář ještě neměl jeho secrety. Když stránka projektu ukáže <q>Poslední build se InitPadu neohlásil</q>, zvolte <span class="ui">Sestavit a nasadit dev</span>, u projektu jen s produkcí <span class="ui">Sestavit a ověřit</span>.</p>
+
 <h3>Projekt, který už má vlastní pipeline</h3>
 <ul>
   <li>Vaše workflow v jiných souborech běží dál beze změny.</li>
@@ -271,7 +274,7 @@ Na rozdíl od Agenta se k SFTP hostingu připojuje InitPad sám. Ve veřejné ed
 <div class="scroll"><table>
   <tr><th>Co chcete</th><th>Jak na to</th></tr>
   <tr><td>Povýšit dev do testu</td><td>Tlačítko se šipkou mezi kartami prostředí.</td></tr>
-  <tr><td>Nasadit do produkce</td><td><span class="ui">Žádost o prod</span>. Nasazení musí schválit vlastník, administrátor nebo správce workspace.</td></tr>
+  <tr><td>Nasadit do produkce</td><td><span class="ui">Žádost o prod</span>. Nasazení musí schválit vlastník, administrátor nebo správce workspace. U projektu jen s produkcí se žádá z karty <span class="ui">Ověřený build</span>.</td></tr>
   <tr><td>Vrátit starší verzi</td><td>Nabídka prostředí, <span class="ui">Vrátit na předchozí verzi…</span></td></tr>
   <tr><td>Nasadit stejnou verzi znovu</td><td>Nabídka prostředí, <span class="ui">Znovu nasadit ověřený build</span>.</td></tr>
   <tr><td>Dočasně vypnout aplikaci</td><td><span class="ui">Zastavit</span> a později <span class="ui">Spustit</span>.</td></tr>
@@ -281,7 +284,7 @@ Na rozdíl od Agenta se k SFTP hostingu připojuje InitPad sám. Ve veřejné ed
   <tr><td>Zjistit, proč aplikace neběží</td><td><span class="ui">Diagnostika workloadu…</span> a část <span class="ui">Aktivita nasazení</span>.</td></tr>
   <tr><td>Zopakovat neúspěšnou pipeline</td><td>Ve veřejné edici <span class="ui">Znovu spustit neúspěšné úlohy na GitHubu</span>.</td></tr>
 </table></div>
-<p>Kroky pipeline u commitu vedou přímo na logy běhu na GitHubu, v self-hosted edici v Gitee.</p>
+<p>Kroky pipeline u commitu vedou přímo na logy běhu na GitHubu, v self-hosted edici v Gitee. Během operace karta prostředí ukazuje, co se děje: <q>nasazuje se</q>, <q>odstraňuje se</q>, <q>zastavuje se</q> nebo <q>spouští se</q>.</p>
 
 <h2 id="variables">8. Proměnné a secrety</h2>
 <p>V detailu projektu je část <span class="ui">Konfigurace</span> s proměnnými pro každé prostředí zvlášť. InitPad je aplikaci předá při nasazení. Změna se projeví až po opětovném nasazení prostředí.</p>
@@ -386,6 +389,8 @@ Převod na jiného vlastníka přejmenování není. Když repozitář přestane
   <tr><td><q>V GitHub organizaci … schvalte aktualizovaná oprávnění aplikace InitPad (Members: read and write) a zkuste to znovu.</q></td><td>Vlastník organizace musí na GitHubu v <span class="ui">Settings → GitHub Apps</span> schválit nové oprávnění InitPadu. Jde o jednorázový krok.</td></tr>
   <tr><td><q>GitHub odmítl udělit uživateli … přístup k repozitáři (HTTP …): …</q></td><td>GitHub změnu práv odmítl a za dvojtečkou uvádí důvod. Pokud problém trvá, pošlete hlášku správci platformy.</td></tr>
   <tr><td>Organizace chybí v nabídce vlastníků</td><td>Není v ní nainstalovaná GitHub App, nebo instalace čeká na schválení vlastníkem organizace („Čeká se, až vlastník organizace na GitHubu schválí aplikaci“). Po schválení se organizace připojí sama, když se vrátíte do okna InitPadu.</td></tr>
+  <tr><td><q>Poslední build se InitPadu neohlásil</q></td><td>CI doběhlo, ale build InitPadu nedoručilo, typicky běh z doby před importem. Zvolte <span class="ui">Sestavit a nasadit dev</span>, u projektu jen s produkcí <span class="ui">Sestavit a ověřit</span>.</td></tr>
+  <tr><td><q>GitHub účet … stále používají projekty …. Před odpojením je smažte.</q></td><td>Účet nebo organizaci nejde odpojit, dokud na ní ve workspace leží projekty. Smažte je, nebo účet nechte připojený.</td></tr>
   <tr><td>Pipeline je zelená, ale prostředí dev selhalo</td><td>Sestavení prošlo, nasazení ne. Důvod je na kartě prostředí a v části Aktivita nasazení. Častá příčina je, že aplikace neposlouchá na portu šablony nebo neodpovídá na <code>/health</code>, viz <a href="#templates">tabulka šablon</a>. Po odstranění příčiny zvolte ikonu opakování.</td></tr>
   <tr><td>Server je v seznamu offline, nasazení <q>Čeká se na Agenta</q></td><td>Agent se 90 sekund neozval. Ověřte, že server běží, Docker je spuštěný a server se dostane na adresu InitPadu, viz <a href="#agent-updates">Aktualizace Agenta a stav offline</a>.</td></tr>
   <tr><td>Instalátor Agenta skončí <code>this server is below the minimum size</code></td><td>Server nemá dost RAM, CPU nebo místa, viz <a href="#server-requirements">požadavky</a>. Zvětšete ho.</td></tr>
@@ -496,7 +501,7 @@ cd initpad/deploy
   <li>Odkazy <span class="ui">Nápověda</span> a <span class="ui">Více v nápovědě</span> vedou od verze 0.2.36 ve výchozím stavu na <a href="https://docs.initpad.me">https://docs.initpad.me</a>.</li>
 </ul>
 
-<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.43, listopad 2026.</footer>
+<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.45, listopad 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
