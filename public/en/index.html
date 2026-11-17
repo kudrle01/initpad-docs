@@ -42,7 +42,7 @@
 </div>
 
 <h1>InitPad Help</h1>
-<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.41.</p>
+<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.42.</p>
 
 <h2 id="getting-started">1. Getting started</h2>
 <p>InitPad creates a repository with an application skeleton and a ready-made pipeline for you, and after every push it builds, tests and deploys the application to your server. You write the code; you do not have to set up Docker or CI.</p>
@@ -83,7 +83,7 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
   <li>An e-mail address and password, from version 0.2.40. See <a href="#email-sign-in">Creating an account with an e-mail address</a> below.</li>
 </ul>
 <p>A sign-in lasts seven days. After a platform update you may have to sign in again. When a new InitPad version is released while a tab is open, the tab shows <q>InitPad was updated</q>; load the new version with <span class="ui">Reload</span>.</p>
-<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.41</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
+<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.42</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
 <h3 id="email-sign-in">Creating an account with an e-mail address</h3>
 <ol class="steps">
   <li>On the start page choose <span class="ui">Create account</span> and fill in the <span class="ui">Username</span>, <span class="ui">E-mail</span>, <span class="ui">Password</span> (at least 12 characters) and <span class="ui">Confirm password</span>.</li>
@@ -109,6 +109,8 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
 <div class="box why"><div class="t">Organizations</div>
 An installation into an organization must be approved by its owner. If that is not you, GitHub sends the owner a request and Settings shows <q>Waiting for a GitHub organization owner to approve the App. The organization connects here once they do.</q> Once the owner approves the App and you return to the InitPad window, the organization connects by itself.</div>
 <p>Membership in an organization is not enough. You will see the organization's repositories in InitPad only after the App is installed into it.</p>
+<div class="box why"><div class="t">A team workspace needs an organization</div>
+Since version 0.2.42 a team workspace connects only to a GitHub organization; a free one is enough. A personal workspace still accepts your personal account and organizations. InitPad then invites team members to the organization and sets their repository permissions by role, see <a href="#repository-access">Members' repository access</a>. A personal GitHub account has no roles such as viewer or maintainer.</div>
 
 <h2 id="servers">4. Connecting a server</h2>
 <p>Applications do not run at InitPad but on your server. InitPad supports two kinds of servers:</p>
@@ -316,6 +318,17 @@ Unlike with the Agent, InitPad connects to SFTP hosting itself. In the public ed
 <div class="box warn"><div class="t">The link is the invitation</div>
 Whoever opens the link and accepts it joins the workspace, even with an account under a different e-mail. Do not forward it. The audit log records who was invited and which account accepted.</div>
 
+<h3 id="repository-access">Members' repository access</h3>
+<p>In the public edition, since version 0.2.42, members of a team workspace get access to the project repositories on GitHub automatically:</p>
+<ol class="steps">
+  <li>The member accepts the workspace invitation. Without linked GitHub, the member list shows <span class="ui">GitHub not linked</span>. Access follows as soon as they link GitHub in <span class="ui">Account settings</span>.</li>
+  <li>Anyone not yet in the workspace's organization gets a GitHub invitation to it with the <em>member</em> role. Meanwhile the member list shows <span class="ui">Invited to … on GitHub</span>, linking to the invitation. InitPad never changes the membership of someone already in the organization, such as its owner.</li>
+  <li>On the project repositories they get permissions by role: viewer read, member write, maintainer <em>maintain</em>, admin and owner <em>admin</em>. Changing the workspace role changes the GitHub permissions too.</li>
+</ol>
+<p>Removed from the workspace, a member loses repository access. InitPad removes them from the organization only if it invited them and no other workspace of theirs uses it. An invitation accepted on GitHub shows in the badge at the next sync, for example a role change.</p>
+<div class="box warn"><div class="t">Older team workspace on a personal account</div>
+A team workspace with projects on a personal GitHub account keeps building and deploying. While it has such projects, members cannot be invited or have their role changed; removing a member works. Connect an organization for new projects.</div>
+
 <h3 id="approvals">Approvals and the audit log</h3>
 <p>A workspace can require production to be approved by someone other than the requester. The <span class="ui">Audit log</span> shows who did what.</p>
 
@@ -368,6 +381,10 @@ A transfer to another owner is not a rename. When the repository is no longer av
   <tr><td><code>This invitation is invalid, expired or already used</code></td><td>The link was already accepted, cancelled, replaced by a newer invitation or is older than 7 days. Ask the workspace owner or admin for a new invitation.</td></tr>
   <tr><td><code>Create a team workspace before inviting other members</code></td><td>A personal workspace cannot be shared. Create a team workspace and invite people there.</td></tr>
   <tr><td><code>Hosted SFTP targets must resolve only to public internet addresses</code></td><td>The public edition accepts only SFTP hosting at a public internet address. Connect hosting on an internal network through a self-hosted instance, or use an Agent server instead.</td></tr>
+  <tr><td><code>A team workspace connects to a GitHub organization. Install the InitPad app on an organization, or use your personal workspace for repositories in your personal account.</code></td><td>You tried to connect a personal GitHub account to a team workspace. Install the App into an organization, see <a href="#github">Connecting GitHub</a>.</td></tr>
+  <tr><td><code>This team workspace still uses the personal GitHub account '…'. Connect a GitHub organization to change member access.</code></td><td>The workspace has projects on a personal account, which has no GitHub roles. See <a href="#repository-access">Members' repository access</a>.</td></tr>
+  <tr><td><code>Approve the updated InitPad app permissions in the GitHub organization '…' (Members: read and write), then try again.</code></td><td>An organization owner approves InitPad's new permission on GitHub in <span class="ui">Settings → GitHub Apps</span>. This is a one-time step.</td></tr>
+  <tr><td><code>Could not grant repository access to '…' (HTTP …): …</code></td><td>GitHub refused the permission change and gives its reason after the colon. If it persists, send the message to the platform administrator.</td></tr>
   <tr><td>An organization is missing from the owner list</td><td>The GitHub App is not installed in it, or the installation is waiting for the organization owner's approval ("Waiting for a GitHub organization owner to approve the App"). Once approved, the organization connects by itself when you return to the InitPad window.</td></tr>
   <tr><td>The pipeline is green but the dev environment failed</td><td>The build passed, the deployment did not. The reason is on the environment card and in the Deployment activity section. A common cause is an application that does not listen on the template's port or does not answer on <code>/health</code>, see the <a href="#templates">template table</a>. Once you fix the cause, choose the retry icon.</td></tr>
   <tr><td>A server shows as offline, a deployment shows <q>Waiting for Agent</q></td><td>The Agent has not reported in for 90 seconds. Check that the server is running, Docker is started and the server can reach the InitPad address, see <a href="#agent-updates">Agent updates and the offline state</a>.</td></tr>
@@ -479,7 +496,7 @@ cd initpad/deploy
   <li>From version 0.2.36 the <span class="ui">Help</span> and <span class="ui">Learn more</span> links point to <a href="https://docs.initpad.me">https://docs.initpad.me</a> by default.</li>
 </ul>
 
-<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.41, November 2026.</footer>
+<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.42, November 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>

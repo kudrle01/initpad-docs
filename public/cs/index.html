@@ -42,7 +42,7 @@
 </div>
 
 <h1>Nápověda InitPad</h1>
-<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.41.</p>
+<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.42.</p>
 
 <h2 id="getting-started">1. Začínáme</h2>
 <p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
@@ -83,7 +83,7 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
   <li>E-mail a heslo, od verze 0.2.40. Postup popisuje část <a href="#email-sign-in">Založení účtu e-mailem</a> níže.</li>
 </ul>
 <p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu. Když mezitím vyjde nová verze InitPadu, otevřená karta ukáže <q>InitPad byl aktualizován</q> a novou verzi načtete tlačítkem <span class="ui">Obnovit</span>.</p>
-<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.41</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
+<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.42</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
 <h3 id="email-sign-in">Založení účtu e-mailem</h3>
 <ol class="steps">
   <li>Na úvodní stránce zvolte <span class="ui">Vytvořit účet</span> a vyplňte <span class="ui">Uživatelské jméno</span>, <span class="ui">E-mail</span>, <span class="ui">Heslo</span> (aspoň 12 znaků) a <span class="ui">Potvrzení hesla</span>.</li>
@@ -109,6 +109,8 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
 <div class="box why"><div class="t">Organizace</div>
 Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHub mu pošle žádost a Nastavení ukážou <q>Čeká se, až vlastník organizace na GitHubu schválí aplikaci. Po schválení se organizace propojí sem.</q> Jakmile vlastník App schválí a vy se vrátíte do okna InitPadu, organizace se připojí sama.</div>
 <p>Samotné členství v organizaci nestačí. Repozitáře organizace uvidíte v InitPadu až po instalaci App do ní.</p>
+<div class="box why"><div class="t">Týmový workspace potřebuje organizaci</div>
+Od verze 0.2.42 se týmový workspace připojuje jen ke GitHub organizaci; stačí i bezplatná. Osobní workspace dál přijme osobní účet i organizaci. InitPad pak členy týmu do organizace sám zve a nastavuje jim práva k repozitářům podle role, viz <a href="#repository-access">Přístup členů k repozitářům</a>. Na osobním účtu GitHub role jako čtenář nebo správce neumí.</div>
 
 <h2 id="servers">4. Připojení serveru</h2>
 <p>Aplikace neběží u InitPadu, ale na vašem serveru. InitPad umí dva druhy serverů:</p>
@@ -316,6 +318,17 @@ Na rozdíl od Agenta se k SFTP hostingu připojuje InitPad sám. Ve veřejné ed
 <div class="box warn"><div class="t">Odkaz je pozvánka</div>
 Kdo odkaz otevře a přijme, ten se do workspace připojí, i s účtem na jiný e-mail. Odkaz proto nepřeposílejte. Audit zaznamená, koho jste pozvali a který účet pozvánku přijal.</div>
 
+<h3 id="repository-access">Přístup členů k repozitářům</h3>
+<p>Ve veřejné edici dostávají členové týmového workspace od verze 0.2.42 přístup k repozitářům projektů na GitHubu automaticky:</p>
+<ol class="steps">
+  <li>Člen přijme pozvánku do workspace. Pokud nemá propojený GitHub, uvidíte u něj v seznamu členů štítek <span class="ui">GitHub nepropojen</span>. Přístup dostane, jakmile si GitHub propojí v <span class="ui">Nastavení účtu</span>.</li>
+  <li>Kdo v organizaci workspace ještě není, dostane od GitHubu pozvánku do ní s rolí <em>member</em>. V seznamu členů má mezitím štítek <span class="ui">Pozván do … na GitHubu</span>, který vede na stránku pozvánky. Kdo v organizaci už je, třeba jako její vlastník, tomu InitPad členství nemění.</li>
+  <li>K repozitářům projektů dostane práva podle role: čtenář čtení, člen zápis, správce <em>maintain</em>, administrátor a vlastník <em>admin</em>. Změna role ve workspace změní i práva na GitHubu.</li>
+</ol>
+<p>Po odebrání z workspace přijde člen o přístup k repozitářům. Z organizace ho InitPad odebere jen tehdy, když ho do ní sám pozval a nepotřebuje ji žádný jiný jeho workspace. Přijetí pozvánky na GitHubu se ve štítku projeví až při další synchronizaci, například při změně role.</p>
+<div class="box warn"><div class="t">Starší týmový workspace na osobním účtu</div>
+Týmový workspace, který má projekty na osobním GitHub účtu, dál sestavuje a nasazuje. Pozvat členy ani jim změnit roli ale nejde, dokud v něm takové projekty jsou; odebrání člena funguje. Pro nové projekty připojte organizaci.</div>
+
 <h3 id="approvals">Schvalování a audit</h3>
 <p>Workspace může vyžadovat, aby produkci schválil někdo jiný než žadatel. Kdo co udělal, najdete v části <span class="ui">Auditní log</span>.</p>
 
@@ -368,6 +381,10 @@ Převod na jiného vlastníka přejmenování není. Když repozitář přestane
   <tr><td><q>Tato pozvánka je neplatná, vypršela nebo už byla použita</q></td><td>Odkaz už byl přijat, zrušen, nahrazen novější pozvánkou, nebo je starší než 7 dní. Požádejte vlastníka nebo administrátora workspace o novou pozvánku.</td></tr>
   <tr><td><q>Před pozváním dalších členů vytvořte týmový workspace</q></td><td>Osobní workspace sdílet nejde. Založte týmový workspace a pozvěte lidi do něj.</td></tr>
   <tr><td><code>Hosted SFTP targets must resolve only to public internet addresses</code></td><td>Ve veřejné edici lze přidat jen SFTP hosting na veřejné internetové adrese. Hosting ve vnitřní síti připojte přes self-hosted instanci, nebo místo něj použijte server s Agentem.</td></tr>
+  <tr><td><q>Týmový workspace se připojuje ke GitHub organizaci. Nainstalujte aplikaci InitPad do organizace, nebo pro repozitáře na osobním účtu použijte osobní workspace.</q></td><td>Do týmového workspace jste zkusili připojit osobní GitHub účet. Nainstalujte App do organizace, viz <a href="#github">Propojení GitHubu</a>.</td></tr>
+  <tr><td><q>Tento týmový workspace stále používá osobní GitHub účet …. Pro změny přístupu členů připojte GitHub organizaci.</q></td><td>Workspace má projekty na osobním účtu, kde GitHub role neumí. Viz <a href="#repository-access">Přístup členů k repozitářům</a>.</td></tr>
+  <tr><td><q>V GitHub organizaci … schvalte aktualizovaná oprávnění aplikace InitPad (Members: read and write) a zkuste to znovu.</q></td><td>Vlastník organizace musí na GitHubu v <span class="ui">Settings → GitHub Apps</span> schválit nové oprávnění InitPadu. Jde o jednorázový krok.</td></tr>
+  <tr><td><q>GitHub odmítl udělit uživateli … přístup k repozitáři (HTTP …): …</q></td><td>GitHub změnu práv odmítl a za dvojtečkou uvádí důvod. Pokud problém trvá, pošlete hlášku správci platformy.</td></tr>
   <tr><td>Organizace chybí v nabídce vlastníků</td><td>Není v ní nainstalovaná GitHub App, nebo instalace čeká na schválení vlastníkem organizace („Čeká se, až vlastník organizace na GitHubu schválí aplikaci“). Po schválení se organizace připojí sama, když se vrátíte do okna InitPadu.</td></tr>
   <tr><td>Pipeline je zelená, ale prostředí dev selhalo</td><td>Sestavení prošlo, nasazení ne. Důvod je na kartě prostředí a v části Aktivita nasazení. Častá příčina je, že aplikace neposlouchá na portu šablony nebo neodpovídá na <code>/health</code>, viz <a href="#templates">tabulka šablon</a>. Po odstranění příčiny zvolte ikonu opakování.</td></tr>
   <tr><td>Server je v seznamu offline, nasazení <q>Čeká se na Agenta</q></td><td>Agent se 90 sekund neozval. Ověřte, že server běží, Docker je spuštěný a server se dostane na adresu InitPadu, viz <a href="#agent-updates">Aktualizace Agenta a stav offline</a>.</td></tr>
@@ -479,7 +496,7 @@ cd initpad/deploy
   <li>Odkazy <span class="ui">Nápověda</span> a <span class="ui">Více v nápovědě</span> vedou od verze 0.2.36 ve výchozím stavu na <a href="https://docs.initpad.me">https://docs.initpad.me</a>.</li>
 </ul>
 
-<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.41, listopad 2026.</footer>
+<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.42, listopad 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
