@@ -42,7 +42,7 @@
 </div>
 
 <h1>Nápověda InitPad</h1>
-<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.40.</p>
+<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.41.</p>
 
 <h2 id="getting-started">1. Začínáme</h2>
 <p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
@@ -83,12 +83,12 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
   <li>E-mail a heslo, od verze 0.2.40. Postup popisuje část <a href="#email-sign-in">Založení účtu e-mailem</a> níže.</li>
 </ul>
 <p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu. Když mezitím vyjde nová verze InitPadu, otevřená karta ukáže <q>InitPad byl aktualizován</q> a novou verzi načtete tlačítkem <span class="ui">Obnovit</span>.</p>
-<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.40</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
+<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.41</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
 <h3 id="email-sign-in">Založení účtu e-mailem</h3>
 <ol class="steps">
   <li>Na úvodní stránce zvolte <span class="ui">Vytvořit účet</span> a vyplňte <span class="ui">Uživatelské jméno</span>, <span class="ui">E-mail</span>, <span class="ui">Heslo</span> (aspoň 12 znaků) a <span class="ui">Potvrzení hesla</span>.</li>
   <li>Po volbě <span class="ui">Vytvořit účet</span> stránka ukáže <q>Na adresu … jsme poslali potvrzovací odkaz. Otevřete ho, tím dokončíte registraci, a pak se přihlaste.</q> Účet zatím nejde použít.</li>
-  <li>Otevřete odkaz z e-mailu. Platí 24 hodin. Po potvrzení adresy vznikne váš osobní workspace.</li>
+  <li>V e-mailu od InitPadu zvolte tlačítko <span class="ui">Verify e-mail</span>, nebo otevřete odkaz pod ním. Odkaz platí 24 hodin a funguje jednou. Po potvrzení adresy vznikne váš osobní workspace.</li>
   <li>Přihlaste se volbou <span class="ui">Přihlásit se</span> uživatelským jménem nebo e-mailem a heslem.</li>
 </ol>
 <p>Když e-mail nepřišel, podívejte se do spamu a zvolte <span class="ui">Poslat odkaz znovu</span>. Při pokusu o přihlášení před potvrzením InitPad ukáže <q>Před přihlášením potvrďte e-mailovou adresu.</q> a tlačítko <span class="ui">Poslat potvrzovací odkaz znovu</span>. Účet nepotvrzený do 24 hodin už jméno ani e-mail neblokuje, stačí se zaregistrovat znovu. Zapomenuté heslo obnovíte odkazem <span class="ui">Zapomněli jste heslo?</span> na úvodní stránce.</p>
@@ -309,7 +309,7 @@ Na rozdíl od Agenta se k SFTP hostingu připojuje InitPad sám. Ve veřejné ed
 <ol class="steps">
   <li>Otevřete <span class="ui">Nastavení workspace</span> týmového workspace. Osobní workspace sdílet nejde.</li>
   <li>V části <span class="ui">Pozvánky</span> zadejte e-mail, vyberte roli a zvolte <span class="ui">Poslat pozvánku</span>. Pozvání administrátora je nutné ještě potvrdit.</li>
-  <li>InitPad pošle pozvanému odkaz e-mailem. Když instance e-maily posílat neumí, ukáže odkaz jednou místo toho: <q>Odesílání e-mailů není nastavené. Pošlete tento odkaz na … sami; funguje jednou.</q></li>
+  <li>InitPad pošle pozvanému e-mail s názvem workspace, tím, kdo zve, a rolí. Pozvánku otevře tlačítko <span class="ui">Accept invitation</span> nebo odkaz pod ním. Když instance e-maily posílat neumí, ukáže odkaz jednou místo toho: <q>Odesílání e-mailů není nastavené. Pošlete tento odkaz na … sami; funguje jednou.</q></li>
   <li>Pozvaný otevře odkaz, uvidí workspace, roli a kdo ho zve, a zvolí <span class="ui">Přijmout pozvánku</span>. Kdo není přihlášený, zvolí <span class="ui">Přihlásit se a přijmout</span>; bez účtu si ho nejdřív <a href="#email-sign-in">založí</a> a odkaz pak otevře znovu.</li>
 </ol>
 <p>Pozvánka funguje jednou a platí 7 dní. Nová pozvánka na stejnou adresu tu předchozí nahradí. Čekající pozvánky jsou vypsané i s platností a lze je stáhnout volbou <span class="ui">Zrušit pozvánku</span>; odkaz tím okamžitě přestane fungovat.</p>
@@ -479,7 +479,7 @@ cd initpad/deploy
   <li>Odkazy <span class="ui">Nápověda</span> a <span class="ui">Více v nápovědě</span> vedou od verze 0.2.36 ve výchozím stavu na <a href="https://docs.initpad.me">https://docs.initpad.me</a>.</li>
 </ul>
 
-<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.40, listopad 2026.</footer>
+<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.41, listopad 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
