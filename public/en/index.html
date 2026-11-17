@@ -42,7 +42,7 @@
 </div>
 
 <h1>InitPad Help</h1>
-<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.42.</p>
+<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.43.</p>
 
 <h2 id="getting-started">1. Getting started</h2>
 <p>InitPad creates a repository with an application skeleton and a ready-made pipeline for you, and after every push it builds, tests and deploys the application to your server. You write the code; you do not have to set up Docker or CI.</p>
@@ -83,7 +83,7 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
   <li>An e-mail address and password, from version 0.2.40. See <a href="#email-sign-in">Creating an account with an e-mail address</a> below.</li>
 </ul>
 <p>A sign-in lasts seven days. After a platform update you may have to sign in again. When a new InitPad version is released while a tab is open, the tab shows <q>InitPad was updated</q>; load the new version with <span class="ui">Reload</span>.</p>
-<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.42</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
+<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.43</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
 <h3 id="email-sign-in">Creating an account with an e-mail address</h3>
 <ol class="steps">
   <li>On the start page choose <span class="ui">Create account</span> and fill in the <span class="ui">Username</span>, <span class="ui">E-mail</span>, <span class="ui">Password</span> (at least 12 characters) and <span class="ui">Confirm password</span>.</li>
@@ -100,11 +100,11 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
 <h2 id="github">3. Connecting GitHub</h2>
 <p>This chapter applies to the public edition. The self-hosted edition does not use GitHub.</p>
 <p>If you signed in with an e-mail address, first connect your GitHub account under <span class="ui">Account settings</span> with <span class="ui">Link GitHub account</span>.</p>
-<p>InitPad does not work with repositories in your name but through a GitHub App. It sees only the accounts and organizations you install it into, and only the repositories you allow.</p>
+<p>InitPad does not work with repositories in your name but through a GitHub App. It sees only the accounts and organizations you install it into, and only the repositories you allow. An installation belongs to a workspace: an organization connected to one workspace does not appear in another.</p>
 <ol class="steps">
-  <li>Open <span class="ui">Account settings</span> and in the <span class="ui">GitHub account</span> section choose <span class="ui">Install GitHub App</span>. A GitHub window opens, so allow pop-ups.</li>
+  <li>In the left menu pick the workspace that should use GitHub and open <span class="ui">Workspace settings</span>. In the <span class="ui">GitHub</span> section choose <span class="ui">Connect organization</span> in a team workspace, or <span class="ui">Install GitHub App</span> in a personal one. A GitHub window opens, so allow pop-ups.</li>
   <li>Pick your account or organization and decide whether the App sees all repositories or only selected ones.</li>
-  <li>When you come back, the installation appears in the list under your account. Add another account or organization with <span class="ui">Add installation</span>.</li>
+  <li>When you come back, the account or organization appears in the <span class="ui">GitHub</span> section. Add another with <span class="ui">Add installation</span>, or <span class="ui">Connect organization</span> again in a team workspace. Only a workspace owner or admin can connect one.</li>
 </ol>
 <div class="box why"><div class="t">Organizations</div>
 An installation into an organization must be approved by its owner. If that is not you, GitHub sends the owner a request and Settings shows <q>Waiting for a GitHub organization owner to approve the App. The organization connects here once they do.</q> Once the owner approves the App and you return to the InitPad window, the organization connects by itself.</div>
@@ -496,7 +496,7 @@ cd initpad/deploy
   <li>From version 0.2.36 the <span class="ui">Help</span> and <span class="ui">Learn more</span> links point to <a href="https://docs.initpad.me">https://docs.initpad.me</a> by default.</li>
 </ul>
 
-<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.42, November 2026.</footer>
+<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.43, November 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
