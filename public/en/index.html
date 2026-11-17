@@ -42,7 +42,7 @@
 </div>
 
 <h1>InitPad Help</h1>
-<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.40.</p>
+<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.41.</p>
 
 <h2 id="getting-started">1. Getting started</h2>
 <p>InitPad creates a repository with an application skeleton and a ready-made pipeline for you, and after every push it builds, tests and deploys the application to your server. You write the code; you do not have to set up Docker or CI.</p>
@@ -83,12 +83,12 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
   <li>An e-mail address and password, from version 0.2.40. See <a href="#email-sign-in">Creating an account with an e-mail address</a> below.</li>
 </ul>
 <p>A sign-in lasts seven days. After a platform update you may have to sign in again. When a new InitPad version is released while a tab is open, the tab shows <q>InitPad was updated</q>; load the new version with <span class="ui">Reload</span>.</p>
-<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.40</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
+<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.41</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
 <h3 id="email-sign-in">Creating an account with an e-mail address</h3>
 <ol class="steps">
   <li>On the start page choose <span class="ui">Create account</span> and fill in the <span class="ui">Username</span>, <span class="ui">E-mail</span>, <span class="ui">Password</span> (at least 12 characters) and <span class="ui">Confirm password</span>.</li>
   <li>After <span class="ui">Create account</span> the page shows <q>We sent a confirmation link to …. Open it to finish creating your account, then sign in.</q> The account is not usable yet.</li>
-  <li>Open the link from the e-mail. It is valid for 24 hours. Your personal workspace is created once the address is confirmed.</li>
+  <li>In the e-mail from InitPad choose <span class="ui">Verify e-mail</span>, or open the link below the button. The link is valid for 24 hours and works once. Your personal workspace is created once the address is confirmed.</li>
   <li>Sign in with <span class="ui">Sign in</span> using your username or e-mail and password.</li>
 </ol>
 <p>If no e-mail arrived, check your spam folder and choose <span class="ui">Send the link again</span>. When you try to sign in before confirming, InitPad shows <q>Confirm your e-mail address before signing in.</q> and the <span class="ui">Send the confirmation link again</span> button. An account that was not confirmed within 24 hours no longer blocks its username or e-mail; you can simply register again. A forgotten password is reset with <span class="ui">Forgot your password?</span> on the start page.</p>
@@ -309,7 +309,7 @@ Unlike with the Agent, InitPad connects to SFTP hosting itself. In the public ed
 <ol class="steps">
   <li>Open <span class="ui">Workspace settings</span> of a team workspace. A personal workspace cannot be shared.</li>
   <li>In the <span class="ui">Invitations</span> section enter the e-mail address, pick the role and choose <span class="ui">Send invitation</span>. Inviting an admin asks for confirmation first.</li>
-  <li>InitPad e-mails the person a link. When the instance cannot send e-mail, the link is shown once instead: <q>E-mail delivery is not configured. Send this link to … yourself; it works once.</q></li>
+  <li>InitPad sends the person an e-mail naming the workspace, who invited them and the role. The <span class="ui">Accept invitation</span> button or the link below it opens the invitation. When the instance cannot send e-mail, the link is shown once instead: <q>E-mail delivery is not configured. Send this link to … yourself; it works once.</q></li>
   <li>The person opens the link, sees the workspace, role and who invited them, and chooses <span class="ui">Accept invitation</span>. Someone who is not signed in chooses <span class="ui">Sign in to accept</span>; without an account they <a href="#email-sign-in">create one</a> first and then open the link again.</li>
 </ol>
 <p>An invitation works once and expires in 7 days. A new invitation to the same address replaces the previous one. Pending invitations are listed with their validity and can be withdrawn with <span class="ui">Cancel invitation</span>; the link stops working immediately.</p>
@@ -479,7 +479,7 @@ cd initpad/deploy
   <li>From version 0.2.36 the <span class="ui">Help</span> and <span class="ui">Learn more</span> links point to <a href="https://docs.initpad.me">https://docs.initpad.me</a> by default.</li>
 </ul>
 
-<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.40, November 2026.</footer>
+<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.41, November 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
