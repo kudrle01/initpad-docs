@@ -42,7 +42,7 @@
 </div>
 
 <h1>Nápověda InitPad</h1>
-<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.42.</p>
+<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.43.</p>
 
 <h2 id="getting-started">1. Začínáme</h2>
 <p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
@@ -83,7 +83,7 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
   <li>E-mail a heslo, od verze 0.2.40. Postup popisuje část <a href="#email-sign-in">Založení účtu e-mailem</a> níže.</li>
 </ul>
 <p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu. Když mezitím vyjde nová verze InitPadu, otevřená karta ukáže <q>InitPad byl aktualizován</q> a novou verzi načtete tlačítkem <span class="ui">Obnovit</span>.</p>
-<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.42</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
+<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.43</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
 <h3 id="email-sign-in">Založení účtu e-mailem</h3>
 <ol class="steps">
   <li>Na úvodní stránce zvolte <span class="ui">Vytvořit účet</span> a vyplňte <span class="ui">Uživatelské jméno</span>, <span class="ui">E-mail</span>, <span class="ui">Heslo</span> (aspoň 12 znaků) a <span class="ui">Potvrzení hesla</span>.</li>
@@ -100,11 +100,11 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
 <h2 id="github">3. Propojení GitHubu</h2>
 <p>Tato kapitola platí pro veřejnou edici. Self-hosted edice GitHub nepoužívá.</p>
 <p>Pokud jste se přihlásili e-mailem, nejdřív v <span class="ui">Nastavení účtu</span> zvolte <span class="ui">Propojit účet GitHub</span>.</p>
-<p>InitPad s repozitáři nepracuje pod vaším jménem, ale přes GitHub App. Vidí jen účty a organizace, do kterých ji nainstalujete, a jen repozitáře, které jí povolíte.</p>
+<p>InitPad s repozitáři nepracuje pod vaším jménem, ale přes GitHub App. Vidí jen účty a organizace, do kterých ji nainstalujete, a jen repozitáře, které jí povolíte. Instalace patří k workspace: organizace připojená k jednomu workspace se v jiném nezobrazí.</p>
 <ol class="steps">
-  <li>Otevřete <span class="ui">Nastavení účtu</span> a v části <span class="ui">Účet GitHub</span> zvolte <span class="ui">Nainstalovat GitHub App</span>. Otevře se okno GitHubu, proto povolte vyskakovací okna.</li>
+  <li>Vyberte v levém menu workspace, ke kterému chcete GitHub připojit, a otevřete <span class="ui">Nastavení workspace</span>. V části <span class="ui">GitHub</span> zvolte v týmovém workspace <span class="ui">Připojit organizaci</span>, v osobním <span class="ui">Nainstalovat GitHub App</span>. Otevře se okno GitHubu, proto povolte vyskakovací okna.</li>
   <li>Vyberte svůj účet nebo organizaci a rozhodněte, zda App uvidí všechny repozitáře, nebo jen vybrané.</li>
-  <li>Po návratu se instalace objeví v seznamu pod vaším účtem. Další účet nebo organizaci přidáte tlačítkem <span class="ui">Přidat instalaci</span>.</li>
+  <li>Po návratu se účet nebo organizace objeví v seznamu v části <span class="ui">GitHub</span>. Další přidáte tlačítkem <span class="ui">Přidat instalaci</span>, v týmovém workspace znovu <span class="ui">Připojit organizaci</span>. Připojovat smí vlastník nebo administrátor workspace.</li>
 </ol>
 <div class="box why"><div class="t">Organizace</div>
 Instalaci do organizace musí potvrdit její vlastník. Pokud jím nejste, GitHub mu pošle žádost a Nastavení ukážou <q>Čeká se, až vlastník organizace na GitHubu schválí aplikaci. Po schválení se organizace propojí sem.</q> Jakmile vlastník App schválí a vy se vrátíte do okna InitPadu, organizace se připojí sama.</div>
@@ -496,7 +496,7 @@ cd initpad/deploy
   <li>Odkazy <span class="ui">Nápověda</span> a <span class="ui">Více v nápovědě</span> vedou od verze 0.2.36 ve výchozím stavu na <a href="https://docs.initpad.me">https://docs.initpad.me</a>.</li>
 </ul>
 
-<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.42, listopad 2026.</footer>
+<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.43, listopad 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
