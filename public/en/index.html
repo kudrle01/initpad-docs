@@ -42,7 +42,7 @@
 </div>
 
 <h1>InitPad Help</h1>
-<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.46.</p>
+<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.47.</p>
 
 <h2 id="getting-started">1. Getting started</h2>
 <p>InitPad creates a repository with an application skeleton and a ready-made pipeline for you, and after every push it builds, tests and deploys the application to your server. You write the code; you do not have to set up Docker or CI.</p>
@@ -83,7 +83,7 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
   <li>An e-mail address and password, from version 0.2.40. See <a href="#email-sign-in">Creating an account with an e-mail address</a> below.</li>
 </ul>
 <p>A sign-in lasts seven days. After a platform update you may have to sign in again. When a new InitPad version is released while a tab is open, the tab shows <q>InitPad was updated</q>; load the new version with <span class="ui">Reload</span>.</p>
-<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.46</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
+<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.47</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
 <h3 id="email-sign-in">Creating an account with an e-mail address</h3>
 <ol class="steps">
   <li>On the start page choose <span class="ui">Create account</span> and fill in the <span class="ui">Username</span>, <span class="ui">E-mail</span>, <span class="ui">Password</span> (at least 12 characters) and <span class="ui">Confirm password</span>.</li>
@@ -284,7 +284,7 @@ Unlike with the Agent, InitPad connects to SFTP hosting itself. In the public ed
   <tr><td>Find out why the application is not running</td><td><span class="ui">Workload diagnostics…</span> and the <span class="ui">Deployment activity</span> section.</td></tr>
   <tr><td>Retry a failed pipeline</td><td>In the public edition, the arrows icon next to a commit whose CI failed in the commit list. After you confirm, GitHub re-runs the failed jobs and InitPad shows the result by itself, also when you start the re-run on GitHub. Members and above may do it.</td></tr>
 </table></div>
-<p>The pipeline steps of a commit link straight to the run logs on GitHub, or in Gitea in the self-hosted edition. During an operation the environment card shows what is happening: <q>deploying</q>, <q>removing</q>, <q>stopping</q> or <q>starting</q>.</p>
+<p>An expanded commit shows every job of the <code>ci.yml</code> workflow and, in the public edition, the numbered steps of each job. Each job and step links straight to its place in the log on GitHub, or to the job log in Gitea in the self-hosted edition. During an operation the environment card shows what is happening: <q>deploying</q>, <q>removing</q>, <q>stopping</q> or <q>starting</q>.</p>
 
 <h2 id="variables">8. Variables and secrets</h2>
 <p>The project detail has a <span class="ui">Configuration</span> section with variables for each environment separately. InitPad passes them to the application on deployment. A change takes effect only after the environment is redeployed.</p>
@@ -501,7 +501,7 @@ cd initpad/deploy
   <li>From version 0.2.36 the <span class="ui">Help</span> and <span class="ui">Learn more</span> links point to <a href="https://docs.initpad.me">https://docs.initpad.me</a> by default.</li>
 </ul>
 
-<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.46, November 2026.</footer>
+<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.47, November 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
