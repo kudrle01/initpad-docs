@@ -42,7 +42,7 @@
 </div>
 
 <h1>Nápověda InitPad</h1>
-<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.47.</p>
+<p class="subtitle">Veřejná edice propojená s GitHubem a self-hosted instalace. Popisuje verzi 0.2.49.</p>
 
 <h2 id="getting-started">1. Začínáme</h2>
 <p>InitPad za vás založí repozitář se základem aplikace a hotovou pipeline a po každém pushi aplikaci sestaví, otestuje a nasadí na váš server. Vy píšete kód, Docker ani CI nastavovat nemusíte.</p>
@@ -83,7 +83,7 @@ Odkaz <span class="ui">Nápověda</span> v levém menu otevře tuto stránku v j
   <li>E-mail a heslo, od verze 0.2.40. Postup popisuje část <a href="#email-sign-in">Založení účtu e-mailem</a> níže.</li>
 </ul>
 <p>Přihlášení platí sedm dní. Po aktualizaci platformy se může stát, že se budete muset přihlásit znovu. Když mezitím vyjde nová verze InitPadu, otevřená karta ukáže <q>InitPad byl aktualizován</q> a novou verzi načtete tlačítkem <span class="ui">Obnovit</span>.</p>
-<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.47</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
+<p>Verzi InitPadu, se kterou pracujete, vidíte vlevo dole pod svým účtem, například <span class="ui">InitPad 0.2.49</span>. Záložka otevřená během aktualizace se při dalším kliknutí sama jednou obnoví a načte novou verzi.</p>
 <h3 id="email-sign-in">Založení účtu e-mailem</h3>
 <ol class="steps">
   <li>Na úvodní stránce zvolte <span class="ui">Vytvořit účet</span> a vyplňte <span class="ui">Uživatelské jméno</span>, <span class="ui">E-mail</span>, <span class="ui">Heslo</span> (aspoň 12 znaků) a <span class="ui">Potvrzení hesla</span>.</li>
@@ -150,7 +150,7 @@ Od verze 0.2.42 se týmový workspace připojuje jen ke GitHub organizaci; stač
 </ol>
 <div class="scroll"><table>
   <tr><th>Zpřístupnění</th><th>Kdy ho zvolit</th><th>Adresa aplikace</th></tr>
-  <tr><td><span class="ui">Přímé porty (lokálně / laboratoř)</span></td><td>Zkoušení, laboratoř, server ve vnitřní síti</td><td>Adresa serveru a port, například <code>http://192.168.1.50:32768</code>. S Agentem 0.17 a novějším zůstává port stejný i po restartu kontejneru nebo serveru a leží v rozsahu 30000–32767, který stačí povolit ve firewallu.</td></tr>
+  <tr><td><span class="ui">Přímé porty (lokálně / laboratoř)</span></td><td>Zkoušení, laboratoř, server ve vnitřní síti</td><td>Adresa serveru a port, například <code>http://192.168.1.50:32768</code>. S Agentem 0.17 a novějším zůstává port stejný i po restartu kontejneru nebo serveru, s Agentem 0.18 a novějším i po nasazení nové verze, a leží v rozsahu 30000–32767, který stačí povolit ve firewallu.</td></tr>
   <tr><td><span class="ui">Spravovaná brána (produkce)</span></td><td>Produkce, stálé HTTPS adresy</td><td>Stálá adresa pro každý projekt a prostředí, například <code>https://shop-prod-1a2b3c4d.apps.example.cz</code>. Vyžaduje doménu, viz <a href="#gateway">Spravovaná brána</a>.</td></tr>
 </table></div>
 <div class="box tip"><div class="t">Server za VPN nebo doma</div>
@@ -501,7 +501,7 @@ cd initpad/deploy
   <li>Odkazy <span class="ui">Nápověda</span> a <span class="ui">Více v nápovědě</span> vedou od verze 0.2.36 ve výchozím stavu na <a href="https://docs.initpad.me">https://docs.initpad.me</a>.</li>
 </ul>
 
-<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.47, listopad 2026.</footer>
+<footer>InitPad, nápověda veřejné a self-hosted edice. Stav k verzi 0.2.49, listopad 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
