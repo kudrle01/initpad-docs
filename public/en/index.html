@@ -42,7 +42,7 @@
 </div>
 
 <h1>InitPad Help</h1>
-<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.47.</p>
+<p class="subtitle">The public edition connected to GitHub and self-hosted installations. Describes version 0.2.49.</p>
 
 <h2 id="getting-started">1. Getting started</h2>
 <p>InitPad creates a repository with an application skeleton and a ready-made pipeline for you, and after every push it builds, tests and deploys the application to your server. You write the code; you do not have to set up Docker or CI.</p>
@@ -83,7 +83,7 @@ The <span class="ui">Help</span> link in the left menu opens this page in the la
   <li>An e-mail address and password, from version 0.2.40. See <a href="#email-sign-in">Creating an account with an e-mail address</a> below.</li>
 </ul>
 <p>A sign-in lasts seven days. After a platform update you may have to sign in again. When a new InitPad version is released while a tab is open, the tab shows <q>InitPad was updated</q>; load the new version with <span class="ui">Reload</span>.</p>
-<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.47</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
+<p>The InitPad version you are using is shown at the bottom left under your account, for example <span class="ui">InitPad 0.2.49</span>. A tab left open during an update reloads itself once on the next click and opens the new version.</p>
 <h3 id="email-sign-in">Creating an account with an e-mail address</h3>
 <ol class="steps">
   <li>On the start page choose <span class="ui">Create account</span> and fill in the <span class="ui">Username</span>, <span class="ui">E-mail</span>, <span class="ui">Password</span> (at least 12 characters) and <span class="ui">Confirm password</span>.</li>
@@ -150,7 +150,7 @@ Since version 0.2.42 a team workspace connects only to a GitHub organization; a 
 </ol>
 <div class="scroll"><table>
   <tr><th>Exposure</th><th>When to choose it</th><th>Application address</th></tr>
-  <tr><td><span class="ui">Direct ports (local / lab)</span></td><td>Trying things out, a lab, a server on an internal network</td><td>The server address and a port, for example <code>http://192.168.1.50:32768</code>. With Agent 0.17 or newer the port stays the same after a container or server restart and lies in the range 30000–32767, which is all the firewall needs to allow.</td></tr>
+  <tr><td><span class="ui">Direct ports (local / lab)</span></td><td>Trying things out, a lab, a server on an internal network</td><td>The server address and a port, for example <code>http://192.168.1.50:32768</code>. With Agent 0.17 or newer the port stays the same after a container or server restart, with Agent 0.18 or newer also after a new version is deployed, and lies in the range 30000–32767, which is all the firewall needs to allow.</td></tr>
   <tr><td><span class="ui">Managed gateway (production)</span></td><td>Production, stable HTTPS addresses</td><td>A stable address for each project and environment, for example <code>https://shop-prod-1a2b3c4d.apps.example.com</code>. Requires a domain, see <a href="#gateway">Managed gateway</a>.</td></tr>
 </table></div>
 <div class="box tip"><div class="t">A server behind a VPN or at home</div>
@@ -501,7 +501,7 @@ cd initpad/deploy
   <li>From version 0.2.36 the <span class="ui">Help</span> and <span class="ui">Learn more</span> links point to <a href="https://docs.initpad.me">https://docs.initpad.me</a> by default.</li>
 </ul>
 
-<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.47, November 2026.</footer>
+<footer>InitPad, help for the public and self-hosted editions. Current as of version 0.2.49, November 2026.</footer>
 </main>
 </div>
 <script>(function(){var a=document.querySelector('.lang a[hreflang]');if(!a)return;var b=a.getAttribute('href');function u(){a.setAttribute('href',b+location.hash);}u();addEventListener('hashchange',u);})();</script>
